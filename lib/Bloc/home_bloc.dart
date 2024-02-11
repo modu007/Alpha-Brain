@@ -9,6 +9,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(GetPostInitialState()) {
     on<GetPostInitialEvent>(getPostInitialEvent);
     on<TabChangeEvent>(tabChangeEvent);
+    on<PaginationEvent>(paginationEvent);
   }
   FutureOr<void> getPostInitialEvent(
       HomeEvent event, Emitter<HomeState> emit) async {
@@ -59,4 +60,26 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
       }
     }
+
+  FutureOr<void> paginationEvent(
+      PaginationEvent event, Emitter<HomeState> emit) async {
+      try{
+        var result = await HomeRepo.getAllPostDataOfForYou(
+            email: "satishlangayan@gmail.com", skip: event.skip, limit: event.limit);
+        if(result is List<ForYouModel>){
+          List<ForYouModel> allPostData = event.allPrevPostData;
+          List<ForYouModel> resultData =[];
+          resultData.addAll(result);
+          result.clear();
+          result.addAll(allPostData);
+          result.addAll(resultData);
+          emit(GetPostSuccessState(listOfPosts:result));
+        }else{
+          emit(GetPostFailureState(errorMessage: "Error"));
+        }
+      }
+      catch(error){
+        emit(GetPostFailureState(errorMessage: "Something went wrong"));
+      }
+  }
 }
