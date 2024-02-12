@@ -25,6 +25,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
   List<ForYouModel> allPostsData=[];
   bool isLoading = false;
 
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +39,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
     });
     scrollControllerTab1 = ScrollController();
     scrollControllerTab2 = ScrollController();
-    scrollControllerTab1.addListener(() {
+    scrollControllerTab1.addListener(()async {
       if (scrollControllerTab1.position.pixels >= scrollControllerTab1.position.maxScrollExtent) {
         if (!isLoading) {
           isLoading = true;
@@ -133,13 +134,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
                       return DefaultTabController(
                       length: 2,
                       child: TabBarView(
+                        physics: const NeverScrollableScrollPhysics(),
                         children: [
                           PostListView(
                               data: data,
-                              scrollController: scrollControllerTab1),
+                              scrollController: scrollControllerTab1,
+                          ),
                           PostListView(
                               data: data,
-                              scrollController: scrollControllerTab1),
+                              scrollController: scrollControllerTab1,
+                          ),
                         ],
                       ),
                     );

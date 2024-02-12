@@ -41,6 +41,7 @@ dependencies:
   flutter_bloc: ^8.1.3
   svg_flutter:
   url_launcher: ^6.2.4
+  reaction_askany: ^0.1.2
 
 
 dev_dependencies:

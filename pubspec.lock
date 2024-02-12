@@ -256,6 +256,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.1"
+  reaction_askany:
+    dependency: "direct main"
+    description:
+      name: reaction_askany
+      sha256: "4c3840a1fd6d8c88f00756a7d3a21d7672b700af86267d352c87ca2e7d2efc60"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   shared_preferences:
     dependency: "direct main"
     description:
