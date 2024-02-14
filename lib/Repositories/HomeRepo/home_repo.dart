@@ -46,4 +46,29 @@ class HomeRepo {
       print("sign up repo $error");
     }
   }
+
+  static Future reactionOnPost(
+      {
+        required String email,
+        required String postId,
+        required String previousEmojiType,
+        required String emojisType,
+      }) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    try {
+      var result = await networkRequest.postRequest({
+        "Email": email,
+        "Post_id": postId,
+        "Emojis_type": emojisType,
+        "Previous_emojis_type": previousEmojiType
+      }, AllApi.reactionOnPost);
+      print("ressss:$result");
+      if(result["Status"]=="Success"){
+        return "success";
+      }
+      return "something went wrong";
+    } catch (error) {
+      print("sign up repo $error");
+    }
+  }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:neuralcode/Bloc/home_bloc.dart';
-import 'package:neuralcode/Bloc/home_event.dart';
-import 'package:neuralcode/Bloc/home_state.dart';
+import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
+import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
 import 'package:neuralcode/Utils/Color/colors.dart';
 import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
+import '../../Bloc/HomeBloc/home_bloc.dart';
 import '../../Models/for_you_model.dart';
 import '../../Utils/Components/Cards/post_card.dart';
 
@@ -43,7 +43,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
       if (scrollControllerTab1.position.pixels >= scrollControllerTab1.position.maxScrollExtent) {
         if (!isLoading) {
           isLoading = true;
-          skip += 5; // Adjust according to your pagination logic
+          skip += 5;
           BlocProvider.of<HomeBloc>(context).add(
             PaginationEvent(
               limit: limit,

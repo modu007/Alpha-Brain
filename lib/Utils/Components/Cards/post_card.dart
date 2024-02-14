@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_reaction_button/flutter_reaction_button.dart';
+import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../Bloc/HomeBloc/home_bloc.dart';
 import '../../../Models/for_you_model.dart';
 import '../Text/simple_text.dart';
 
@@ -28,6 +32,12 @@ class PostListView extends StatelessWidget{
             );
           }
         else{
+            // var emojiType="";
+            // if(data[index].myEmojis.isNotEmpty){
+            //   emojiType = data[index].myEmojis[0]["type"];
+            // }else{
+            //   emojiType="";
+            // }
             return Container(
               margin: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -75,7 +85,71 @@ class PostListView extends StatelessWidget{
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SvgPicture.asset("assets/svg/heart-1.svg",),
+                        Flexible(
+                          child: ReactionButton<String>(
+                            boxRadius: 80,
+                            itemsSpacing: 5,
+                            placeholder:
+                            // emojiType ==
+                            //     "love" ?
+                            // Reaction<String>(
+                            //   value: "love",
+                            //   icon: SvgPicture.asset(
+                            //     "assets/svg/heart_filled.svg",
+                            //     color: Colors.red,
+                            //   ),
+                            // ):
+                            Reaction<String>(
+                              value: "",
+                              icon: SvgPicture.asset(
+                                "assets/svg/heart-1.svg",
+                              ),
+                            ),
+                            onReactionChanged: (Reaction<String>? reaction) {
+                              print(reaction?.value!);
+                              BlocProvider.of<HomeBloc>(context).add(
+                                PostLikeEvent(
+                                    postData: data[index],
+                                    previousEmojiType: "",
+                                    emojisType: reaction!.value!,
+                                    listOfData: data)
+                              );
+                            },
+                            reactions:  <Reaction<String>>[
+                              Reaction<String>(
+                                value: 'like',
+                                icon: SvgPicture.asset("assets/svg/like.svg",),
+                              ),
+                              Reaction<String>(
+                                value: 'happy',
+                                icon: SvgPicture.asset(
+                                  "assets/svg/grinning-face.svg",),
+                              ),
+                              Reaction<String>(
+                                value: 'bulb',
+                                icon: SvgPicture.asset(
+                                  "assets/svg/lightbulb.svg",),
+                              ),
+                              Reaction<String>(
+                                value: 'celebrate',
+                                icon: SvgPicture.asset(
+                                  "assets/svg/party-popper.svg",),
+                              ),
+                              Reaction<String>(
+                                value: 'curious',
+                                icon: SvgPicture.asset(
+                                  "assets/svg/thinking-face.svg",),
+                              ),
+                            ],
+                            selectedReaction:  Reaction<String>(
+                              value: 'love',
+                              icon: SvgPicture.asset(
+                                "assets/svg/heart_filled.svg",
+                                color: Colors.red,
+                              ),
+                            ), itemSize:const Size(30, 30),
+                          ),
+                        ),
                         Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -85,7 +159,7 @@ class PostListView extends StatelessWidget{
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const SimpleText(
-                            text:"Ask query",
+                            text:"Ask jury",
                             fontSize: 15,
                             fontColor: Colors.white,
                             fontWeight: FontWeight.w500,

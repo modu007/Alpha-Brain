@@ -1,4 +1,4 @@
-import '../Models/for_you_model.dart';
+import '../../Models/for_you_model.dart';
 
 abstract class HomeState {}
 

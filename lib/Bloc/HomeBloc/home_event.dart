@@ -11,7 +11,15 @@ class TabChangeEvent extends HomeEvent{
 
 class PostLikeEvent extends HomeEvent{
   final ForYouModel postData;
-  PostLikeEvent({required this.postData});
+  final String previousEmojiType;
+  final String emojisType;
+  final List<ForYouModel> listOfData;
+  PostLikeEvent({
+    required this.postData,
+    required this.previousEmojiType,
+    required this.emojisType,
+    required this.listOfData,
+  });
 }
 
 class PaginationEvent extends HomeEvent{
@@ -24,3 +32,5 @@ class PaginationEvent extends HomeEvent{
     required this.allPrevPostData,
   });
 }
+
+

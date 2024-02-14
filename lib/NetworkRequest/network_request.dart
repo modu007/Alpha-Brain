@@ -74,7 +74,7 @@ class NetworkRequest {
     var token = await SharedData.getUserid("uid");
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token}'
+      // 'Authorization': 'Bearer $token}'
     };
     try {
       http.Request request = http.Request('POST', Uri.parse(api));
