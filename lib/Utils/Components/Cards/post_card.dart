@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_reaction_button/flutter_reaction_button.dart';
-import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../Bloc/HomeBloc/home_bloc.dart';
+import '../../../Bloc/HomeBloc/home_event.dart';
 import '../../../Models/for_you_model.dart';
 import '../Text/simple_text.dart';
 
@@ -32,151 +31,228 @@ class PostListView extends StatelessWidget{
             );
           }
         else{
-            // var emojiType="";
-            // if(data[index].myEmojis.isNotEmpty){
-            //   emojiType = data[index].myEmojis[0]["type"];
-            // }else{
-            //   emojiType="";
-            // }
+          bool emojiTypeBool=false;
+           var emojiType="";
+            if(data[index].myEmojis.isNotEmpty){
+              emojiType = data[index].myEmojis[0]["emoji"];
+              emojiTypeBool=true;
+            }
+            else{
+              emojiType="";
+            }
             return Container(
-              margin: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 10),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 20),
+              margin: const EdgeInsets.only(left: 15,right: 15,top: 0,bottom: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20)
-              ),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                      color: const Color(0xffF8F8FA)
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Color(0xffF7F8F9),
+                        spreadRadius: 4,
+                        blurRadius: 2)
+                  ]),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 15),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          width: 50,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(25),
+                            child: Image.asset("assets/images/logo.jpeg"),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SimpleText(
+                              text: "Ayaba Onile-Ire",
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              textHeight: 1,
+                            ),
+                            SimpleText(
+                              text: "@ayabaoniile_",
+                              fontSize: 12,
+                              textHeight: 2,
+                              fontColor: Color(0xff8698A9),
+                            )
+                          ],
+                        ),
+                        const Spacer(),
+                         SimpleText(
+                          text: data[index].dateTime.split("2024")[0],
+                          fontSize: 12,
+                          fontColor: const Color(0xff8698A9),
+                        )
+                      ],
+                    ),
+                  ),
+                  Stack(
                     children: [
                       SizedBox(
-                        height: 45,
-                        width: 45,
-                        child:  ClipRRect(
-                          borderRadius: BorderRadius.circular(25),
-                          child: Image.asset("assets/images/logo.jpeg"),
+                        height: 220,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 200,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(data[index].imageUrl),
+                                )
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 8,),
-                      const Flexible(
-                        child: SimpleText(
-                          text: "Alpha Brains",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          maxLines: 2,
-                          textHeight: 1,
+                      Positioned(
+                        top: 10,
+                        left: 15,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            border: Border.all(
+                                color: const Color(0xffCDC8BC)
+                            ),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child:  InkWell(
+                            onTap: ()async{
+                              if (!await launchUrl(Uri.parse(data[index].newsUrl))) {
+                              throw Exception('Could not launch url');
+                              }
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Image.asset("assets/images/hindustan_times.png"),
+                                const SizedBox(width: 5,),
+                                const SimpleText(
+                                  text: "The Hindu",
+                                  fontSize: 8,
+                                  fontColor:Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        left: 15,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: const Color(0xffF8F8FA)
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 2,
+                                )
+                              ]
+                          ),
+                          child: emojiTypeBool?
+                          InkWell(
+                            onTap: (){
+                              BlocProvider.of<HomeBloc>(context).add(
+                                  PostLikeEvent(
+                                      postData: data[index],
+                                      previousEmojiType: emojiType,
+                                      emojisType: "",
+                                      listOfData: data)
+                              );
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset("assets/svg/heart_filled.svg",),
+                                const SizedBox(width: 5,),
+                                const SimpleText(
+                                  text: "101.9K",
+                                  fontSize: 12,
+                                  fontColor: Color(0xff060606),)
+                              ],
+                            ),
+                          ):
+                          InkWell(
+                            onTap: (){
+                              BlocProvider.of<HomeBloc>(context).add(
+                                  PostLikeEvent(
+                                      postData: data[index],
+                                      previousEmojiType: emojiType,
+                                      emojisType: "love",
+                                      listOfData: data)
+                              );
+                            },
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset("assets/svg/heart.svg",),
+                                const SizedBox(width: 5,),
+                                const SimpleText(
+                                  text: "101.9K",
+                                  fontSize: 12,
+                                  fontColor: Color(0xff060606),)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 10,
+                        left: 100,
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: const Color(0xffF8F8FA)
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  blurRadius: 2,
+                                )
+                              ]
+                          ),
+                          child: SvgPicture.asset("assets/svg/bookmark.svg"),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12,),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.network(data[index].imageUrl),
-                  ),
-                  const SizedBox(height: 10,),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: ReactionButton<String>(
-                            boxRadius: 80,
-                            itemsSpacing: 5,
-                            placeholder:
-                            // emojiType ==
-                            //     "love" ?
-                            // Reaction<String>(
-                            //   value: "love",
-                            //   icon: SvgPicture.asset(
-                            //     "assets/svg/heart_filled.svg",
-                            //     color: Colors.red,
-                            //   ),
-                            // ):
-                            Reaction<String>(
-                              value: "",
-                              icon: SvgPicture.asset(
-                                "assets/svg/heart-1.svg",
-                              ),
-                            ),
-                            onReactionChanged: (Reaction<String>? reaction) {
-                              print(reaction?.value!);
-                              BlocProvider.of<HomeBloc>(context).add(
-                                PostLikeEvent(
-                                    postData: data[index],
-                                    previousEmojiType: "",
-                                    emojisType: reaction!.value!,
-                                    listOfData: data)
-                              );
-                            },
-                            reactions:  <Reaction<String>>[
-                              Reaction<String>(
-                                value: 'like',
-                                icon: SvgPicture.asset("assets/svg/like.svg",),
-                              ),
-                              Reaction<String>(
-                                value: 'happy',
-                                icon: SvgPicture.asset(
-                                  "assets/svg/grinning-face.svg",),
-                              ),
-                              Reaction<String>(
-                                value: 'bulb',
-                                icon: SvgPicture.asset(
-                                  "assets/svg/lightbulb.svg",),
-                              ),
-                              Reaction<String>(
-                                value: 'celebrate',
-                                icon: SvgPicture.asset(
-                                  "assets/svg/party-popper.svg",),
-                              ),
-                              Reaction<String>(
-                                value: 'curious',
-                                icon: SvgPicture.asset(
-                                  "assets/svg/thinking-face.svg",),
-                              ),
-                            ],
-                            selectedReaction:  Reaction<String>(
-                              value: 'love',
-                              icon: SvgPicture.asset(
-                                "assets/svg/heart_filled.svg",
-                                color: Colors.red,
-                              ),
-                            ), itemSize:const Size(30, 30),
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 5),
-                          decoration: BoxDecoration(
-                            color: Colors.black54,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const SimpleText(
-                            text:"Ask jury",
-                            fontSize: 15,
-                            fontColor: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SvgPicture.asset("assets/svg/bookmark.svg",),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
                   SimpleText(
                     text: data[index].summary.title,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    textHeight: 1,
                   ),
-                  const SizedBox(height: 6,),
+                  const SizedBox(height: 10,),
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -188,20 +264,20 @@ class PostListView extends StatelessWidget{
                           margin: const EdgeInsets.symmetric(
                               vertical: 5),
                           child: RichText(
-                            text:  TextSpan(
+                            text: TextSpan(
                               children: [
                                 TextSpan(
                                   text: "${keyPoints.subHeading} ",
                                   style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
+                                      fontSize: 15,
+                                      color: Color(0xff77818A),
                                       fontWeight: FontWeight.bold),
                                 ),
                                 TextSpan(
                                   text: keyPoints.description,
                                   style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
+                                      fontSize: 15,
+                                      color:Color(0xff77818A),
                                       fontWeight: FontWeight.normal),
                                 ),
                               ],
@@ -209,29 +285,58 @@ class PostListView extends StatelessWidget{
                           ),
                         );
                       }),
-                  const SizedBox(height: 15,),
-                  Row(
-                    children: [
-                      const SimpleText(
-                        text: "source: ",
-                        fontSize: 13,fontColor: Colors.grey,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      InkWell(
-                        onTap: ()async{
-                          if (!await launchUrl(Uri.parse(data[index].newsUrl))) {
-                            throw Exception('Could not launch url');
-                          }
-                        },
-                        child: SimpleText(
-                          text: data[index].source,
-                          fontSize: 13,fontColor: Colors.grey,
-                          fontWeight: FontWeight.w500,
-                          textDecoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ],
-                  )
+                  // const SizedBox(height: 10,),
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 8),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       emojiTypeBool ?
+                  //       InkWell(
+                  //         onTap: (){
+                  //           BlocProvider.of<HomeBloc>(context).add(
+                  //               PostLikeEvent(
+                  //                   postData: data[index],
+                  //                   previousEmojiType: emojiType,
+                  //                   emojisType: "",
+                  //                   listOfData: data)
+                  //           );
+                  //         },
+                  //           child: const Icon(Icons.favorite,color: Colors.red,)) :
+                  //       InkWell(
+                  //         onTap: (){
+                  //           BlocProvider.of<HomeBloc>(context).add(
+                  //               PostLikeEvent(
+                  //                   postData: data[index],
+                  //                   previousEmojiType: emojiType,
+                  //                   emojisType: "love",
+                  //                   listOfData: data)
+                  //           );
+                  //         },
+                  //         child: const Icon(
+                  //             Icons.favorite_outline
+                  //         ),
+                  //       ),
+                  //       Container(
+                  //         padding: const EdgeInsets.symmetric(
+                  //             horizontal: 10,
+                  //             vertical: 5),
+                  //         decoration: BoxDecoration(
+                  //           color: Colors.black54,
+                  //           borderRadius: BorderRadius.circular(10),
+                  //         ),
+                  //         child: const SimpleText(
+                  //           text:"Ask jury",
+                  //           fontSize: 15,
+                  //           fontColor: Colors.white,
+                  //           fontWeight: FontWeight.w500,
+                  //         ),
+                  //       ),
+                  //       SvgPicture.asset("assets/svg/bookmark.svg",),
+                  //     ],
+                  //   ),
+                  // ),
+                  const SizedBox(height: 10,),
                 ],
               ),
             );

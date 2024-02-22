@@ -102,20 +102,36 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }
             index+=1;
           }
-          print("here");
           data.removeAt(index);
-          data.insert(index, ForYouModel(
-                  id: event.postData.id,
-                  dateTime: event.postData.id,
-                  imageUrl: event.postData.imageUrl,
-                  myEmojis: [{
-                    "type": "love"
-                  }],
-                  newsUrl: event.postData.newsUrl,
-                  source: event.postData.source,
-                  summary: event.postData.summary,
-                  tags: event.postData.tags,
-                  yt: event.postData.yt));
+          if(event.postData.myEmojis.isEmpty){
+            data.insert(index, ForYouModel(
+                id: event.postData.id,
+                dateTime: event.postData.dateTime,
+                imageUrl: event.postData.imageUrl,
+                myEmojis: [{
+                  "emoji": "love"
+                }],
+                newsUrl: event.postData.newsUrl,
+                source: event.postData.source,
+                summary: event.postData.summary,
+                tags: event.postData.tags,
+                yt: event.postData.yt,
+                love: event.postData.love
+            ));
+          }else{
+            data.insert(index, ForYouModel(
+                id: event.postData.id,
+                dateTime: event.postData.dateTime,
+                imageUrl: event.postData.imageUrl,
+                myEmojis: [],
+                newsUrl: event.postData.newsUrl,
+                source: event.postData.source,
+                summary: event.postData.summary,
+                tags: event.postData.tags,
+                yt: event.postData.yt,
+              love: event.postData.love
+            ));
+          }
           emit(GetPostSuccessState(listOfPosts:data));
         }
         else{

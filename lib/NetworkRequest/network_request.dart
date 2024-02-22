@@ -9,99 +9,21 @@ import 'app_exception.dart';
 class NetworkRequest {
   static const int timeOutDuration = 20;
 
-  Future deleteRequest(String api) async {
-    var token = await SharedData.getUserid("uid");
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token}'
-    };
-    try {
-      http.Request request = http.Request('DELETE', Uri.parse(api));
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send()
-      .timeout(const Duration(seconds: timeOutDuration));
-      return _processResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet connection', api.toString());
-    } on TimeoutException {
-      throw RequestTimeOutException(
-          'API not responded in time', api.toString());
-    }
-  }
 
-  Future getRequest(String api) async {
-    var token = await SharedData.getUserid("uid");
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    try {
-      http.Request request = http.Request('GET', Uri.parse(api));
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send()
-      .timeout(const Duration(seconds: timeOutDuration));
-      return _processResponse(response);
-    } on SocketException {
-      return throw FetchDataException('No Internet connection', api.toString());
-    } on TimeoutException {
-      return throw RequestTimeOutException(
-          'API not responded in time', api.toString());
-    }
-  }
-
-  Future putRequest(Map body, String api) async {
-    var token = await SharedData.getUserid("uid");
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token'
-    };
-    try {
-      http.Request request = http.Request('PUT', Uri.parse(api));
-      request.body = json.encode(body);
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send().
-      timeout(const Duration(seconds: timeOutDuration));
-      return _processResponse(response);
-    } on SocketException {
-      return throw FetchDataException('No Internet connection', api.toString());
-    } on TimeoutException {
-      return throw RequestTimeOutException(
-          'API not responded in time', api.toString());
-    }
-  }
-
-  Future postRequest( Map body, String api) async {
-    var token = await SharedData.getUserid("uid");
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      // 'Authorization': 'Bearer $token}'
-    };
-    try {
-      http.Request request = http.Request('POST', Uri.parse(api));
-      request.body = json.encode(body);
-      request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send().timeout(const Duration(seconds: timeOutDuration));
-      return _processResponse(response);
-    } on SocketException {
-      return throw InternetException('No Internet connection', api.toString());
-    } on TimeoutException {
-      return throw RequestTimeOutException(
-          'API not responded in time', api.toString());
-    }
-  }
 
   //original
   Future postMethodRequest(Map body, String api) async {
     var token = await SharedData.getUserid("uid");
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token}'
+      'Authorization': 'Bearer $token}',
     };
     try {
       http.Request request = http.Request('POST', Uri.parse(api));
       request.body = json.encode(body);
       request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send()
+      http.StreamedResponse response = await request
+          .send()
           .timeout(const Duration(seconds: timeOutDuration));
       return _processResponse(response);
     } on SocketException {
@@ -122,7 +44,8 @@ class NetworkRequest {
       http.Request request = http.Request('PUT', Uri.parse(api));
       request.body = json.encode(body);
       request.headers.addAll(headers);
-      http.StreamedResponse response = await request.send()
+      http.StreamedResponse response = await request
+          .send()
           .timeout(const Duration(seconds: timeOutDuration));
       return _processResponse(response);
     } on SocketException {

@@ -7,7 +7,7 @@ class HomeRepo {
       {required String email, required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
     try {
-      var result = await networkRequest.postRequest({
+      var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Skip": skip,
         "Limit": limit
@@ -29,7 +29,7 @@ class HomeRepo {
       {required String email, required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
     try {
-      var result = await networkRequest.postRequest({
+      var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Skip": skip,
         "Limit": limit
@@ -56,12 +56,13 @@ class HomeRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     try {
-      var result = await networkRequest.postRequest({
+      var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Post_id": postId,
         "Emojis_type": emojisType,
         "Previous_emojis_type": previousEmojiType
-      }, AllApi.reactionOnPost);
+      },
+          AllApi.reactionOnPost);
       print("ressss:$result");
       if(result["Status"]=="Success"){
         return "success";

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:neuralcode/View/Auth/register.dart';
+import 'package:neuralcode/View/Auth/sign_in.dart';
 import 'package:neuralcode/View/Home/home.dart';
 import 'package:neuralcode/View/Splash/splash.dart';
 
@@ -17,6 +18,9 @@ class Routes {
         case RouteName.splash:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SplashScreen());
+        case RouteName.signIn:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const SignIn());
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

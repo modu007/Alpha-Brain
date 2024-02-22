@@ -10,7 +10,7 @@ class AuthRepo{
     NetworkRequest networkRequest = NetworkRequest();
     try {
       var result = await networkRequest
-          .postRequest({
+          .postMethodRequest({
         "FullName": fullName,
         "Email": email,
         "Gender": gender,

@@ -44,6 +44,7 @@ dependencies:
   flutter_reaction_button: ^3.0.0+3
   colorful_safe_area: ^1.0.0
   dropdown_button2: ^2.3.9
+  google_fonts: ^6.1.0
 
 dev_dependencies:
   flutter_test:

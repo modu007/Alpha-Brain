@@ -9,5 +9,5 @@ class AllApi {
   static const topPicks = "$baseUrl/top_picks/";
 
   //for reaction
-  static const reactionOnPost = "$baseUrl/post/reaction";
+  static const reactionOnPost = "$baseUrl/post/reaction/";
 }

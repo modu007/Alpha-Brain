@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SimpleText extends StatelessWidget {
   final String text;
@@ -28,14 +29,14 @@ class SimpleText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: TextStyle(
-          fontFamily: fontFamily,
+      style: GoogleFonts.besley(
           color: fontColor,
           fontSize: fontSize,
           fontWeight: fontWeight,
           height: textHeight,
-          overflow: overflow,
-          decoration: textDecoration),
+          decoration: textDecoration,
+      ),
+      overflow: overflow,
       textAlign: textAlign,
       maxLines: maxLines,
     );

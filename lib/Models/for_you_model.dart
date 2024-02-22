@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final forYouModel = forYouModelFromJson(jsonString);
+
 import 'dart:convert';
 
 ForYouModel forYouModelFromJson(String str) => ForYouModel.fromJson(json.decode(str));
@@ -8,6 +12,7 @@ class ForYouModel {
   final String id;
   final String dateTime;
   final String imageUrl;
+  final int? love;
   final List<dynamic> myEmojis;
   final String newsUrl;
   final String source;
@@ -19,6 +24,7 @@ class ForYouModel {
     required this.id,
     required this.dateTime,
     required this.imageUrl,
+    required this.love,
     required this.myEmojis,
     required this.newsUrl,
     required this.source,
@@ -31,6 +37,7 @@ class ForYouModel {
     id: json["_id"],
     dateTime: json["date_time"],
     imageUrl: json["image_url"],
+    love: json["love"] ?? null,
     myEmojis: List<dynamic>.from(json["my_emojis"].map((x) => x)),
     newsUrl: json["news_url"],
     source: json["source"],
@@ -43,6 +50,7 @@ class ForYouModel {
     "_id": id,
     "date_time": dateTime,
     "image_url": imageUrl,
+    "love": love,
     "my_emojis": List<dynamic>.from(myEmojis.map((x) => x)),
     "news_url": newsUrl,
     "source": source,

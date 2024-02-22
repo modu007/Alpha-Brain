@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/register_event.dart';
 import 'package:neuralcode/Bloc/AuthBloc/register_state.dart';
-import 'package:neuralcode/Repositories/AuthRepo/SignUpRepo.dart';
+import 'package:neuralcode/Repositories/AuthRepo/signUpRepo.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc() : super(RegisterInitial()) {

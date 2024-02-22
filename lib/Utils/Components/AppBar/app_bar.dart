@@ -1,31 +1,73 @@
 import 'package:flutter/material.dart';
+import 'package:neuralcode/Utils/Color/colors.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
-import 'package:svg_flutter/svg.dart';
+import 'package:svg_flutter/svg_flutter.dart';
 
 class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({super.key});
+  final TabController tabController;
+  const HomeAppBar({super.key, required this.tabController});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 20),
+      child: Column(
         children: [
-          SvgPicture.asset("assets/svg/home.svg",height: 35,width: 35,),
-          const SizedBox(width: 10,),
-          const SimpleText(text: "Neural Code", fontSize: 25,fontWeight: FontWeight.w500,),
-          const Spacer(),
-          SvgPicture.asset("assets/svg/filter.svg",height: 35,width: 35,),
-          const SizedBox(width: 10,),
-         SizedBox(
-           height: 45,
-           width: 45,
-           child:  ClipRRect(
-             borderRadius: BorderRadius.circular(25),
-             child: Image.asset("assets/images/profile-1.jpg"),
-           ),
-         )
+          Row(
+            children: [
+            const SimpleText(
+              text: "Alpha Brains",
+              fontSize: 24,
+              fontColor: ColorClass.headingColor,
+              fontWeight: FontWeight.w500,
+            ),
+              const Spacer(),
+              SvgPicture.asset("assets/svg/menu.svg")
+            ],
+          ),
+          SizedBox(
+            width: 150,
+            child: TabBar(
+              controller: tabController,
+              dividerColor: Colors.transparent,
+              indicatorSize: TabBarIndicatorSize.label,
+              indicatorColor: const Color(0xff4EB3CA),
+              labelPadding: EdgeInsets.zero,
+              indicatorPadding: const EdgeInsets.symmetric(horizontal: 8),
+              unselectedLabelStyle: const TextStyle(color: Color(0xff8698A9)),
+              labelColor: Colors.black,
+              tabs: const [
+                Tab(
+                    child: SimpleText(
+                  text: 'For you',
+                  fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                )),
+                Tab(
+                    child: SimpleText(
+                  text: 'Top picks',
+                  fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    )),
+              ],
+            ),
+          ),
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.transparent,
+                  Colors.black12, // Adjust the color and opacity as needed
+                  Colors.transparent,
+                ],
+                stops: [0, 0.5, 1],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+            height: 1.0, // Adjust the height of the divider
+          ),
         ],
       ),
     );
