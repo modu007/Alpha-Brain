@@ -10,6 +10,7 @@ String forYouModelToJson(ForYouModel data) => json.encode(data.toJson());
 
 class ForYouModel {
   final String id;
+  final int? bookmarkCount;
   final String dateTime;
   final String imageUrl;
   final int? love;
@@ -22,6 +23,7 @@ class ForYouModel {
 
   ForYouModel({
     required this.id,
+    required this.bookmarkCount,
     required this.dateTime,
     required this.imageUrl,
     required this.love,
@@ -35,9 +37,10 @@ class ForYouModel {
 
   factory ForYouModel.fromJson(Map<String, dynamic> json) => ForYouModel(
     id: json["_id"],
+    bookmarkCount: json["bookmark_count"],
     dateTime: json["date_time"],
     imageUrl: json["image_url"],
-    love: json["love"] ?? null,
+    love: json["love"],
     myEmojis: List<dynamic>.from(json["my_emojis"].map((x) => x)),
     newsUrl: json["news_url"],
     source: json["source"],
@@ -48,6 +51,7 @@ class ForYouModel {
 
   Map<String, dynamic> toJson() => {
     "_id": id,
+    "bookmark_count": bookmarkCount,
     "date_time": dateTime,
     "image_url": imageUrl,
     "love": love,

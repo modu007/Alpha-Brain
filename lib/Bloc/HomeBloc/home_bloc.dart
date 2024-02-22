@@ -11,6 +11,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<TabChangeEvent>(tabChangeEvent);
     on<PaginationEvent>(paginationEvent);
     on<PostLikeEvent>(postLikeEvent);
+    on<BookmarkPostEvent>(bookmarkPostEvent);
   }
   FutureOr<void> getPostInitialEvent(
       HomeEvent event, Emitter<HomeState> emit) async {
@@ -116,7 +117,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 summary: event.postData.summary,
                 tags: event.postData.tags,
                 yt: event.postData.yt,
-                love: event.postData.love
+                love: event.postData.love,
+              bookmarkCount: event.postData.bookmarkCount
             ));
           }else{
             data.insert(index, ForYouModel(
@@ -129,7 +131,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 summary: event.postData.summary,
                 tags: event.postData.tags,
                 yt: event.postData.yt,
-              love: event.postData.love
+              love: event.postData.love,
+                bookmarkCount: event.postData.bookmarkCount
             ));
           }
           emit(GetPostSuccessState(listOfPosts:data));
@@ -141,5 +144,72 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       catch(error){
         emit(GetPostFailureState(errorMessage: "Something went wrong"));
       }
+  }
+
+  FutureOr<void> bookmarkPostEvent(
+      BookmarkPostEvent event, Emitter<HomeState> emit) async {
+    try{
+      var result = await HomeRepo.bookmarkPost(
+          email: "satishlangayan@gmail.com",
+          postId: event.postData.id,
+        bookmark: event.bookmark
+      );
+      if(result == "success"){
+        var data = event.listOfData;
+        int index=0;
+        for(int i=0;i<data.length;i++){
+          if(event.postData.id == data[i].id){
+            break;
+          }
+          index+=1;
+        }
+        data.removeAt(index);
+        data.insert(index, ForYouModel(
+            id: event.postData.id,
+            dateTime: event.postData.dateTime,
+            imageUrl: event.postData.imageUrl,
+            myEmojis: event.postData.myEmojis,
+            newsUrl: event.postData.newsUrl,
+            source: event.postData.source,
+            summary: event.postData.summary,
+            tags: event.postData.tags,
+            yt: event.postData.yt,
+            love: event.postData.love,
+            bookmarkCount: event.bookmark == true ?1:null
+        ));
+        emit(GetPostSuccessState(listOfPosts:data));
+      }
+      else if(result =="removed"){
+        var data = event.listOfData;
+        int index=0;
+        for(int i=0;i<data.length;i++){
+          if(event.postData.id == data[i].id){
+            break;
+          }
+          index+=1;
+        }
+        data.removeAt(index);
+        data.insert(index, ForYouModel(
+            id: event.postData.id,
+            dateTime: event.postData.dateTime,
+            imageUrl: event.postData.imageUrl,
+            myEmojis: event.postData.myEmojis,
+            newsUrl: event.postData.newsUrl,
+            source: event.postData.source,
+            summary: event.postData.summary,
+            tags: event.postData.tags,
+            yt: event.postData.yt,
+            love: event.postData.love,
+            bookmarkCount: 0
+        ));
+        emit(GetPostSuccessState(listOfPosts:data));
+      }
+      else{
+        emit(GetPostFailureState(errorMessage: "Error"));
+      }
+    }
+    catch(error){
+      emit(GetPostFailureState(errorMessage: "Something went wrong"));
+    }
   }
 }

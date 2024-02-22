@@ -72,4 +72,32 @@ class HomeRepo {
       print("sign up repo $error");
     }
   }
+
+  static Future bookmarkPost(
+      {
+        required String email,
+        required String postId,
+       required bool bookmark
+      }) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    try {
+      var result = await networkRequest.postMethodRequest({
+        "Email": email,
+        "Post_id": postId,
+        "BookMark": bookmark
+      },
+          AllApi.bookmarkOnPost);
+      print("ressss:$result");
+      if(result["Status"]=="success"&& result["Message"]=="Post bookmarked"){
+        return "success";
+      }
+      else if(result["Status"]=="success" &&
+          result["Message"] == "Bookmarked removed"){
+        return "removed";
+      }
+      return "something went wrong";
+    } catch (error) {
+      print("sign up repo $error");
+    }
+  }
 }

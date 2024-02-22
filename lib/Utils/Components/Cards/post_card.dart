@@ -33,6 +33,9 @@ class PostListView extends StatelessWidget{
         else{
           bool emojiTypeBool=false;
            var emojiType="";
+           bool bookmarkOrNot =
+           data[index].bookmarkCount == null ||
+          data[index].bookmarkCount==0 ? false:true;
             if(data[index].myEmojis.isNotEmpty){
               emojiType = data[index].myEmojis[0]["emoji"];
               emojiTypeBool=true;
@@ -227,22 +230,35 @@ class PostListView extends StatelessWidget{
                       Positioned(
                         bottom: 10,
                         left: 100,
-                        child: Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                  color: const Color(0xffF8F8FA)
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.grey,
-                                  blurRadius: 2,
-                                )
-                              ]
+                        child: InkWell(
+                          onTap: (){
+                            bookmarkOrNot =!bookmarkOrNot;
+                            BlocProvider.of<HomeBloc>(context).add(
+                               BookmarkPostEvent(
+                                   postData: data[index],
+                                   listOfData: data,
+                                   bookmark: bookmarkOrNot)
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: const Color(0xffF8F8FA)
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 2,
+                                  )
+                                ]
+                            ),
+                            child: bookmarkOrNot ?
+                            SvgPicture.asset("assets/svg/bookmarked.svg"):
+                            SvgPicture.asset("assets/svg/bookmark.svg"),
                           ),
-                          child: SvgPicture.asset("assets/svg/bookmark.svg"),
                         ),
                       ),
                     ],
@@ -285,57 +301,6 @@ class PostListView extends StatelessWidget{
                           ),
                         );
                       }),
-                  // const SizedBox(height: 10,),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       emojiTypeBool ?
-                  //       InkWell(
-                  //         onTap: (){
-                  //           BlocProvider.of<HomeBloc>(context).add(
-                  //               PostLikeEvent(
-                  //                   postData: data[index],
-                  //                   previousEmojiType: emojiType,
-                  //                   emojisType: "",
-                  //                   listOfData: data)
-                  //           );
-                  //         },
-                  //           child: const Icon(Icons.favorite,color: Colors.red,)) :
-                  //       InkWell(
-                  //         onTap: (){
-                  //           BlocProvider.of<HomeBloc>(context).add(
-                  //               PostLikeEvent(
-                  //                   postData: data[index],
-                  //                   previousEmojiType: emojiType,
-                  //                   emojisType: "love",
-                  //                   listOfData: data)
-                  //           );
-                  //         },
-                  //         child: const Icon(
-                  //             Icons.favorite_outline
-                  //         ),
-                  //       ),
-                  //       Container(
-                  //         padding: const EdgeInsets.symmetric(
-                  //             horizontal: 10,
-                  //             vertical: 5),
-                  //         decoration: BoxDecoration(
-                  //           color: Colors.black54,
-                  //           borderRadius: BorderRadius.circular(10),
-                  //         ),
-                  //         child: const SimpleText(
-                  //           text:"Ask jury",
-                  //           fontSize: 15,
-                  //           fontColor: Colors.white,
-                  //           fontWeight: FontWeight.w500,
-                  //         ),
-                  //       ),
-                  //       SvgPicture.asset("assets/svg/bookmark.svg",),
-                  //     ],
-                  //   ),
-                  // ),
                   const SizedBox(height: 10,),
                 ],
               ),

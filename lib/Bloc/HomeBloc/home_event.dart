@@ -33,4 +33,17 @@ class PaginationEvent extends HomeEvent{
   });
 }
 
+class BookmarkPostEvent extends HomeEvent{
+  final ForYouModel postData;
+  final List<ForYouModel> listOfData;
+  final bool bookmark;
+  BookmarkPostEvent({
+    required this.postData,
+    required this.listOfData,
+    required this.bookmark,
+  });
+}
+
+
+
 
