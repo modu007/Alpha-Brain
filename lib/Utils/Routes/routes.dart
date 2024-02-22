@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import 'package:neuralcode/View/Auth/otp_verification.dart';
 import 'package:neuralcode/View/Auth/register.dart';
 import 'package:neuralcode/View/Auth/sign_in.dart';
 import 'package:neuralcode/View/Home/home.dart';
@@ -21,6 +22,9 @@ class Routes {
         case RouteName.signIn:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignIn());
+        case RouteName.otpVerification:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const OtpVerification());
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

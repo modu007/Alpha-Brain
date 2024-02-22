@@ -8,12 +8,16 @@ class TextFieldContainer extends StatelessWidget {
     this.validator,
     required this.hintText,
     this.suffixIcon,
+    this.onTap,
+    this.readOnly
   });
 
   final TextEditingController emailController;
   final String? Function(String?)? validator;
   final String hintText;
   final Widget? suffixIcon;
+  final void Function()? onTap;
+  final bool? readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +37,8 @@ class TextFieldContainer extends StatelessWidget {
               )
           ),
           child: TextFormField(
+            readOnly: readOnly ?? false,
+            onTap: onTap,
             validator: validator,
             controller: emailController,
             maxLines: 1,

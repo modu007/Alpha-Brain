@@ -3,4 +3,5 @@ class RouteName {
   static const String register = 'register';
   static const String splash = 'splash';
   static const String signIn = 'sign_in';
+  static const String otpVerification = 'otp_verify';
 }

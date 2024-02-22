@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/regex.dart';
 import 'package:svg_flutter/svg.dart';
+import '../../Bloc/AuthBloc/register_bloc.dart';
+import '../../Bloc/AuthBloc/register_event.dart';
+import '../../Bloc/AuthBloc/register_state.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
+import '../../Utils/Routes/route_name.dart';
 
 class Register extends StatefulWidget {
-  final String? restorationId;
-  const Register({super.key, this.restorationId});
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
 }
 
-class _RegisterState extends State<Register> with RestorationMixin{
+class _RegisterState extends State<Register>{
   TextEditingController nameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+  bool isEmailValid = false;
   late Regex regex;
   final List<String> genderItems = [
     'Male',
@@ -29,64 +37,7 @@ class _RegisterState extends State<Register> with RestorationMixin{
   bool isEmailDone =false;
   bool isNameDone =false;
 
-  @override
-  String? get restorationId => widget.restorationId;
-
-  final RestorableDateTime _selectedDate =
-  RestorableDateTime(DateTime(2014, 7, 25));
-  late final RestorableRouteFuture<DateTime?> _restorableDatePickerRouteFuture =
-  RestorableRouteFuture<DateTime?>(
-    onComplete: _selectDate,
-    onPresent: (NavigatorState navigator, Object? arguments) {
-      return navigator.restorablePush(
-        _datePickerRoute,
-        arguments: _selectedDate.value.millisecondsSinceEpoch,
-      );
-    },
-  );
-
-  @pragma('vm:entry-point')
-  static Route<DateTime> _datePickerRoute(
-      BuildContext context,
-      Object? arguments,
-      ) {
-    return DialogRoute<DateTime>(
-      context: context,
-      builder: (BuildContext context) {
-        return DatePickerDialog(
-          restorationId: 'date_picker_dialog',
-          initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: DateTime.fromMillisecondsSinceEpoch(arguments! as int),
-          firstDate: DateTime(1970),
-          lastDate: DateTime(2015),
-        );
-      },
-    );
-  }
-
-  @override
-  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    registerForRestoration(_selectedDate, 'selected_date');
-    registerForRestoration(
-        _restorableDatePickerRouteFuture, 'date_picker_route_future');
-  }
-
-  DateTime? _selectDate(DateTime? newSelectedDate) {
-    if (newSelectedDate != null) {
-      setState(() {
-        _selectedDate.value = newSelectedDate;
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //   content: Text(
-        //       'Selected: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
-        // ));
-      });
-      return newSelectedDate;
-    }else{
-      return null;
-    }
-  }
-
-  @override
+@override
   void initState() {
     super.initState();
      regex= Regex();
@@ -122,27 +73,89 @@ class _RegisterState extends State<Register> with RestorationMixin{
                   hintText: "Full Name",
                 ),
                 TextFieldContainer(
-                  emailController: emailController,
+                  emailController: usernameController,
                   hintText: "Username",
                 ),
                 TextFieldContainer(
-                  emailController: emailController,
+                  emailController: dobController,
                   hintText: "Date of birth",
                   suffixIcon: InkWell(
-                    onTap: () {
-                      _restorableDatePickerRouteFuture.present();
+                    onTap: () async{
+                      DateTime? datePicked = await showDatePicker(
+                          context: context,
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
+                        firstDate: DateTime(1970),
+                        lastDate: DateTime(2016));
+                      setState(() {
+                        dobController.text=""
+                            "${datePicked?.day.toString()}-"
+                            "${datePicked?.month.toString()}-"
+                            "${datePicked?.year.toString()}";
+                      });
                     },
                     child:Image.asset("assets/images/calender.png"),
                   ),
                 ),
-                TextFieldContainer(
-                  emailController: emailController,
-                  hintText: "Gender",
-                  suffixIcon: Image.asset("assets/images/down.jpg"),
+                Container(
+                  padding: const EdgeInsets.only(
+                      right: 10,),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xffE8ECF4),
+                    borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
+                    value: genderController.text.isEmpty
+                    ? null
+                    : genderController.text,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        genderController.text = newValue;
+                      }
+                      },
+                    items: ['Male', 'Female']
+                    .map<DropdownMenuItem<String>>(
+                      (String value) => DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      ),
+                    ).toList(),
+                    decoration: InputDecoration(
+                    hintText: "Gender",
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color(0xffE8ECF4),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: const BorderSide(
+                          color: Color(0xff4EB3CA),
+                          width: 2.0,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    hintStyle: GoogleFonts.besley(
+                    color: const Color(0xff8391A1),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    ),
+                    ),
+                  ),
                 ),
+                const SizedBox(height: 10,),
                 TextFieldContainer(
                   emailController: emailController,
                   hintText: "Email",
+                  validator: (val){
+                    if(regex.isValidEmail(emailController.text)){
+                      setState(() {
+                        isEmailValid=true;
+                      });
+                    }
+                  },
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
@@ -155,12 +168,31 @@ class _RegisterState extends State<Register> with RestorationMixin{
                   ),
                 ),
                 const SizedBox(height: 15,),
-                LoginButtons(
-                  size: size,
-                  onPressed: ()async{
-                    print(_selectedDate.value);
+                BlocConsumer<RegisterBloc, RegisterState>(
+                  listener: (context, state) {
+                    if (state is RegistrationSuccessFullState) {
+                      Navigator.pushNamed(context, RouteName.home);
+                    }
                   },
-                  centerText: "Register",
+                  builder: (context,state){
+                    if (state is RegisterLoadingState) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return LoginButtons(
+                      size: size,
+                      onPressed: ()async{
+                        BlocProvider.of<RegisterBloc>(context)
+                            .add(RegisterDataEvent(
+                            email: emailController.text,
+                            name: nameController.text,
+                            age: dobController.text,
+                            gender: selectedValue));
+                      },
+                      centerText: "Register",
+                    );
+                  },
                 ),
                 const SizedBox(height: 30,),
                 Container(
@@ -245,194 +277,3 @@ class _RegisterState extends State<Register> with RestorationMixin{
     );
   }
 }
-
-// Scaffold(
-// backgroundColor: ColorClass.backgroundColor,
-// body: ColorfulSafeArea(
-// color: ColorClass.backCardColor,
-// child: Stack(
-// children: [
-// Container(
-// height: size.height*0.6,
-// width: size.width,
-// decoration: const BoxDecoration(
-// color: ColorClass.backCardColor,
-// borderRadius: BorderRadius.only(
-// bottomRight: Radius.circular(20),
-// bottomLeft: Radius.circular(20),
-// )
-// ),
-// ),
-// Center(
-// child: Container(
-// height: size.height*0.8,
-// padding: const EdgeInsets.only(top: 50,left: 30,right: 30),
-// margin: const EdgeInsets.symmetric(horizontal: 20),
-// decoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(20),
-// color: Colors.white
-// ),
-// child: SingleChildScrollView(
-// child: Column(
-// children: [
-// TextFormContainer(
-// hintText: 'Name', controller: nameController,
-// onChanged: (val){
-// if(val.isNotEmpty){
-// setState(() {
-// isNameDone=true;
-// });
-// }
-// else{
-// setState(() {
-// isNameDone=false;
-// });
-// }
-// },
-// ),
-// TextFormContainer(
-// hintText: 'Email',
-// controller: emailController,
-// onChanged: (val){
-// if (regex.isValidEmail(emailController.text)) {
-// setState(() {
-// isEmailDone = true;
-// });
-// } else {
-// setState(() {
-// isEmailDone = false;
-// });
-// }
-// },
-// ),
-// Container(
-// margin: const EdgeInsets.symmetric(vertical: 10),
-// child: DropdownButtonFormField(
-// decoration: InputDecoration(
-// enabledBorder: OutlineInputBorder(
-// borderSide: const BorderSide(
-// width: 2,
-// color: ColorClass.backCardColor),
-// borderRadius: BorderRadius.circular(20),
-// ),
-// border: OutlineInputBorder(
-// borderSide: const BorderSide(
-// width: 2,
-// color: ColorClass.backCardColor),
-// borderRadius: BorderRadius.circular(20),
-// ),
-// fillColor: ColorClass.backgroundColor,
-// ),
-// dropdownColor: ColorClass.backgroundColor,
-// value: selectedValue,
-// onChanged: (val) {
-// setState(() {
-// selectedValue = val.toString();
-// });
-// },
-// items: const [
-// DropdownMenuItem(value: "Male", child: Text("Male")),
-// DropdownMenuItem(value: "Female", child: Text("Female")),
-// ]),
-// ),
-// Container(
-// margin: const EdgeInsets.symmetric(vertical: 5),
-// child: DropdownButtonFormField(
-// isExpanded: true,
-// decoration: InputDecoration(
-// enabledBorder: OutlineInputBorder(
-// borderSide: const BorderSide(
-// width: 2,
-// color: ColorClass.backCardColor),
-// borderRadius: BorderRadius.circular(20),
-// ),
-// border: OutlineInputBorder(
-// borderSide: const BorderSide(
-// width: 2,
-// color: ColorClass.backCardColor),
-// borderRadius: BorderRadius.circular(20),
-// ),
-// fillColor: ColorClass.backgroundColor,
-// ),
-// dropdownColor: ColorClass.backgroundColor,
-// value: selectedAge,
-// onChanged: (val) {
-// setState(() {
-// selectedAge = val.toString();
-// });
-// },
-// items: const [
-// DropdownMenuItem(
-// value: "15-30",
-// child: Text("15-30")),
-// DropdownMenuItem(
-// value: "30-35",
-// child: Text("30-35")),
-// DropdownMenuItem(
-// value: "35 Above",
-// child: Text("35 Above")),
-// ]),
-// ),
-// const SizedBox(height: 15,),
-// const SimpleText(
-// text: "We will send you-one time password(OTP)",
-// fontSize: 18,
-// textAlign: TextAlign.center,
-// ),
-// const SizedBox(height: 10,),
-// const SimpleText(
-// text: "Carrier rates may apply",
-// fontSize: 18,
-// textAlign: TextAlign.center,
-// fontColor: Colors.pink,
-// ),
-// const SizedBox(height: 10,),
-// BlocConsumer<RegisterBloc, RegisterState>(
-// listener: (context, state) {
-// if(state is RegistrationSuccessFullState){
-// Navigator.pushNamed(context, RouteName.home);
-// }
-// },
-// builder: (context, state) {
-// if(state is RegisterLoadingState){
-// return const Center(
-// child: CircularProgressIndicator(),
-// );
-// }
-// return InkWell(
-// onTap: (){
-// if(isEmailDone && isNameDone){
-// BlocProvider.of<RegisterBloc>(context)
-//     .add(RegisterDataEvent(
-// email: emailController.text,
-// name: nameController.text,
-// age: selectedAge,
-// gender: selectedValue));
-// }
-// },
-// child: Container(
-// width: 60,
-// height: 60,
-// padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-// margin: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-// decoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(40),
-// color: isEmailDone && isNameDone ?
-// ColorClass.backCardColor:Colors.black45,
-// ),
-// child:  Center(
-// child: SvgPicture.asset("assets/svg/next.svg"),
-// ),
-// ),
-// );
-// },
-// )
-// ],
-// ),
-// ),
-// ),
-// ),
-// ],
-// ),
-// ),
-// );

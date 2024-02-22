@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>RegisterBloc()),
       ],
       child: MaterialApp(
-        initialRoute: RouteName.home,
+        initialRoute: RouteName.register,
         onGenerateRoute: Routes.generateRoute,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
