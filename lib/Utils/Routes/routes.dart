@@ -23,8 +23,20 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const SignIn());
         case RouteName.otpVerification:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const OtpVerification());
+          if(argument is Map){
+            return MaterialPageRoute(
+                builder: (BuildContext context) =>  OtpVerification(
+                  email: argument["email"],
+                ));
+          }else{
+            return MaterialPageRoute(builder: (_) {
+              return const Scaffold(
+                body: Center(
+                  child: Text('No route defined'),
+                ),
+              );
+            });
+          }
       default:
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(

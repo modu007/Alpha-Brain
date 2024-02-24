@@ -5,9 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/regex.dart';
 import 'package:svg_flutter/svg.dart';
-import '../../Bloc/AuthBloc/register_bloc.dart';
-import '../../Bloc/AuthBloc/register_event.dart';
-import '../../Bloc/AuthBloc/register_state.dart';
+import '../../Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
+import '../../Bloc/AuthBloc/RegisterBloc/register_event.dart';
+import '../../Bloc/AuthBloc/RegisterBloc/register_state.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
@@ -171,7 +171,7 @@ class _RegisterState extends State<Register>{
                 BlocConsumer<RegisterBloc, RegisterState>(
                   listener: (context, state) {
                     if (state is RegistrationSuccessFullState) {
-                      Navigator.pushNamed(context, RouteName.home);
+                      Navigator.pushNamed(context, RouteName.otpVerification);
                     }
                   },
                   builder: (context,state){

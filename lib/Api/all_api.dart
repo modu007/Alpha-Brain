@@ -4,8 +4,9 @@ class AllApi {
   //register user
   static const registerUser = "$baseUrl/register/user/";
 
-  //send otp
+  //otp
   static const sendOtp = "$baseUrl/send/auth_code/";
+  static const verifyOtp = "$baseUrl/verify/auth_code/";
 
   //tabs data
   static const forYou   = "$baseUrl/for_you/";

@@ -8,17 +8,17 @@ class SharedData {
 
   static Future setToken(String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("uid", token);
+    preferences.setString("token", token);
   }
 
-  static Future getFCMToken(String key) async {
+  static Future getRefreshToken(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get(key);
   }
 
-  static Future setFCMToken(String token) async {
+  static Future setRefreshToken(String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("token", token);
+    preferences.setString("refresh", token);
   }
 
   static Future removeUserid() async {
