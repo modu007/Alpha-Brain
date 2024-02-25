@@ -14,12 +14,12 @@ class BackButtonContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: onPressed,
+          child: Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -30,15 +30,15 @@ class BackButtonContainer extends StatelessWidget {
             ),
             child:SvgPicture.asset("assets/svg/back_arrow.svg"),
           ),
-          const SizedBox(height: 15,),
-          SimpleText(
-            text: headingText,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            fontColor: const Color(0xff1E232C),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 15,),
+        SimpleText(
+          text: headingText,
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+          fontColor: const Color(0xff1E232C),
+        ),
+      ],
     );
   }
 }

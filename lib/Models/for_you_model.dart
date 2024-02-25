@@ -10,57 +10,57 @@ String forYouModelToJson(ForYouModel data) => json.encode(data.toJson());
 
 class ForYouModel {
   final String id;
-  final int? bookmarkCount;
   final String dateTime;
-  final String imageUrl;
-  final int? love;
+  final String? imageUrl;
+  final List<dynamic>? myBookmark;
   final List<dynamic> myEmojis;
   final String newsUrl;
   final String source;
   final Summary summary;
   final List<String> tags;
   final bool yt;
+  final int? love;
 
   ForYouModel({
     required this.id,
-    required this.bookmarkCount,
     required this.dateTime,
     required this.imageUrl,
-    required this.love,
+    required this.myBookmark,
     required this.myEmojis,
     required this.newsUrl,
     required this.source,
     required this.summary,
     required this.tags,
     required this.yt,
+    required this.love
   });
 
   factory ForYouModel.fromJson(Map<String, dynamic> json) => ForYouModel(
     id: json["_id"],
-    bookmarkCount: json["bookmark_count"],
     dateTime: json["date_time"],
     imageUrl: json["image_url"],
-    love: json["love"],
+    myBookmark: List<dynamic>.from(json["my_bookmark"].map((x) => x)),
     myEmojis: List<dynamic>.from(json["my_emojis"].map((x) => x)),
     newsUrl: json["news_url"],
     source: json["source"],
     summary: Summary.fromJson(json["summary"]),
     tags: List<String>.from(json["tags"].map((x) => x)),
     yt: json["yt"],
+    love: json["love"],
   );
 
   Map<String, dynamic> toJson() => {
     "_id": id,
-    "bookmark_count": bookmarkCount,
     "date_time": dateTime,
     "image_url": imageUrl,
-    "love": love,
+    "my_bookmark": List<dynamic>.from(myBookmark!.map((x) => x)),
     "my_emojis": List<dynamic>.from(myEmojis.map((x) => x)),
     "news_url": newsUrl,
     "source": source,
     "summary": summary.toJson(),
     "tags": List<dynamic>.from(tags.map((x) => x)),
     "yt": yt,
+    "love": love,
   };
 }
 

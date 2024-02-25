@@ -1,11 +1,16 @@
 import 'package:neuralcode/Models/for_you_model.dart';
+import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import '../../Api/all_api.dart';
 import '../../NetworkRequest/network_request.dart';
 
 class HomeRepo {
   static Future getAllPostDataOfForYou(
-      {required String email, required int skip,required int limit}) async {
+      {required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    print(email);
+    print(skip);
+    print(limit);
     try {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
@@ -13,7 +18,8 @@ class HomeRepo {
         "Limit": limit
       }, AllApi.forYou);
       if(result is List){
-      List<ForYouModel> data =[];
+        print(result);
+        List<ForYouModel> data =[];
         for(int i=0;i<result.length;i++){
           data.add(ForYouModel.fromJson(result[i]));
         }
@@ -21,13 +27,15 @@ class HomeRepo {
       }
       return "something went wrong";
     } catch (error) {
-      print("sign up repo $error");
+      print("on pagination repo $error");
     }
   }
 
   static Future getAllPostDataOfTopPicks(
-      {required String email, required int skip,required int limit}) async {
+      {required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+
     try {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
@@ -49,12 +57,12 @@ class HomeRepo {
 
   static Future reactionOnPost(
       {
-        required String email,
         required String postId,
         required String previousEmojiType,
         required String emojisType,
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
     try {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
@@ -75,11 +83,12 @@ class HomeRepo {
 
   static Future bookmarkPost(
       {
-        required String email,
         required String postId,
        required bool bookmark
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+
     try {
       var result = await networkRequest.postMethodRequest({
         "Email": email,

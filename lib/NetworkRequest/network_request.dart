@@ -13,7 +13,7 @@ class NetworkRequest {
 
   //original
   Future postMethodRequest(Map body, String api) async {
-    var token = await SharedData.getUserid("uid");
+    var token = await SharedData.getToken("token");
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token}',
@@ -35,7 +35,7 @@ class NetworkRequest {
   }
 
   Future putMethodRequest(Map body, String api) async {
-    var token = await SharedData.getUserid("uid");
+    var token = await SharedData.getToken("token");
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
@@ -57,7 +57,7 @@ class NetworkRequest {
   }
 
   Future getMethodRequest(String api) async {
-    var token = await SharedData.getUserid("uid");
+    var token = await SharedData.getToken("token");
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'
@@ -78,7 +78,7 @@ class NetworkRequest {
   }
 
   Future deleteMethodRequest(String api) async {
-    var token = await SharedData.getUserid("uid");
+    var token = await SharedData.getToken("token");
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token}'
@@ -99,7 +99,7 @@ class NetworkRequest {
   }
 
   Future postDioRequest(String api, dynamic data) async {
-    var token = await SharedData.getUserid("uid");
+    var token = await SharedData.getToken("token");
     Map<String, String> headers = {
       'Content-Type': 'multipart/form-data',
       'Authorization': 'Bearer $token'

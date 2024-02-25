@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 
@@ -12,13 +13,23 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin{
   late AnimationController controller;
-
+  Future splash()async{
+    var token = await SharedData.getToken("token");
+    if(token!= null){
+      Timer(
+          const Duration(seconds: 5),
+              () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
+              RouteName.home, (route) => false )
+      );
+    }else{
+      Timer(
+          const Duration(seconds: 5),
+              () => Navigator.of(context).pushNamed(RouteName.register)
+      );
+    }
+  }
   @override
   void initState() {
-    Timer(
-        const Duration(seconds: 5),
-            () => Navigator.of(context).pushNamed(RouteName.register)
-    );
     controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 5),
@@ -27,6 +38,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     });
     controller.repeat();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    splash();
+    super.didChangeDependencies();
   }
 
   @override

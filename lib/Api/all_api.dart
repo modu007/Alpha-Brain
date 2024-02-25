@@ -23,4 +23,7 @@ class AllApi {
 
   //get liked posts
   static const getLikedPosts = "$baseUrl/get/liked_post/";
+
+  //user availability
+  static const userAvailability = "$baseUrl/check/username_availability?username=";
 }

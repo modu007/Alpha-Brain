@@ -14,11 +14,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
    if(event.isValidEmail){
      emit(SignInLoadingState());
      try{
-       print("here");
        var result = await AuthRepo.signInUser(
          email: event.email,
        );
-       print(result);
        if(result == "success"){
          emit(SignInSuccessState());
        }

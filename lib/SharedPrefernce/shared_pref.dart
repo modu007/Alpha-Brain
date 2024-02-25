@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedData {
-  static Future getUserid(String key) async {
+  static Future getToken(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get(key);
   }
@@ -19,6 +19,16 @@ class SharedData {
   static Future setRefreshToken(String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("refresh", token);
+  }
+
+  static Future getEmail(String key) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return preferences.get(key);
+  }
+
+  static Future setEmail(String token) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("email", token);
   }
 
   static Future removeUserid() async {

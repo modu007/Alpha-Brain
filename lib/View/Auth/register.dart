@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/regex.dart';
 import 'package:svg_flutter/svg.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_event.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_state.dart';
+import '../../Bloc/AuthBloc/UsernameCubit/username_state.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
@@ -26,7 +29,9 @@ class _RegisterState extends State<Register>{
   TextEditingController emailController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController genderController = TextEditingController();
+  final focusNode = FocusNode();
   bool isEmailValid = false;
+  bool isUserNameValid = false;
   late Regex regex;
   final List<String> genderItems = [
     'Male',
@@ -37,8 +42,16 @@ class _RegisterState extends State<Register>{
   bool isEmailDone =false;
   bool isNameDone =false;
 
+
 @override
   void initState() {
+  BlocProvider.of<UsernameCubit>(context).userInitialEvent();
+  focusNode.addListener(() {
+    if(!focusNode.hasFocus){
+      BlocProvider.of<UsernameCubit>(context).usernameAvailability(
+          usernameController.text);
+    }
+  });
     super.initState();
      regex= Regex();
   }
@@ -47,6 +60,9 @@ class _RegisterState extends State<Register>{
   nameController.dispose();
   emailController.dispose();
   usernameController.dispose();
+  dobController.dispose();
+  genderController.dispose();
+  focusNode.dispose();
     super.dispose();
   }
   @override
@@ -65,20 +81,119 @@ class _RegisterState extends State<Register>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 BackButtonContainer(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context);
+                  },
                   headingText: "Hello! Register to get started",),
                 const SizedBox(height: 40,),
                 TextFieldContainer(
-                    emailController: emailController,
+                    emailController: nameController,
                   hintText: "Full Name",
                 ),
-                TextFieldContainer(
-                  emailController: usernameController,
-                  hintText: "Username",
-                ),
+                BlocBuilder<UsernameCubit,UsernameState>(
+                builder: (context, state) {
+                  if(state is UsernameSuccessState){
+                    isUserNameValid =true;
+                    return Container(
+                      width: size.width,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffE8ECF4),
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: TextFormField(
+                        focusNode: focusNode,
+                        controller: usernameController,
+                        decoration: InputDecoration(
+                          suffixIcon: SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: Image.asset("assets/images/Right.jpg"),
+                          ),
+                            border: InputBorder.none,
+                            hintText: "UserName",
+                            hintStyle: GoogleFonts.besley(
+                              color: const Color(0xff8391A1),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            contentPadding: const EdgeInsets.only(left: 15)
+                        ),
+                      ),
+                    );
+                  }
+                  else if (state is UsernameExistsState){
+                    isUserNameValid =false;
+                    return Column(
+                      children: [
+                        Container(
+                          width: size.width,
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          decoration: BoxDecoration(
+                              color: const Color(0xffE8ECF4),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: TextFormField(
+                            focusNode: focusNode,
+                            controller: usernameController,
+                            decoration: InputDecoration(
+                              suffixIcon: SizedBox(
+                                height: 10,
+                                width: 10,
+                                child: Image.asset("assets/images/Cancel.jpg"),
+                              ),
+                                border: InputBorder.none,
+                                hintText: "UserName",
+                                hintStyle: GoogleFonts.besley(
+                                  color: const Color(0xff8391A1),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                contentPadding: const EdgeInsets.only(left: 15)
+                            ),
+                          ),
+                        ),
+                        const Align(
+                          alignment: Alignment.topLeft,
+                          child: SimpleText(
+                              text: "That username has taken. Please enter another.",
+                              fontSize: 12,
+                            fontColor: Colors.red,
+                          ),
+                        )
+                      ],
+                    );
+                  }
+                  isUserNameValid =false;
+                  return Container(
+                  width: size.width,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                      color: const Color(0xffE8ECF4),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: TextFormField(
+                    focusNode: focusNode,
+                    controller: usernameController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "UserName",
+                      hintStyle: GoogleFonts.besley(
+                        color: const Color(0xff8391A1),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      contentPadding: const EdgeInsets.only(left: 15)
+                    ),
+                  ),
+                );
+                },
+              ),
+                const SizedBox(height: 10,),
                 TextFieldContainer(
                   emailController: dobController,
                   hintText: "Date of birth",
+                  readOnly: true,
                   suffixIcon: InkWell(
                     onTap: () async{
                       DateTime? datePicked = await showDatePicker(
@@ -98,7 +213,7 @@ class _RegisterState extends State<Register>{
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                      right: 10,),
+                      right: 25,left: 15,top: 10,bottom: 10),
                   width: size.width,
                   decoration: BoxDecoration(
                       color: const Color(0xffE8ECF4),
@@ -123,20 +238,7 @@ class _RegisterState extends State<Register>{
                     ).toList(),
                     decoration: InputDecoration(
                     hintText: "Gender",
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color(0xffE8ECF4),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color(0xff4EB3CA),
-                          width: 2.0,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                    border: InputBorder.none,
                     hintStyle: GoogleFonts.besley(
                     color: const Color(0xff8391A1),
                     fontSize: 15,
@@ -171,7 +273,24 @@ class _RegisterState extends State<Register>{
                 BlocConsumer<RegisterBloc, RegisterState>(
                   listener: (context, state) {
                     if (state is RegistrationSuccessFullState) {
-                      Navigator.pushNamed(context, RouteName.otpVerification);
+                      BlocProvider.of<RegisterBloc>(context)
+                          .add(SendOtp(email: state.email));
+                    }
+                    if(state is OtpSendState){
+                      Navigator.of(context).pushNamed(
+                        RouteName.otpVerification,arguments: {
+                          "email":state.email
+                      });
+                    }
+                    if(state is UsernameInvalidState){
+                      Fluttertoast.showToast(
+                          msg: "Invalid username",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          textColor: Colors.black,
+                          fontSize: 15.0
+                      );
                     }
                   },
                   builder: (context,state){
@@ -188,7 +307,10 @@ class _RegisterState extends State<Register>{
                             email: emailController.text,
                             name: nameController.text,
                             age: dobController.text,
-                            gender: selectedValue));
+                            gender: selectedValue,
+                          username: usernameController.text,
+                          isUsernameValid:isUserNameValid,
+                        ));
                       },
                       centerText: "Register",
                     );
@@ -257,8 +379,8 @@ class _RegisterState extends State<Register>{
                         fontColor: Colors.black),
                     InkWell(
                       onTap: () {
-                        // Navigator.pushReplacementNamed(
-                        //     context, RouteName.signIn);
+                        Navigator.popAndPushNamed(
+                            context, RouteName.signIn);
                       },
                       child: const SimpleText(
                           text: "Login Now",

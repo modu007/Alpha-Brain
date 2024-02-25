@@ -31,6 +31,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
+        skip=0;
+        limit=5;
         BlocProvider.of<HomeBloc>(context)
             .add(TabChangeEvent(tabIndex: _tabController.index));
       }

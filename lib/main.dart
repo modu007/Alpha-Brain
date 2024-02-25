@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_cubit.dart';
 import 'package:neuralcode/Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_bloc.dart';
+import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import 'Bloc/HomeBloc/home_bloc.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
@@ -26,9 +27,11 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>SignInBloc()),
         BlocProvider<OtpCubit>(
             create: (BuildContext context) =>OtpCubit()),
+        BlocProvider<UsernameCubit>(
+            create: (BuildContext context) =>UsernameCubit()),
       ],
       child: MaterialApp(
-        initialRoute: RouteName.signIn,
+        initialRoute: RouteName.splash,
         onGenerateRoute: Routes.generateRoute,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

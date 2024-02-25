@@ -17,8 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       HomeEvent event, Emitter<HomeState> emit) async {
     emit(GetPostLoadingState());
     try{
-      var result = await HomeRepo.getAllPostDataOfForYou(
-          email: "satishlangayan@gmail.com", skip: 0, limit: 5);
+      var result = await HomeRepo.getAllPostDataOfForYou(skip: 0, limit: 5);
       if(result is List<ForYouModel>){
         emit(GetPostSuccessState(listOfPosts:result));
       }else{
@@ -35,8 +34,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(GetPostLoadingState());
     if(event.tabIndex ==0){
       try{
-        var result = await HomeRepo.getAllPostDataOfForYou(
-            email: "satishlangayan@gmail.com", skip: 0, limit: 5);
+        var result = await HomeRepo.getAllPostDataOfForYou(skip: 0, limit: 5);
         if(result is List<ForYouModel>){
           emit(GetPostSuccessState(listOfPosts:result));
         }else{
@@ -49,8 +47,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     else{
       try{
-        var result = await HomeRepo.getAllPostDataOfTopPicks(
-            email: "satishlangayan@gmail.com", skip: 0, limit: 5);
+        var result = await HomeRepo.getAllPostDataOfTopPicks(skip: 0, limit: 5);
         if(result is List<ForYouModel>){
           emit(GetPostSuccessState(listOfPosts:result));
         }else{
@@ -67,7 +64,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       PaginationEvent event, Emitter<HomeState> emit) async {
       try{
         var result = await HomeRepo.getAllPostDataOfForYou(
-            email: "satishlangayan@gmail.com", skip: event.skip, limit: event.limit);
+            skip: event.skip, limit: event.limit);
         if(result is List<ForYouModel>){
           List<ForYouModel> allPostData = event.allPrevPostData;
           List<ForYouModel> resultData =[];
@@ -87,9 +84,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> postLikeEvent(
       PostLikeEvent event, Emitter<HomeState> emit) async {
-      try{
+    int? loveCount = event.postData.love;
+    try{
         var result = await HomeRepo.reactionOnPost(
-            email: "satishlangayan@gmail.com",
           emojisType: event.emojisType,
           previousEmojiType: event.previousEmojiType,
           postId: event.postData.id
@@ -105,6 +102,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
           data.removeAt(index);
           if(event.postData.myEmojis.isEmpty){
+            if(loveCount == null){
+              loveCount =1;
+            }else{
+              loveCount = loveCount+1;
+            }
             data.insert(index, ForYouModel(
                 id: event.postData.id,
                 dateTime: event.postData.dateTime,
@@ -117,10 +119,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 summary: event.postData.summary,
                 tags: event.postData.tags,
                 yt: event.postData.yt,
-                love: event.postData.love,
-              bookmarkCount: event.postData.bookmarkCount
+                love:loveCount,
+                myBookmark: event.postData.myBookmark,
             ));
           }else{
+            loveCount = loveCount!-1;
             data.insert(index, ForYouModel(
                 id: event.postData.id,
                 dateTime: event.postData.dateTime,
@@ -131,8 +134,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 summary: event.postData.summary,
                 tags: event.postData.tags,
                 yt: event.postData.yt,
-              love: event.postData.love,
-                bookmarkCount: event.postData.bookmarkCount
+                love: loveCount,
+              myBookmark: event.postData.myBookmark,
             ));
           }
           emit(GetPostSuccessState(listOfPosts:data));
@@ -150,7 +153,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       BookmarkPostEvent event, Emitter<HomeState> emit) async {
     try{
       var result = await HomeRepo.bookmarkPost(
-          email: "satishlangayan@gmail.com",
           postId: event.postData.id,
         bookmark: event.bookmark
       );
@@ -175,7 +177,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             tags: event.postData.tags,
             yt: event.postData.yt,
             love: event.postData.love,
-            bookmarkCount: event.bookmark == true ?1:null
+            myBookmark: [
+              {
+                "bookmarked": true
+              }
+            ]
         ));
         emit(GetPostSuccessState(listOfPosts:data));
       }
@@ -200,7 +206,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             tags: event.postData.tags,
             yt: event.postData.yt,
             love: event.postData.love,
-            bookmarkCount: 0
+          myBookmark: []
         ));
         emit(GetPostSuccessState(listOfPosts:data));
       }

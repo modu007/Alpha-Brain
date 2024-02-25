@@ -8,15 +8,18 @@ class AuthRepo{
     required String fullName,
     required String email,
     required String gender,
-    required String age}) async {
+    required String age,
+    required String username,
+  }) async {
     NetworkRequest networkRequest = NetworkRequest();
     try {
       var result = await networkRequest
           .postMethodRequest({
         "FullName": fullName,
         "Email": email,
-        "Gender": gender,
-        "Age": age
+        "Gender":gender,
+        "Age": age,
+        "Username": username
       },AllApi.registerUser);
       if(result["Status"]=="success"){
         return "success";
@@ -62,10 +65,10 @@ class AuthRepo{
         "Otp": otp,
         "Email":email
       },AllApi.verifyOtp);
-      print(result);
       if(result["Token"] != null){
         SharedData.setToken(result["Token"]);
         SharedData.setRefreshToken(result["Refresh_Token"]);
+        SharedData.setEmail(email);
         return "success";
       }
       else if(result["Status"]=="invalid_otp"){
@@ -73,6 +76,27 @@ class AuthRepo{
       }
       else{
         return "details provided are incorrect";
+      }
+    } catch (error) {
+      print("sign up repo $error");
+    }
+  }
+
+  static Future userAvailability({
+    required String userName,
+    }) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    try {
+      print("${AllApi.userAvailability}$userName");
+      var result = await networkRequest
+          .getMethodRequest("${AllApi.userAvailability}$userName");
+      if(result["Status"]=="username_available"){
+        return "success";
+      }
+      else if(result["Status"]=="username_exists"){
+        return "exists";
+      }else{
+        return "error";
       }
     } catch (error) {
       print("sign up repo $error");
