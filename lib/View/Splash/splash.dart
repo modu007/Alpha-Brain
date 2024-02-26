@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     }else{
       Timer(
           const Duration(seconds: 5),
-              () => Navigator.of(context).pushNamed(RouteName.register)
+              () => Navigator.of(context).pushNamed(RouteName.signIn)
       );
     }
   }
@@ -56,6 +56,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return Scaffold(
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),

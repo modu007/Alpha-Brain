@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
+import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
@@ -31,6 +32,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
+        print("Tab index changed: ${_tabController.index}");
         skip=0;
         limit=5;
         BlocProvider.of<HomeBloc>(context)
@@ -50,6 +52,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               limit: limit,
               skip: skip,
               allPrevPostData: allPostsData,
+              tab: 0
             ),
           );
           isLoading = false;
@@ -67,6 +70,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               limit: limit,
               skip: skip,
               allPrevPostData: allPostsData,
+              tab: 1
             ),
           );
           isLoading = false;
@@ -111,6 +115,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     return DefaultTabController(
                       length: 2,
                       child: TabBarView(
+                        controller: _tabController,
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
                           PostListView(
@@ -119,7 +124,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           ),
                           PostListView(
                             data: data,
-                            scrollController: scrollControllerTab1,
+                            scrollController: scrollControllerTab2,
                           ),
                         ],
                       ),

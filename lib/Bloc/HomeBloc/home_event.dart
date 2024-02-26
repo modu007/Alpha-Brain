@@ -26,10 +26,12 @@ class PaginationEvent extends HomeEvent{
   final int skip;
   final int limit;
   final List<ForYouModel> allPrevPostData;
+  final int tab;
   PaginationEvent({
     required this.limit,
     required this.skip,
     required this.allPrevPostData,
+    required this.tab,
   });
 }
 

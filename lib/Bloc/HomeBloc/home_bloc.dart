@@ -62,9 +62,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> paginationEvent(
       PaginationEvent event, Emitter<HomeState> emit) async {
+    var result;
       try{
-        var result = await HomeRepo.getAllPostDataOfForYou(
-            skip: event.skip, limit: event.limit);
+        if(event.tab==0){
+          print("here tab 0");
+           result = await HomeRepo.getAllPostDataOfForYou(
+              skip: event.skip, limit: event.limit);
+        }
+        else{
+          print("here tab 1");
+           result = await HomeRepo.getAllPostDataOfTopPicks(
+              skip: event.skip, limit: event.limit);
+        }
         if(result is List<ForYouModel>){
           List<ForYouModel> allPostData = event.allPrevPostData;
           List<ForYouModel> resultData =[];

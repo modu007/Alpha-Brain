@@ -17,20 +17,6 @@ class BackButtonContainer extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        InkWell(
-          onTap: onPressed,
-          child: Container(
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: const Color(0xffE8ECF4),
-                )
-            ),
-            child:SvgPicture.asset("assets/svg/back_arrow.svg"),
-          ),
-        ),
         const SizedBox(height: 15,),
         SimpleText(
           text: headingText,
