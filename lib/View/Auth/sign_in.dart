@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_event.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_state.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
-import 'package:svg_flutter/svg.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';

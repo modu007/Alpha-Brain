@@ -4,6 +4,7 @@ import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_cubit.dart';
 import 'package:neuralcode/Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
+import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'Bloc/HomeBloc/home_bloc.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
@@ -29,9 +30,11 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>OtpCubit()),
         BlocProvider<UsernameCubit>(
             create: (BuildContext context) =>UsernameCubit()),
+        BlocProvider<ProfileBloc>(
+            create: (BuildContext context) =>ProfileBloc()),
       ],
       child: MaterialApp(
-        initialRoute: RouteName.home,
+        initialRoute: RouteName.profile,
         onGenerateRoute: Routes.generateRoute,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

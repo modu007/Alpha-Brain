@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:svg_flutter/svg.dart';
-
 import '../Text/simple_text.dart';
 
 class BackButtonContainer extends StatelessWidget {

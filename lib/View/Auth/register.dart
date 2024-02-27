@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/regex.dart';
-import 'package:svg_flutter/svg.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_event.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_state.dart';

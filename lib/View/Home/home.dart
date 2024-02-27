@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
-import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
@@ -32,7 +33,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
-        print("Tab index changed: ${_tabController.index}");
         skip=0;
         limit=5;
         BlocProvider.of<HomeBloc>(context)
@@ -89,9 +89,89 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light));
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
+        drawer:  Drawer(
+          backgroundColor: Colors.white,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+          children: <Widget>[
+              Row(
+          children: [
+               Image.asset("assets/images/81.png"),
+               const SizedBox(width: 10,),
+              Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SimpleText(
+                  text: "Harshit Soni",
+                  fontSize: 15,
+                  fontWeight:FontWeight.w600,
+                  fontColor: Colors.black,
+                  textHeight: 0,
+                ),
+                InkWell(
+                  onTap: (){},
+                  child: const SimpleText(
+                    text: 'View Profile',
+                    fontSize: 14,
+                    fontColor: Color(0xff4EB3CA),
+                    textHeight: 1,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+              const SizedBox(height: 20,),
+              ListTile(
+                leading:SvgPicture.asset("assets/svg/discover.svg"),
+                title:  const SimpleText(
+                  text: 'Discover',
+                  fontSize: 15,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onTap: () => {},
+              ),
+              ListTile(
+                leading:SvgPicture.asset("assets/svg/user_icon.svg"),
+                title:  const SimpleText(
+                  text: 'My Account',
+                  fontSize: 15,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onTap: () => {Navigator.of(context).pop()},
+              ),
+              ListTile(
+                leading: SvgPicture.asset("assets/svg/settings.svg"),
+                title:  const SimpleText(
+                  text: 'Settings',
+                  fontSize: 15,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onTap: () => {Navigator.of(context).pop()},
+              ),
+            ListTile(
+                leading: SvgPicture.asset("assets/svg/call.svg"),
+                title:  const SimpleText(
+                  text: 'Support',
+                  fontSize: 15,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onTap: () => {Navigator.of(context).pop()},
+              ),
+            ],
+          ),
+        ),
         body: Column(
           children: [
             HomeAppBar(tabController: _tabController,),

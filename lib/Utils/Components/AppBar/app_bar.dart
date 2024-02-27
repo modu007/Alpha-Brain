@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:neuralcode/Utils/Color/colors.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
-import 'package:svg_flutter/svg_flutter.dart';
 
 class HomeAppBar extends StatelessWidget {
   final TabController tabController;
@@ -23,7 +23,12 @@ class HomeAppBar extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
               const Spacer(),
-              SvgPicture.asset("assets/svg/menu.svg")
+              Builder(
+                builder:(context)=>InkWell(
+                  onTap: (){
+                    Scaffold.of(context).openDrawer();
+                  },
+                    child: SvgPicture.asset("assets/svg/menu.svg")))
             ],
           ),
           SizedBox(
