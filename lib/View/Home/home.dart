@@ -6,6 +6,7 @@ import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
 import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
+import 'package:neuralcode/Utils/Routes/route_name.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
 import '../../Models/for_you_model.dart';
 import '../../Utils/Components/Cards/post_card.dart';
@@ -116,7 +117,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   textHeight: 0,
                 ),
                 InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    Navigator.of(context).pushNamed(RouteName.profile);
+                  },
                   child: const SimpleText(
                     text: 'View Profile',
                     fontSize: 14,
@@ -130,26 +133,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
               const SizedBox(height: 20,),
               ListTile(
-                leading:SvgPicture.asset("assets/svg/discover.svg"),
-                title:  const SimpleText(
-                  text: 'Discover',
-                  fontSize: 15,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                onTap: () => {},
-              ),
-              ListTile(
-                leading:SvgPicture.asset("assets/svg/user_icon.svg"),
-                title:  const SimpleText(
-                  text: 'My Account',
-                  fontSize: 15,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                onTap: () => {Navigator.of(context).pop()},
-              ),
-              ListTile(
                 leading: SvgPicture.asset("assets/svg/settings.svg"),
                 title:  const SimpleText(
                   text: 'Settings',
@@ -157,7 +140,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   fontColor: Colors.black,
                   fontWeight: FontWeight.w600,
                 ),
-                onTap: () => {Navigator.of(context).pop()},
+                onTap: () => {
+                  // Navigator.of(context).pop()
+                },
               ),
             ListTile(
                 leading: SvgPicture.asset("assets/svg/call.svg"),
@@ -167,7 +152,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   fontColor: Colors.black,
                   fontWeight: FontWeight.w600,
                 ),
-                onTap: () => {Navigator.of(context).pop()},
+                onTap: () => {
+                  // Navigator.of(context).pop()
+                },
               ),
             ],
           ),

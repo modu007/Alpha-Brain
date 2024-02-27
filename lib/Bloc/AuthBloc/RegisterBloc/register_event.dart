@@ -7,6 +7,9 @@ class RegisterDataEvent extends RegisterEvent{
   final String gender;
   final String username;
   final bool isUsernameValid;
+  final bool isEmailValid;
+  final bool fullNameValid;
+  final bool dob;
   RegisterDataEvent({
     required this.email,
     required this.name,
@@ -14,6 +17,9 @@ class RegisterDataEvent extends RegisterEvent{
     required this.gender,
     required this.username,
     required this.isUsernameValid,
+    required this.isEmailValid,
+    required this.fullNameValid,
+    required this.dob,
   });
 }
 

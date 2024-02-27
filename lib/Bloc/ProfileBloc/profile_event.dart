@@ -46,6 +46,10 @@ class BookmarkPostEvent extends ProfileEvent{
   });
 }
 
+class UploadPhotoEvent extends ProfileEvent{
+
+}
+
 
 
 

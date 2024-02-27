@@ -1,7 +1,10 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import '../../Api/all_api.dart';
 import '../../NetworkRequest/network_request.dart';
+import 'package:dio/dio.dart';
+
 
 class ProfileRepo {
   static Future getAllBookmarksData(
@@ -101,6 +104,28 @@ class ProfileRepo {
       return "something went wrong";
     } catch (error) {
       print("sign up repo $error");
+    }
+  }
+
+  static Future uploadProfile(
+      {
+        required PlatformFile image
+      }) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    try {
+      FormData formData = FormData.fromMap(
+        {
+          'image': await MultipartFile.fromFile(image.path.toString(),
+              filename: image.name),
+          "Email":email,
+          "Name":"Harshit"
+        },
+      );
+      return networkRequest.postDioRequest(AllApi.uploadImage, formData);
+    } catch (e) {
+      print("User repo: $e");
+      return e.toString();
     }
   }
 }

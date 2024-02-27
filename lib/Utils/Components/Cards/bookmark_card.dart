@@ -11,18 +11,22 @@ class BookmarkPostCard extends StatelessWidget{
     required this.scrollController,
     required this.isLoading,
     required this.isTab1,
+    required this.futureData,
+    required this.isDataEmpty,
   });
   final List<BookmarkPostModel> data;
+  final List<BookmarkPostModel>? futureData;
   final ScrollController scrollController;
   final bool isLoading;
   final bool isTab1;
+  final bool isDataEmpty;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         controller: scrollController,
         itemCount: data.length,
         itemBuilder: (context,index){
-          if (index == data.length-1 && isLoading) {
+          if (index == data.length-1 && isDataEmpty==false) {
             return Container(
               margin: const EdgeInsets.symmetric(vertical: 5),
               child: const Center(
@@ -60,7 +64,7 @@ class BookmarkPostCard extends StatelessWidget{
                           width: 50,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(25),
-                            child: Image.asset("assets/images/logo.jpeg"),
+                            child: Image.asset("assets/images/logo.png"),
                           ),
                         ),
                         const SizedBox(
@@ -70,13 +74,13 @@ class BookmarkPostCard extends StatelessWidget{
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SimpleText(
-                              text: "Ayaba Onile-Ire",
+                              text: "Alpha Brain",
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               textHeight: 1,
                             ),
                             SimpleText(
-                              text: "@ayabaoniile_",
+                              text: "@alphabrain",
                               fontSize: 12,
                               textHeight: 2,
                               fontColor: Color(0xff8698A9),
@@ -104,7 +108,7 @@ class BookmarkPostCard extends StatelessWidget{
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Center(child: Image.asset("assets/images/logo.jpeg")),
+                              child: Center(child: Image.asset("assets/images/logo.png")),
                             ) :Container(
                               height: 200,
                               decoration: BoxDecoration(

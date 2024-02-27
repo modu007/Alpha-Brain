@@ -31,20 +31,23 @@ class _RegisterState extends State<Register>{
   TextEditingController genderController = TextEditingController();
   final focusNode = FocusNode();
   bool isEmailValid = false;
+  bool isFullNameDone = false;
   bool isUserNameValid = false;
+  bool isDobDone = false;
   late Regex regex;
   final List<String> genderItems = [
     'Male',
     'Female',
   ];
   String selectedValue = "Male";
-  String dob = "15-30";
+  String dob = "";
   bool isEmailDone =false;
   bool isNameDone =false;
 
 
 @override
   void initState() {
+  genderController.text ="Male";
   BlocProvider.of<UsernameCubit>(context).userInitialEvent();
   focusNode.addListener(() {
     if(!focusNode.hasFocus){
@@ -87,8 +90,16 @@ class _RegisterState extends State<Register>{
                   headingText: "Hello! Register to get started",),
                 const SizedBox(height: 40,),
                 TextFieldContainer(
-                    emailController: nameController,
+                  emailController: nameController,
                   hintText: "Full Name",
+                  onChanged: (val){
+                    if(val.isNotEmpty && val.length >=3){
+                      isFullNameDone=true;
+                    }
+                    else{
+                      isFullNameDone=false;
+                    }
+                  },
                 ),
                 BlocBuilder<UsernameCubit,UsernameState>(
                 builder: (context, state) {
@@ -203,10 +214,11 @@ class _RegisterState extends State<Register>{
                         lastDate: DateTime(2016));
                       setState(() {
                         dobController.text=""
-                            "${datePicked?.day.toString()}-"
-                            "${datePicked?.month.toString()}-"
-                            "${datePicked?.year.toString()}";
+                            "${datePicked?.day.toString() ?? 01}-"
+                            "${datePicked?.month.toString() ?? 01}-"
+                            "${datePicked?.year.toString()?? 2016}";
                       });
+                      isDobDone=true;
                     },
                     child:Image.asset("assets/images/calender.png"),
                   ),
@@ -251,11 +263,12 @@ class _RegisterState extends State<Register>{
                 TextFieldContainer(
                   emailController: emailController,
                   hintText: "Email",
-                  validator: (val){
-                    if(regex.isValidEmail(emailController.text)){
-                      setState(() {
-                        isEmailValid=true;
-                      });
+                  onChanged: (val){
+                    if(regex.isValidEmail(val)){
+                      isEmailValid=true;
+                    }
+                    else{
+                      isEmailValid=false;
                     }
                   },
                 ),
@@ -292,6 +305,26 @@ class _RegisterState extends State<Register>{
                           fontSize: 15.0
                       );
                     }
+                    if(state is FullNameInvalidState){
+                      Fluttertoast.showToast(
+                          msg: "Either the name field is empty or the length should be greater than 3 characters ",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          textColor: Colors.black,
+                          fontSize: 15.0
+                      );
+                    }
+                    if(state is EmailInvalidState){
+                      Fluttertoast.showToast(
+                          msg: "Invalid Email",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          textColor: Colors.black,
+                          fontSize: 15.0
+                      );
+                    }
                   },
                   builder: (context,state){
                     if (state is RegisterLoadingState) {
@@ -310,6 +343,9 @@ class _RegisterState extends State<Register>{
                             gender: selectedValue,
                           username: usernameController.text,
                           isUsernameValid:isUserNameValid,
+                          fullNameValid: isFullNameDone,
+                          isEmailValid: isEmailValid,
+                          dob: isDobDone
                         ));
                       },
                       centerText: "Register",

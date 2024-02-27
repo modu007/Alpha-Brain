@@ -54,6 +54,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xff4EB3CA),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -62,8 +63,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: Colors.white),
-              child: Image.asset("assets/images/logo.jpeg"),
+                  borderRadius: BorderRadius.circular(10), color: const Color(0xff4EB3CA)),
+              child: Image.asset("assets/images/logo.png"),
             ),
             const SimpleText(
                 text: "Y-Alpha Brainz",

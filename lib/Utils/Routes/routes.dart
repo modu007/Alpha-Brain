@@ -4,6 +4,7 @@ import 'package:neuralcode/View/Auth/otp_verification.dart';
 import 'package:neuralcode/View/Auth/register.dart';
 import 'package:neuralcode/View/Auth/sign_in.dart';
 import 'package:neuralcode/View/Home/home.dart';
+import 'package:neuralcode/View/Profile/edit_profile.dart';
 import 'package:neuralcode/View/Profile/profile.dart';
 import 'package:neuralcode/View/Splash/splash.dart';
 
@@ -26,6 +27,9 @@ class Routes {
         case RouteName.profile:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Profile());
+        case RouteName.editProfile:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const EditProfile());
         case RouteName.otpVerification:
           if(argument is Map){
             return MaterialPageRoute(

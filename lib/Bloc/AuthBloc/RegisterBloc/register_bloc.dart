@@ -11,28 +11,40 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
   FutureOr<void> registerDataEvent(
       RegisterDataEvent event, Emitter<RegisterState> emit) async {
-    if(event.isUsernameValid){
-      emit(RegisterLoadingState());
-      try{
-        var result = await AuthRepo.registerUserData(
-            fullName: event.name,
-            email: event.email,
-            gender: event.gender,
-            age: event.age,
-            username: event.username
-        );
-        if(result == "success" ){
-          emit(RegistrationSuccessFullState(email: event.email));
+    if(event.fullNameValid){
+      if(event.isEmailValid){
+        if(event.dob){
+          if(event.isUsernameValid){
+            emit(RegisterLoadingState());
+            try{
+              var result = await AuthRepo.registerUserData(
+                  fullName: event.name,
+                  email: event.email,
+                  gender: event.gender,
+                  age: event.age,
+                  username: event.username
+              );
+              if(result == "success" ){
+                emit(RegistrationSuccessFullState(email: event.email));
+              }
+              else{
+                emit(ErrorState());
+              }
+            }
+            catch(error){
+              emit(ErrorState());
+            }
+          }else{
+            emit(UsernameInvalidState());
+          }
+        }else{
+          emit(DobInvalidState());
         }
-        else{
-          emit(ErrorState());
-        }
-      }
-      catch(error){
-        emit(ErrorState());
+      }else{
+        emit(EmailInvalidState());
       }
     }else{
-      emit(UsernameInvalidState());
+      emit(FullNameInvalidState());
     }
   }
 

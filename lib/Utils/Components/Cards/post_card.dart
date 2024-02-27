@@ -76,7 +76,7 @@ class PostListView extends StatelessWidget{
                           width: 50,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(25),
-                            child: Image.asset("assets/images/logo.jpeg"),
+                            child: Image.asset("assets/images/logo.png"),
                           ),
                         ),
                         const SizedBox(
@@ -86,13 +86,13 @@ class PostListView extends StatelessWidget{
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SimpleText(
-                              text: "Ayaba Onile-Ire",
+                              text: "Alpha Brain",
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               textHeight: 1,
                             ),
                             SimpleText(
-                              text: "@ayabaoniile_",
+                              text: "@alphabrain",
                               fontSize: 12,
                               textHeight: 2,
                               fontColor: Color(0xff8698A9),
@@ -120,7 +120,7 @@ class PostListView extends StatelessWidget{
                               decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Center(child: Image.asset("assets/images/logo.jpeg")),
+                              child: Center(child: Image.asset("assets/images/logo.png")),
                             ) :Container(
                               height: 200,
                               decoration: BoxDecoration(

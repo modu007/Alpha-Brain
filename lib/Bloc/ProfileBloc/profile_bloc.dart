@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_event.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_state.dart';
@@ -10,6 +11,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<GetPostInitialEvent>(getPostInitialEvent);
     on<TabChangeEvent>(tabChangeEvent);
     on<PaginationEvent>(paginationEvent);
+    on<UploadPhotoEvent>(uploadPhotoEvent);
   }
   FutureOr<void> getPostInitialEvent(
       ProfileEvent event, Emitter<ProfileState> emit) async {
@@ -17,7 +19,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try{
       var result = await ProfileRepo.getAllBookmarksData(skip: 0, limit: 5);
       if(result is List<BookmarkPostModel>){
-        emit(GetPostSuccessState(listOfPosts:result));
+        emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
       }else{
         emit(GetPostFailureState(errorMessage: "Error"));
       }
@@ -34,7 +36,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try{
         var result = await ProfileRepo.getAllBookmarksData(skip: 0, limit: 5);
         if(result is List<BookmarkPostModel>){
-          emit(GetPostSuccessState(listOfPosts:result));
+          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
         }
@@ -47,7 +49,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try{
         var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
         if(result is List<BookmarkPostModel>){
-          emit(GetPostSuccessState(listOfPosts:result));
+          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
         }
@@ -60,6 +62,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   FutureOr<void> paginationEvent(
       PaginationEvent event, Emitter<ProfileState> emit) async {
+    // ignore: prefer_typing_uninitialized_variables
     var result;
     try{
       if(event.tab==0){
@@ -72,12 +75,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
       if(result is List<BookmarkPostModel>){
         List<BookmarkPostModel> allPostData = event.allPrevPostData;
+        List<BookmarkPostModel>? listOfFutureData=[];
+        if(result.isNotEmpty) {
+          listOfFutureData = null;
+        }
         List<BookmarkPostModel> resultData =[];
         resultData.addAll(result);
         result.clear();
         result.addAll(allPostData);
         result.addAll(resultData);
-        emit(GetPostSuccessState(listOfPosts:result));
+        emit(GetPostSuccessState(
+            listOfPosts:result,
+            listOfFutureData: listOfFutureData));
       }else{
         emit(GetPostFailureState(errorMessage: "Error"));
       }
@@ -85,5 +94,31 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     catch(error){
       emit(GetPostFailureState(errorMessage: "Something went wrong"));
     }
+  }
+
+  Future uploadPhotoEvent(
+      UploadPhotoEvent event, Emitter<ProfileState> emit) async {
+    emit(UploadProfileLoadingState());
+   try{
+     FilePickerResult? result = await FilePicker.platform.pickFiles(
+       type: FileType.custom,
+       dialogTitle: "Select Profile Photo",
+       allowMultiple: false,
+       allowedExtensions: ['jpg', 'jpeg', 'png'],
+     );
+     if (result != null) {
+       PlatformFile file = result.files.first;
+       var resultData = await ProfileRepo.uploadProfile(image: file);
+       if (resultData["Status"] == "success"&& resultData["Message"]=="Uploaded successfully"){
+         emit(UploadProfileSuccessState());
+       }
+       else {
+         emit(UploadProfileSuccessState());
+       }
+     }
+   }
+   catch(e){
+     emit(UploadProfileErrorState());
+   }
   }
 }

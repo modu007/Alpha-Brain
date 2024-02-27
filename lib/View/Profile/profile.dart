@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_state.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
+import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import '../../Bloc/ProfileBloc/profile_event.dart';
 import '../../Utils/Components/Cards/bookmark_card.dart';
+import '../../Utils/Routes/route_name.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -24,7 +25,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   int limit = 5;
   List<BookmarkPostModel> allPostsData = [];
   bool isLoading = false;
+
+  // using tab1 for removing bookmark or liked
   bool isTab1 =true;
+  bool isEmptyData = false;
 
   @override
   void initState() {
@@ -36,6 +40,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
         skip=0;
         limit=5;
         isTab1 = !isTab1;
+        isEmptyData=false;
+        isLoading=false;
         BlocProvider.of<ProfileBloc>(context)
             .add(TabChangeEvent(tabIndex: tabController.index));
       }
@@ -43,39 +49,42 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     scrollControllerTab1 = ScrollController();
     scrollControllerTab2 = ScrollController();
     scrollControllerTab1.addListener(() async {
-      if(allPostsData.length %5 ==0){
-        if (scrollControllerTab1.position.pixels >=
-            scrollControllerTab1.position.maxScrollExtent) {
+     if(!isEmptyData){
+       if (scrollControllerTab1.position.pixels >=
+           scrollControllerTab1.position.maxScrollExtent) {
+         if (!isLoading) {
+           isLoading=true;
+           skip += 5;
+           BlocProvider.of<ProfileBloc>(context).add(
+             PaginationEvent(
+                 limit: limit,
+                 skip: skip,
+                 allPrevPostData: allPostsData,
+                 tab: 0
+             ),
+           );
+           isLoading=false;
+         }
+       }
+     }
+    });
+    scrollControllerTab2.addListener(() {
+      if(!isEmptyData){
+        if (scrollControllerTab2.position.pixels >=
+            scrollControllerTab2.position.maxScrollExtent) {
           if (!isLoading) {
-            isLoading=true;
-            skip += 5;
+            isLoading = true;
+            skip += 5; // Adjust according to your pagination logic
             BlocProvider.of<ProfileBloc>(context).add(
               PaginationEvent(
                   limit: limit,
                   skip: skip,
                   allPrevPostData: allPostsData,
-                  tab: 0
+                  tab: 1
               ),
             );
             isLoading=false;
           }
-      }
-      }
-    });
-    scrollControllerTab2.addListener(() {
-      if (scrollControllerTab2.position.pixels >=
-          scrollControllerTab2.position.maxScrollExtent) {
-        if (!isLoading) {
-          isLoading = true;
-          skip += 5; // Adjust according to your pagination logic
-          BlocProvider.of<ProfileBloc>(context).add(
-            PaginationEvent(
-                limit: limit,
-                skip: skip,
-                allPrevPostData: allPostsData,
-                tab: 1
-            ),
-          );
         }
       }
     });
@@ -105,35 +114,25 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
               margin: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
               child: Row(
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+                  const BackButtonText(titleText: "Profile"),
+                  const Spacer(),
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).pushNamed(RouteName.editProfile);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: const Color(0xffE8ECF4),
                         )
-                    ),
-                    child:SvgPicture.asset("assets/svg/back_arrow.svg"),
-                  ),
-                  const SizedBox(width: 15,),
-                  const SimpleText(
-                    text: "Profile",
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: const Color(0xffE8ECF4),
-                      )
-                    ),
-                    child: const SimpleText(
-                      text: "Edit Profile",
-                      fontColor: Color(0xff4EB3CA),
-                      fontSize: 14,
+                      ),
+                      child: const SimpleText(
+                        text: "Edit Profile",
+                        fontColor: Color(0xff4EB3CA),
+                        fontSize: 14,
+                      ),
                     ),
                   )
                 ],
@@ -154,10 +153,39 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                     ],
                   ),
                   const Spacer(),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset("assets/images/profile_pic.png"),
-                  )
+                 Stack(
+                   children: [
+                     ClipRRect(
+                       borderRadius: BorderRadius.circular(20),
+                       child: Image.asset("assets/images/profile_pic.png"),
+                     ),
+                     Positioned(
+                       bottom: 0,
+                       right: 0,
+                       child: InkWell(
+                         onTap: (){
+                           BlocProvider.of<ProfileBloc>(context)
+                               .add(UploadPhotoEvent());
+                         },
+                         child: Container(
+                           height: 40,
+                           width: 40,
+                           decoration: BoxDecoration(
+                             borderRadius: BorderRadius.circular(20),
+                             border: Border.all(
+                               color: const Color(0xffE8ECF4),
+                               width: 2
+                             ),
+                           ),
+                           child: const Icon(
+                               Icons.edit,
+                             color: Colors.white,
+                           ),
+                         ),
+                       ),
+                     )
+                   ],
+                 )
                 ],
               ),
             ),
@@ -199,6 +227,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                 else if(state is GetPostSuccessState){
                   allPostsData.clear();
                   final data = state.listOfPosts;
+                  if(state.listOfFutureData!=null &&state.listOfFutureData!.isEmpty){
+                    isEmptyData=true;
+                  }
                   allPostsData.addAll(data);
                   return Expanded(
                       child: DefaultTabController(
@@ -212,12 +243,16 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                               scrollController: scrollControllerTab1,
                               isLoading: isLoading,
                               isTab1: isTab1,
+                              futureData: state.listOfFutureData,
+                              isDataEmpty: isEmptyData,
                             ),
                             BookmarkPostCard(
                               data: data,
                               scrollController: scrollControllerTab2,
                               isLoading: isLoading,
                               isTab1: isTab1,
+                              futureData: state.listOfFutureData,
+                              isDataEmpty: isEmptyData,
                             ),
                           ],
                         ),
@@ -239,11 +274,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                   );
                 }
               },
-            )
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+
 

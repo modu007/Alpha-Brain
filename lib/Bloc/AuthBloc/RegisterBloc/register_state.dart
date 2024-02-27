@@ -22,4 +22,10 @@ class OtpSendState extends RegisterState{
 
 class UsernameInvalidState extends RegisterScreenActionState{}
 
+class EmailInvalidState extends RegisterScreenActionState{}
+
+class FullNameInvalidState extends RegisterScreenActionState{}
+
+class DobInvalidState extends RegisterScreenActionState{}
+
 class ErrorState extends RegisterState{}

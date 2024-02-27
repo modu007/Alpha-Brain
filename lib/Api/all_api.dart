@@ -26,4 +26,7 @@ class AllApi {
 
   //user availability
   static const userAvailability = "$baseUrl/check/username_availability?username=";
+
+  //upload image
+  static const uploadImage = "$baseUrl/upload/display_pic/";
 }
