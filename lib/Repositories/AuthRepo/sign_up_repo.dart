@@ -68,7 +68,10 @@ class AuthRepo{
       if(result["Token"] != null){
         SharedData.setToken(result["Token"]);
         SharedData.setRefreshToken(result["Refresh_Token"]);
-        SharedData.setEmail(email);
+        SharedData.setEmail(result["Email"]);
+        SharedData.setName(result["Name"]);
+        SharedData.setUserName(result["Username"]);
+        SharedData.setProfilePic(result["Display_pic"]);
         return "success";
       }
       else if(result["Status"]=="invalid_otp"){

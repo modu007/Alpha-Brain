@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
+import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import '../../Api/all_api.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
 import '../../Models/for_you_model.dart';
 import '../../Utils/Components/Cards/post_card.dart';
@@ -26,10 +28,25 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   int limit = 5;
   List<ForYouModel> allPostsData = [];
   bool isLoading = false;
+  String name = "";
+  String imageUrl="";
+  String dp="";
+  Future getName()async{
+    String result = await SharedData.getEmail("name");
+    name =result;
+  }
 
+  Future getImage()async{
+    String name = await SharedData.getEmail("name");
+    String profilePic = await SharedData.getEmail("profilePic");
+    dp = profilePic;
+    imageUrl = "${AllApi.getProfilePic}$name/$profilePic";
+  }
   @override
   void initState() {
     super.initState();
+    getName();
+    getImage();
     BlocProvider.of<HomeBloc>(context).add(GetPostInitialEvent());
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
@@ -104,35 +121,43 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           children: <Widget>[
               Row(
           children: [
-               Image.asset("assets/images/81.png"),
+               dp.isEmpty ?
+               SvgPicture.asset(
+                 "assets/svg/user_icon.svg",height: 40,width: 40,):
+               ClipRRect(
+                 borderRadius: BorderRadius.circular(20),
+                   child: Image.network(imageUrl,height: 40,width: 40,)
+               ),
                const SizedBox(width: 10,),
-              Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SimpleText(
-                  text: "Harshit Soni",
+               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                SimpleText(
+                  text: name,
                   fontSize: 15,
                   fontWeight:FontWeight.w600,
                   fontColor: Colors.black,
                   textHeight: 0,
                 ),
-                InkWell(
-                  onTap: (){
-                    Navigator.of(context).pushNamed(RouteName.profile);
-                  },
-                  child: const SimpleText(
-                    text: 'View Profile',
-                    fontSize: 14,
-                    fontColor: Color(0xff4EB3CA),
-                    textHeight: 1,
-                  ),
-                )
               ],
             )
-          ],
-        ),
+                ],
+              ),
               const SizedBox(height: 20,),
               ListTile(
+                leading: SvgPicture.asset("assets/svg/user_icon.svg"),
+                title:  const SimpleText(
+                  text: 'Profile',
+                  fontSize: 15,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onTap: (){
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(RouteName.profile);
+                },
+              ),
+            ListTile(
                 leading: SvgPicture.asset("assets/svg/settings.svg"),
                 title:  const SimpleText(
                   text: 'Settings',
@@ -188,10 +213,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           PostListView(
                             data: data,
                             scrollController: scrollControllerTab1,
+                            isAdmin: state.isAdmin,
                           ),
                           PostListView(
                             data: data,
                             scrollController: scrollControllerTab2,
+                            isAdmin: state.isAdmin,
                           ),
                         ],
                       ),

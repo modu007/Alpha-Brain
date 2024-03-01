@@ -19,6 +19,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
        );
        if(result == "success"){
          emit(SignInSuccessState());
+         emit(SignInInitial());
        }
        else if(result == "email not exist"){
          emit(SignInInitial());

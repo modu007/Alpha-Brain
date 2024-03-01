@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_cubit.dart';
 import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_state.dart';
+import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_bloc.dart';
+import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_event.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:pinput/pinput.dart';
@@ -40,9 +43,30 @@ class _OtpVerificationState extends State<OtpVerification> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BackButtonContainer(
-                onPressed: () {},
-                headingText: "OTP Verification",),
+              Row(
+                children: [
+                  InkWell(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: const Color(0xffE8ECF4),
+                          )
+                      ),
+                      child:SvgPicture.asset("assets/svg/back_arrow.svg"),
+                    ),
+                  ),
+                  const SizedBox(width: 10,),
+                  BackButtonContainer(
+                    onPressed: () {},
+                    headingText: "OTP Verification",),
+                ],
+              ),
               const SizedBox(height: 10,),
               const SimpleText(
                 text: "Enter the verification code we just sent on your email address. ",

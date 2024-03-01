@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:neuralcode/Bloc/AuthBloc/UploadProfileCubit/upload_image_cubit.dart';
+import 'package:neuralcode/Bloc/AuthBloc/UploadProfileCubit/upload_image_state.dart';
+import 'package:neuralcode/Bloc/AuthBloc/UserDetailsBloc/user_details_cubit.dart';
+import 'package:neuralcode/Bloc/AuthBloc/UserDetailsBloc/user_details_state.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_state.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
@@ -9,6 +15,8 @@ import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import '../../Bloc/ProfileBloc/profile_event.dart';
 import '../../Utils/Components/Cards/bookmark_card.dart';
 import '../../Utils/Routes/route_name.dart';
+import 'dart:io';
+
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -25,14 +33,18 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   int limit = 5;
   List<BookmarkPostModel> allPostsData = [];
   bool isLoading = false;
-
   // using tab1 for removing bookmark or liked
   bool isTab1 =true;
   bool isEmptyData = false;
-
+  String name = "";
+  String imageUrl="";
+  String dp="";
+  String userName="";
+  
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<UserDetailsCubit>(context).getUserDetails();
     BlocProvider.of<ProfileBloc>(context).add(GetPostInitialEvent());
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
@@ -107,175 +119,262 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
-              child: Row(
+        body: BlocBuilder<UserDetailsCubit, UserDetailsState>(
+          builder: (context, state) {
+            if(state is UserDetailsLoadingState){
+              return const Center(child: CircularProgressIndicator(),);
+            }
+            else if(state is UserDetailsSuccessState){
+              dp = state.profilePic;
+              imageUrl = state.imageUrl;
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const BackButtonText(titleText: "Profile"),
-                  const Spacer(),
-                  InkWell(
-                    onTap: (){
-                      Navigator.of(context).pushNamed(RouteName.editProfile);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: const Color(0xffE8ECF4),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
+                    child: Row(
+                      children: [
+                        const BackButtonText(titleText: "Profile"),
+                        const Spacer(),
+                        InkWell(
+                          onTap: (){
+                            Navigator.of(context).pushNamed(
+                                RouteName.editProfile,arguments: {
+                                  "name":state.name
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: const Color(0xffE8ECF4),
+                                )
+                            ),
+                            child: const SimpleText(
+                              text: "Edit Profile",
+                              fontColor: Color(0xff4EB3CA),
+                              fontSize: 14,
+                            ),
+                          ),
                         )
-                      ),
-                      child: const SimpleText(
-                        text: "Edit Profile",
-                        fontColor: Color(0xff4EB3CA),
-                        fontSize: 14,
-                      ),
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 15,),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-              child: Row(
-                children: [
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SimpleText(text: "Hemraj Chhaidwal", fontSize: 17,
-                        fontColor: Colors.black,fontWeight: FontWeight.w600,),
-                      SimpleText(text: "@hemraj1", fontSize: 17,
-                        fontColor: Color(0xff8698A9),fontWeight: FontWeight.w600,),
-                    ],
                   ),
-                  const Spacer(),
-                 Stack(
-                   children: [
-                     ClipRRect(
-                       borderRadius: BorderRadius.circular(20),
-                       child: Image.asset("assets/images/profile_pic.png"),
-                     ),
-                     Positioned(
-                       bottom: 0,
-                       right: 0,
-                       child: InkWell(
-                         onTap: (){
-                           BlocProvider.of<ProfileBloc>(context)
-                               .add(UploadPhotoEvent());
-                         },
-                         child: Container(
-                           height: 40,
-                           width: 40,
-                           decoration: BoxDecoration(
-                             borderRadius: BorderRadius.circular(20),
-                             border: Border.all(
-                               color: const Color(0xffE8ECF4),
-                               width: 2
-                             ),
-                           ),
-                           child: const Icon(
-                               Icons.edit,
-                             color: Colors.white,
-                           ),
-                         ),
-                       ),
-                     )
-                   ],
-                 )
-                ],
-              ),
-            ),
-            SizedBox(
-              width: 150,
-              child: TabBar(
-                controller: tabController,
-                dividerColor: Colors.transparent,
-                indicatorSize: TabBarIndicatorSize.tab,
-                indicatorColor: const Color(0xff4EB3CA),
-                labelPadding: const EdgeInsets.symmetric(horizontal: 5),
-                unselectedLabelStyle: const TextStyle(color: Color(0xff8698A9)),
-                labelColor: Colors.black,
-                tabs: const [
-                  Tab(
-                      child: SimpleText(
-                        text: 'Bookmark',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      )),
-                  Tab(
-                      child: SimpleText(
-                        text: 'Likes',
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      )),
-                ],
-              ),
-            ),
-            BlocConsumer<ProfileBloc, ProfileState>(
-              listener: (context, state) {
-                // TODO: implement listener
-              },
-              builder: (context, state) {
-                if (state is GetPostLoadingState) {
-                  return const Expanded(
-                      child: Center(child: CircularProgressIndicator()));
-                }
-                else if(state is GetPostSuccessState){
-                  allPostsData.clear();
-                  final data = state.listOfPosts;
-                  if(state.listOfFutureData!=null &&state.listOfFutureData!.isEmpty){
-                    isEmptyData=true;
-                  }
-                  allPostsData.addAll(data);
-                  return Expanded(
-                      child: DefaultTabController(
-                        length: 2,
-                        child: TabBarView(
-                          controller: tabController,
-                          physics: const NeverScrollableScrollPhysics(),
+                  const SizedBox(height: 15,),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                    child: Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            BookmarkPostCard(
-                              data: data,
-                              scrollController: scrollControllerTab1,
-                              isLoading: isLoading,
-                              isTab1: isTab1,
-                              futureData: state.listOfFutureData,
-                              isDataEmpty: isEmptyData,
-                            ),
-                            BookmarkPostCard(
-                              data: data,
-                              scrollController: scrollControllerTab2,
-                              isLoading: isLoading,
-                              isTab1: isTab1,
-                              futureData: state.listOfFutureData,
-                              isDataEmpty: isEmptyData,
-                            ),
+                            SimpleText(text: state.name, fontSize: 17,
+                              fontColor: Colors.black,fontWeight: FontWeight.w600,),
+                            SimpleText(text: "@${state.userName}", fontSize: 17,
+                              fontColor: const Color(0xff8698A9),
+                              fontWeight: FontWeight.w600,),
                           ],
                         ),
-                      ));
-                }
-                else if (state is GetPostFailureState) {
-                  return Center(
-                    child: SimpleText(
-                      text: state.errorMessage,
-                      fontSize: 16,
+                        const Spacer(),
+                        Stack(
+                          children: [
+                            BlocConsumer<UploadImageCubit, UploadImageState>(
+                              listener: (context, state) {
+                                if(state is CouldNotUploadImageState){
+                                  Fluttertoast.showToast(
+                                      msg: "Please try again later",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      textColor: Colors.black,
+                                      fontSize: 15.0
+                                  );
+                                }
+                              },
+                              builder: (context, state) {
+                                if(state is UploadProfileLoadingState){
+                                  return const Center(child: CircularProgressIndicator(),);
+                                }
+                                if(state is UploadProfileSuccessState){
+                                  var data = state.path;
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.circular(40),
+                                    child: data != null
+                                        ? Image.file(
+                                      File(data),
+                                      height: 90,
+                                      width: 90,
+                                      fit: BoxFit.cover,
+                                    )
+                                        : dp.isEmpty ?
+                                    ClipRRect(
+                                      child: SvgPicture.asset(
+                                        "assets/svg/user_icon.svg",
+                                        height: 90,
+                                        width: 90,),
+                                    ):
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(40),
+                                      child: Center(
+                                        child: Image.network(
+                                            imageUrl,
+                                            height: 90,
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ),
+                                  );
+                                }else{
+                                  return ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child:dp.isEmpty ?
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                            "assets/svg/user_icon.svg",
+                                            height: 90,
+                                            width: 90,),
+                                        ),
+                                      ):
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(40),
+                                        child: Image.network(
+                                          imageUrl, height: 90,fit: BoxFit.cover),
+                                      )
+                                  );
+                                }
+                              },
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: InkWell(
+                                onTap: (){
+                                  BlocProvider.of<UploadImageCubit>(context)
+                                      .uploadPhotoEvent();
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: const Color(0xffE8ECF4),
+                                        width: 2
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
                     ),
-                  );
-                } else {
-                  return const Center(
-                    child: SimpleText(
-                      text: "Loading...",
-                      fontSize: 16,
+                  ),
+                  SizedBox(
+                    width: 150,
+                    child: TabBar(
+                      controller: tabController,
+                      dividerColor: Colors.transparent,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorColor: const Color(0xff4EB3CA),
+                      labelPadding: const EdgeInsets.symmetric(horizontal: 5),
+                      unselectedLabelStyle: const TextStyle(color: Color(0xff8698A9)),
+                      labelColor: Colors.black,
+                      tabs: const [
+                        Tab(
+                            child: SimpleText(
+                              text: 'Bookmark',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            )),
+                        Tab(
+                            child: SimpleText(
+                              text: 'Likes',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            )),
+                      ],
                     ),
-                  );
-                }
-              },
-            ),
-          ],
+                  ),
+                  BlocConsumer<ProfileBloc, ProfileState>(
+                    listener: (context, state) {
+                      // TODO: implement listener
+                    },
+                    builder: (context, state) {
+                      if (state is GetPostLoadingState) {
+                        return const Expanded(
+                            child: Center(child: CircularProgressIndicator()));
+                      }
+                      else if(state is GetPostSuccessState){
+                        allPostsData.clear();
+                        final data = state.listOfPosts;
+                        if(state.listOfFutureData!=null &&state.listOfFutureData!.isEmpty){
+                          isEmptyData=true;
+                        }
+                        allPostsData.addAll(data);
+                        return Expanded(
+                            child: DefaultTabController(
+                              length: 2,
+                              child: TabBarView(
+                                controller: tabController,
+                                physics: const NeverScrollableScrollPhysics(),
+                                children: [
+                                  BookmarkPostCard(
+                                    data: data,
+                                    scrollController: scrollControllerTab1,
+                                    isLoading: isLoading,
+                                    isTab1: isTab1,
+                                    futureData: state.listOfFutureData,
+                                    isDataEmpty: isEmptyData,
+                                  ),
+                                  BookmarkPostCard(
+                                    data: data,
+                                    scrollController: scrollControllerTab2,
+                                    isLoading: isLoading,
+                                    isTab1: isTab1,
+                                    futureData: state.listOfFutureData,
+                                    isDataEmpty: isEmptyData,
+                                  ),
+                                ],
+                              ),
+                            ));
+                      }
+                      else if (state is GetPostFailureState) {
+                        return Center(
+                          child: SimpleText(
+                            text: state.errorMessage,
+                            fontSize: 16,
+                          ),
+                        );
+                      } else {
+                        return const Center(
+                          child: SimpleText(
+                            text: "Loading...",
+                            fontSize: 16,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              );
+            }
+            else{
+              return const Center(
+                child: SimpleText(
+                  text: "Something went wrong",
+                  fontColor: Colors.black,
+                  fontSize: 16,
+                ),
+              );
+            }
+          },
         ),
       ),
     );

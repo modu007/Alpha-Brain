@@ -1,3 +1,4 @@
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:neuralcode/Models/for_you_model.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import '../../Api/all_api.dart';
@@ -8,24 +9,25 @@ class HomeRepo {
       {required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
-    print(email);
-    print(skip);
-    print(limit);
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
-      var result = await networkRequest.postMethodRequest({
-        "Email": email,
-        "Skip": skip,
-        "Limit": limit
-      }, AllApi.forYou);
-      if(result is List){
-        print(result);
-        List<ForYouModel> data =[];
-        for(int i=0;i<result.length;i++){
-          data.add(ForYouModel.fromJson(result[i]));
-        }
-        return data;
-      }
-      return "something went wrong";
+     if(hasExpired){
+
+     }
+     var result = await networkRequest.postMethodRequest({
+       "Email": email,
+       "Skip": skip,
+       "Limit": limit
+     }, AllApi.forYou);
+     if(result is List){
+       List<ForYouModel> data =[];
+       for(int i=0;i<result.length;i++){
+         data.add(ForYouModel.fromJson(result[i]));
+       }
+       return data;
+     }
+     return "something went wrong";
     } catch (error) {
       print("on pagination repo $error");
     }
@@ -35,7 +37,6 @@ class HomeRepo {
       {required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
-
     try {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
@@ -71,7 +72,6 @@ class HomeRepo {
         "Previous_emojis_type": previousEmojiType
       },
           AllApi.reactionOnPost);
-      print("ressss:$result");
       if(result["Status"]=="Success"){
         return "success";
       }
@@ -88,7 +88,6 @@ class HomeRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
-
     try {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
@@ -96,7 +95,6 @@ class HomeRepo {
         "BookMark": bookmark
       },
           AllApi.bookmarkOnPost);
-      print("ressss:$result");
       if(result["Status"]=="success"&& result["Message"]=="Post bookmarked"){
         return "success";
       }
@@ -105,6 +103,25 @@ class HomeRepo {
         return "removed";
       }
       return "something went wrong";
+    } catch (error) {
+      print("sign up repo $error");
+    }
+  }
+
+  static Future adminAction(
+      {
+        required String postId,
+      }) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    try {
+      var result = await networkRequest.postMethodRequest({
+        "Email": email,
+        "Post_id": postId
+      },
+          AllApi.adminApi);
+      print(result);
+     return result;
     } catch (error) {
       print("sign up repo $error");
     }

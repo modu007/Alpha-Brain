@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_event.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_state.dart';
@@ -11,7 +10,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     on<GetPostInitialEvent>(getPostInitialEvent);
     on<TabChangeEvent>(tabChangeEvent);
     on<PaginationEvent>(paginationEvent);
-    on<UploadPhotoEvent>(uploadPhotoEvent);
   }
   FutureOr<void> getPostInitialEvent(
       ProfileEvent event, Emitter<ProfileState> emit) async {
@@ -94,31 +92,5 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     catch(error){
       emit(GetPostFailureState(errorMessage: "Something went wrong"));
     }
-  }
-
-  Future uploadPhotoEvent(
-      UploadPhotoEvent event, Emitter<ProfileState> emit) async {
-    emit(UploadProfileLoadingState());
-   try{
-     FilePickerResult? result = await FilePicker.platform.pickFiles(
-       type: FileType.custom,
-       dialogTitle: "Select Profile Photo",
-       allowMultiple: false,
-       allowedExtensions: ['jpg', 'jpeg', 'png'],
-     );
-     if (result != null) {
-       PlatformFile file = result.files.first;
-       var resultData = await ProfileRepo.uploadProfile(image: file);
-       if (resultData["Status"] == "success"&& resultData["Message"]=="Uploaded successfully"){
-         emit(UploadProfileSuccessState());
-       }
-       else {
-         emit(UploadProfileSuccessState());
-       }
-     }
-   }
-   catch(e){
-     emit(UploadProfileErrorState());
-   }
   }
 }

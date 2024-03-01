@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
@@ -53,6 +54,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light));
     return Scaffold(
       backgroundColor: const Color(0xff4EB3CA),
       body: Center(

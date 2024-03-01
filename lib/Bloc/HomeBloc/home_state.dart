@@ -16,6 +16,10 @@ class GetPostFailureState extends HomeState {
 
 class GetPostSuccessState extends HomeState{
   final List<ForYouModel> listOfPosts;
-  GetPostSuccessState({required this.listOfPosts});
+  final bool isAdmin;
+  GetPostSuccessState({
+    required this.listOfPosts,
+    required this.isAdmin,
+  });
 }
 

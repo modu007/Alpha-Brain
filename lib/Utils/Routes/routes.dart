@@ -28,8 +28,18 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const Profile());
         case RouteName.editProfile:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const EditProfile());
+        if(argument is Map){
+          return MaterialPageRoute(
+              builder: (BuildContext context) => EditProfile(name: argument["name"],));
+        }else{
+          return MaterialPageRoute(builder: (_) {
+            return const Scaffold(
+              body: Center(
+                child: Text('No route defined'),
+              ),
+            );
+          });
+        }
         case RouteName.otpVerification:
           if(argument is Map){
             return MaterialPageRoute(

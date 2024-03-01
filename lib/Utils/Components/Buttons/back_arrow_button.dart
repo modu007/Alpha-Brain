@@ -15,7 +15,6 @@ class BackButtonContainer extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 15,),
         SimpleText(
           text: headingText,
           fontSize: 28,

@@ -1,6 +1,8 @@
 class AllApi {
   static const baseUrl  = 'http://20.42.87.219/api';
 
+  static const baseUrl1  = 'http://20.42.87.219';
+
   //register user
   static const registerUser = "$baseUrl/register/user/";
 
@@ -29,4 +31,16 @@ class AllApi {
 
   //upload image
   static const uploadImage = "$baseUrl/upload/display_pic/";
+
+  //get uploaded image
+  static const getProfilePic = "$baseUrl1/fetch_dp/";
+
+  //update profile
+  static const updateProfile = "$baseUrl/update_profile/";
+
+  //generate a token
+  static const generateToken = "$baseUrl/generate/new_token/";
+
+  // admin api
+  static const adminApi = "$baseUrl/admin_action/";
 }

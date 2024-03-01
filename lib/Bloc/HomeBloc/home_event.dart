@@ -46,6 +46,15 @@ class BookmarkPostEvent extends HomeEvent{
   });
 }
 
+class AdminActionEvent extends HomeEvent{
+  final List<ForYouModel> listOfData;
+  final ForYouModel postData;
+  AdminActionEvent({
+    required this.postData,
+    required this.listOfData,
+  });
+}
+
 
 
 

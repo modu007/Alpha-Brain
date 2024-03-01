@@ -113,13 +113,14 @@ class ProfileRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    String name = await SharedData.getEmail("name");
     try {
       FormData formData = FormData.fromMap(
         {
-          'image': await MultipartFile.fromFile(image.path.toString(),
-              filename: image.name),
+          'File': await MultipartFile.fromFile(image.path.toString(),
+              filename: image.name.toLowerCase()),
           "Email":email,
-          "Name":"Harshit"
+          "Name":name
         },
       );
       return networkRequest.postDioRequest(AllApi.uploadImage, formData);
@@ -128,4 +129,41 @@ class ProfileRepo {
       return e.toString();
     }
   }
+
+  static Future editProfile(
+      {required String name,required String age}) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    try {
+      var result = await networkRequest.postMethodRequest({
+        "Email": email,
+        "Name": name,
+        "Age": age
+      }, AllApi.getBookmarks);
+      if(result["Status"]=="success"){
+        return "success";
+      }
+      return "something went wrong";
+    } catch (error) {
+      print("on edit profile $error");
+    }
+  }
+
+
+  static Future getProfilePic() async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String name = await SharedData.getEmail("name");
+    String dp = await SharedData.getEmail("profile");
+    try {
+      var result = await networkRequest.getMethodRequest("${AllApi.getProfilePic}$name/$dp");
+      if(result["message"]=="Image 'bottom-img_compressed.jpg' not found."){
+        return "something went wrong";
+      }else{
+        return result;
+      }
+    } catch (error) {
+      print("on edit profile $error");
+    }
+  }
+
 }

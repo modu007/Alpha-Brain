@@ -237,15 +237,16 @@ class BookmarkPostCard extends StatelessWidget{
                                   text: "${keyPoints.subHeading} ",
                                   style: const TextStyle(
                                       fontSize: 15,
-                                      color: Color(0xff77818A),
-                                      fontWeight: FontWeight.bold),
+                                      color: Color(0xff2B2B2B),
+                                      fontWeight: FontWeight.w500
+                                  ),
                                 ),
                                 TextSpan(
                                   text: keyPoints.description,
                                   style: const TextStyle(
-                                      fontSize: 15,
-                                      color:Color(0xff77818A),
-                                      fontWeight: FontWeight.normal),
+                                    fontSize: 15,
+                                    color:Color(0xff2B2B2B),
+                                  ),
                                 ),
                               ],
                             ),

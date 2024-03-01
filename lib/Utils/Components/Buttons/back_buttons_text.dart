@@ -12,13 +12,13 @@ class BackButtonText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: (){
-        Navigator.of(context).pop();
-      },
-      child: Row(
-        children: [
-          Container(
+    return Row(
+      children: [
+        InkWell(
+          onTap: (){
+            Navigator.of(context).pop();
+          },
+          child: Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -29,13 +29,13 @@ class BackButtonText extends StatelessWidget {
             ),
             child:SvgPicture.asset("assets/svg/back_arrow.svg"),
           ),
-          const SizedBox(width: 15,),
-           SimpleText(
-            text: titleText,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,),
-        ],
-      ),
+        ),
+        const SizedBox(width: 15,),
+         SimpleText(
+          text: titleText,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,),
+      ],
     );
   }
 }

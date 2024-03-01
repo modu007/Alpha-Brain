@@ -12,9 +12,11 @@ class PostListView extends StatelessWidget{
     super.key,
     required this.data,
     required this.scrollController,
+    required this.isAdmin,
   });
   final List<ForYouModel> data;
   final ScrollController scrollController;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class PostListView extends StatelessWidget{
               ),
             );
           }
-        else{
+          else{
           bool emojiTypeBool=false;
            var emojiType="";
            bool bookmarkOrNot = false;
@@ -100,11 +102,34 @@ class PostListView extends StatelessWidget{
                           ],
                         ),
                         const Spacer(),
-                         SimpleText(
-                          text: data[index].dateTime.split("2024")[0],
-                          fontSize: 12,
-                          fontColor: const Color(0xff8698A9),
-                        )
+                       isAdmin ?
+                       Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            InkWell(
+                                onTap: (){
+                                  BlocProvider.of<HomeBloc>(context).add(
+                                    AdminActionEvent(
+                                        postData: data[index],
+                                        listOfData: data)
+                                  );
+                                },
+                                child: const Icon(
+                                  Icons.delete_outline,
+                                  color: Colors.red,
+                                )),
+                            SimpleText(
+                              text: data[index].dateTime.split("2024")[0],
+                              fontSize: 12,
+                              fontColor: const Color(0xff8698A9),
+                            )
+                          ],
+                        ):
+                       SimpleText(
+                         text: data[index].dateTime.split("2024")[0],
+                         fontSize: 12,
+                         fontColor: const Color(0xff8698A9),
+                       )
                       ],
                     ),
                   ),
@@ -159,8 +184,8 @@ class PostListView extends StatelessWidget{
                               children: [
                                 Image.asset("assets/images/hindustan_times.png"),
                                 const SizedBox(width: 5,),
-                                const SimpleText(
-                                  text: "The Hindu",
+                                 SimpleText(
+                                  text: data[index].source,
                                   fontSize: 8,
                                   fontColor:Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -207,11 +232,14 @@ class PostListView extends StatelessWidget{
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SvgPicture.asset("assets/svg/heart_filled.svg",),
-                                    const SizedBox(width: 5,),
-                                    SimpleText(
-                                      text: data[index].love!=null ? data[index].love.toString():"",
-                                      fontSize: 12,
-                                      fontColor: const Color(0xff060606),)
+                                    data[index].love!=null ?Padding(
+                                      padding: const EdgeInsets.only(left: 6),
+                                      child: SimpleText(
+                                        text: data[index].love.toString(),
+                                        fontSize: 12,
+                                        fontColor: const Color(0xff060606),),
+                                    ):
+                                    const SizedBox()
                                   ],
                                 ),
                               ):
@@ -231,7 +259,8 @@ class PostListView extends StatelessWidget{
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SvgPicture.asset("assets/svg/heart.svg",),
-                                    const SizedBox(width: 5,),
+                                    data[index].love!=null ?
+                                    const SizedBox(width: 5,):const SizedBox(),
                                     SimpleText(
                                       text: data[index].love!=null ? data[index].love.toString():"",
                                       fontSize: 12,
@@ -279,7 +308,8 @@ class PostListView extends StatelessWidget{
                   SimpleText(
                     text: data[index].summary.title,
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
+                    fontColor: const Color(0xff002D42),
                   ),
                   const SizedBox(height: 10,),
                   ListView.builder(
@@ -299,15 +329,16 @@ class PostListView extends StatelessWidget{
                                   text: "${keyPoints.subHeading} ",
                                   style: const TextStyle(
                                       fontSize: 15,
-                                      color: Color(0xff77818A),
-                                      fontWeight: FontWeight.bold),
+                                      color: Color(0xff2B2B2B),
+                                    fontWeight: FontWeight.w500
+                                  ),
                                 ),
                                 TextSpan(
                                   text: keyPoints.description,
                                   style: const TextStyle(
                                       fontSize: 15,
-                                      color:Color(0xff77818A),
-                                      fontWeight: FontWeight.normal),
+                                      color:Color(0xff2B2B2B),
+                                      ),
                                 ),
                               ],
                             ),

@@ -10,12 +10,6 @@ class GetPostInitialState extends ProfileState {}
 
 class GetPostLoadingState extends ProfileState {}
 
-class UploadProfileLoadingState extends ProfileState {}
-
-class UploadProfileSuccessState extends ProfileState {}
-
-class UploadProfileErrorState extends ProfileState {}
-
 class GetPostFailureState extends ProfileState {
   final String errorMessage;
 
