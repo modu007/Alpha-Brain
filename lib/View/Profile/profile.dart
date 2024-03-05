@@ -60,30 +60,10 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
     });
     scrollControllerTab1 = ScrollController();
     scrollControllerTab2 = ScrollController();
-    scrollControllerTab1.addListener(() async {
-     if(!isEmptyData){
-       if (scrollControllerTab1.position.pixels >=
-           scrollControllerTab1.position.maxScrollExtent) {
-         if (!isLoading) {
-           isLoading=true;
-           skip += 5;
-           BlocProvider.of<ProfileBloc>(context).add(
-             PaginationEvent(
-                 limit: limit,
-                 skip: skip,
-                 allPrevPostData: allPostsData,
-                 tab: 0
-             ),
-           );
-           isLoading=false;
-         }
-       }
-     }
-    });
-    scrollControllerTab2.addListener(() {
+    scrollControllerTab1.addListener(() {
       if(!isEmptyData){
-        if (scrollControllerTab2.position.pixels >=
-            scrollControllerTab2.position.maxScrollExtent) {
+        if (scrollControllerTab1.position.pixels >=
+            scrollControllerTab1.position.maxScrollExtent) {
           if (!isLoading) {
             isLoading = true;
             skip += 5; // Adjust according to your pagination logic
@@ -99,6 +79,26 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
           }
         }
       }
+    });
+    scrollControllerTab2.addListener(() async {
+     if(!isEmptyData){
+       if (scrollControllerTab2.position.pixels >=
+           scrollControllerTab2.position.maxScrollExtent) {
+         if (!isLoading) {
+           isLoading=true;
+           skip += 5;
+           BlocProvider.of<ProfileBloc>(context).add(
+             PaginationEvent(
+                 limit: limit,
+                 skip: skip,
+                 allPrevPostData: allPostsData,
+                 tab: 0
+             ),
+           );
+           isLoading=false;
+         }
+       }
+     }
     });
   }
 
@@ -282,6 +282,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                       controller: tabController,
                       dividerColor: Colors.transparent,
                       indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorPadding: const EdgeInsets.symmetric(horizontal: 10),
                       indicatorColor: const Color(0xff4EB3CA),
                       labelPadding: const EdgeInsets.symmetric(horizontal: 5),
                       unselectedLabelStyle: const TextStyle(color: Color(0xff8698A9)),
@@ -289,13 +290,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                       tabs: const [
                         Tab(
                             child: SimpleText(
-                              text: 'Bookmark',
+                              text: 'Likes',
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             )),
                         Tab(
                             child: SimpleText(
-                              text: 'Likes',
+                              text: 'Bookmark',
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             )),

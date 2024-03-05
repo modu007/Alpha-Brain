@@ -141,6 +141,7 @@ class ProfileRepo {
         "Age": age
       }, AllApi.getBookmarks);
       if(result["Status"]=="success"){
+        SharedData.setUserName(name);
         return "success";
       }
       return "something went wrong";

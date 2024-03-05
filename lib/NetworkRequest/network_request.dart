@@ -9,9 +9,6 @@ import 'app_exception.dart';
 
 class NetworkRequest {
   static const int timeOutDuration = 20;
-
-
-
   //original
   Future postMethodRequest(Map body, String api) async {
     var token = await SharedData.getToken("token");

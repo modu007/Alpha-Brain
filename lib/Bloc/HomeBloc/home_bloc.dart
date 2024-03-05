@@ -23,7 +23,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if(result is List<ForYouModel>){
         String email =await SharedData.getEmail("email");
         bool isAdmin =false;
-        if(email == "soniharshit36@gmail.com"){
+        if(email == "satishlangayan@gmail.com"){
           isAdmin=true;
         }
         emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
@@ -45,7 +45,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
-          if(email == "soniharshit36@gmail.com"){
+          if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
           emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
@@ -63,7 +63,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
-          if(email == "soniharshit36@gmail.com"){
+          if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
           emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
@@ -98,7 +98,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           result.addAll(resultData);
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
-          if(email == "soniharshit36@gmail.com"){
+          if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
           emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
@@ -167,7 +167,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     String email =await SharedData.getEmail("email");
     bool isAdmin =false;
-    if(email == "soniharshit36@gmail.com"){
+    if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
     emit(GetPostSuccessState(listOfPosts:data,isAdmin: isAdmin));
@@ -234,7 +234,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     String email =await SharedData.getEmail("email");
     bool isAdmin =false;
-    if(email == "soniharshit36@gmail.com"){
+    if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
     emit(GetPostSuccessState(listOfPosts:data,isAdmin: isAdmin));
@@ -270,7 +270,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
    data.removeAt(index);
     String email =await SharedData.getEmail("email");
     bool isAdmin =false;
-    if(email == "soniharshit36@gmail.com"){
+    if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
    emit(GetPostSuccessState(listOfPosts: data, isAdmin: isAdmin));

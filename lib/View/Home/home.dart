@@ -42,6 +42,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     dp = profilePic;
     imageUrl = "${AllApi.getProfilePic}$name/$profilePic";
   }
+
   @override
   void initState() {
     super.initState();
@@ -114,13 +115,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        drawer:  Drawer(
+        endDrawer:  Drawer(
           backgroundColor: Colors.white,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
           children: <Widget>[
               Row(
-          children: [
+                children: [
                dp.isEmpty ?
                SvgPicture.asset(
                  "assets/svg/user_icon.svg",height: 40,width: 40,):
@@ -181,34 +182,51 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   // Navigator.of(context).pop()
                 },
               ),
+            ListTile(
+                leading: SvgPicture.asset("assets/svg/logout.svg"),
+                title:  const SimpleText(
+                  text: 'Logout',
+                  fontSize: 15,
+                  fontColor: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+                onTap: (){
+                  SharedData.removeUserid();
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                      RouteName.signIn, (route) => false);
+                },
+              ),
+
             ],
           ),
         ),
         body: Column(
           children: [
-            HomeAppBar(tabController: _tabController,),
+            HomeAppBar(
+              tabController: _tabController,
+            ),
             const SizedBox(
               height: 20,
             ),
-            Expanded(
-              child: BlocConsumer<HomeBloc, HomeState>(
-                listenWhen: (previous, current) => current is HomeActionState,
-                buildWhen: (previous, current) => current is! HomeActionState,
-                listener: (context, state) {
-                  // TODO: implement listener
-                },
-                builder: (context, state) {
-                  if (state is GetPostLoadingState) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (state is GetPostSuccessState) {
-                    allPostsData.clear();
-                    final data = state.listOfPosts;
-                    allPostsData.addAll(data);
-                    return DefaultTabController(
+            BlocConsumer<HomeBloc, HomeState>(
+              listenWhen: (previous, current) => current is HomeActionState,
+              buildWhen: (previous, current) => current is! HomeActionState,
+              listener: (context, state) {
+                // TODO: implement listener
+              },
+              builder: (context, state) {
+                if (state is GetPostLoadingState) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is GetPostSuccessState) {
+                  allPostsData.clear();
+                  final data = state.listOfPosts;
+                  allPostsData.addAll(data);
+                  return Expanded(
+                    child: DefaultTabController(
                       length: 2,
                       child: TabBarView(
-                        controller: _tabController,
                         physics: const NeverScrollableScrollPhysics(),
+                        controller: _tabController,
                         children: [
                           PostListView(
                             data: data,
@@ -222,24 +240,24 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           ),
                         ],
                       ),
-                    );
-                  } else if (state is GetPostFailureState) {
-                    return Center(
-                      child: SimpleText(
-                        text: state.errorMessage,
-                        fontSize: 16,
-                      ),
-                    );
-                  } else {
-                    return const Center(
-                      child: SimpleText(
-                        text: "Loading...",
-                        fontSize: 16,
-                      ),
-                    );
-                  }
-                },
-              ),
+                    ),
+                  );
+                } else if (state is GetPostFailureState) {
+                  return Center(
+                    child: SimpleText(
+                      text: state.errorMessage,
+                      fontSize: 16,
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: SimpleText(
+                      text: "Loading...",
+                      fontSize: 16,
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),

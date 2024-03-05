@@ -15,7 +15,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       ProfileEvent event, Emitter<ProfileState> emit) async {
     emit(GetPostLoadingState());
     try{
-      var result = await ProfileRepo.getAllBookmarksData(skip: 0, limit: 5);
+      var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
       if(result is List<BookmarkPostModel>){
         emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
       }else{
@@ -32,7 +32,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     emit(GetPostLoadingState());
     if(event.tabIndex ==0){
       try{
-        var result = await ProfileRepo.getAllBookmarksData(skip: 0, limit: 5);
+        var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
         if(result is List<BookmarkPostModel>){
           emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
         }else{
@@ -45,7 +45,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
     else{
       try{
-        var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
+        var result = await ProfileRepo.getAllBookmarksData(skip: 0, limit: 5);
         if(result is List<BookmarkPostModel>){
           emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
         }else{
@@ -64,11 +64,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     var result;
     try{
       if(event.tab==0){
-        result = await ProfileRepo.getAllBookmarksData(
+        result = await ProfileRepo.getAllLikesData(
             skip: event.skip, limit: event.limit);
       }
       else{
-        result = await ProfileRepo.getAllLikesData(
+        result = await ProfileRepo.getAllBookmarksData(
             skip: event.skip, limit: event.limit);
       }
       if(result is List<BookmarkPostModel>){

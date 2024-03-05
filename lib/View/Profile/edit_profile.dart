@@ -5,6 +5,7 @@ import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
 import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
 import 'package:neuralcode/Utils/Components/Buttons/login_buttons.dart';
 import '../../Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
+import '../../Bloc/EditProfileCubit/edit_profile_state.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
 import '../../Utils/Regex/regex.dart';
@@ -96,7 +97,12 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 const SizedBox(height: 10,),
-                LoginButtons(
+                BlocBuilder<EditProfileCubit, EditProfileState>(
+                builder: (context, state) {
+                  if(state is EditProfileLoadingState){
+                    return const Center(child: CircularProgressIndicator(),);
+                  }
+                  return LoginButtons(
                     size: size,
                     centerText: "Update Profile",
                     onPressed: (){
@@ -104,7 +110,9 @@ class _EditProfileState extends State<EditProfile> {
                        BlocProvider.of<EditProfileCubit>(context)
                            .editProfile(nameController.text,dobController.text);
                      }
-                    })
+                    });
+                  },
+                )
               ],
             ),
           ),
