@@ -34,6 +34,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Future getName()async{
     String result = await SharedData.getEmail("name");
     name =result;
+    setState(() {});
   }
 
   Future getImage()async{
@@ -41,6 +42,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     String profilePic = await SharedData.getEmail("profilePic");
     dp = profilePic;
     imageUrl = "${AllApi.getProfilePic}$name/$profilePic";
+    setState(() {});
   }
 
   @override
@@ -68,10 +70,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           skip += 5;
           BlocProvider.of<HomeBloc>(context).add(
             PaginationEvent(
-              limit: limit,
-              skip: skip,
-              allPrevPostData: allPostsData,
-              tab: 0
+                limit: limit,
+                skip: skip,
+                allPrevPostData: allPostsData,
+                tab: 0
             ),
           );
           isLoading = false;
@@ -86,10 +88,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           skip += 5; // Adjust according to your pagination logic
           BlocProvider.of<HomeBloc>(context).add(
             PaginationEvent(
-              limit: limit,
-              skip: skip,
-              allPrevPostData: allPostsData,
-              tab: 1
+                limit: limit,
+                skip: skip,
+                allPrevPostData: allPostsData,
+                tab: 1
             ),
           );
           isLoading = false;
@@ -108,6 +110,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    getName();
+    getImage();
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
@@ -119,29 +123,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           backgroundColor: Colors.white,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
-          children: <Widget>[
+            children: <Widget>[
               Row(
                 children: [
-               dp.isEmpty ?
-               SvgPicture.asset(
-                 "assets/svg/user_icon.svg",height: 40,width: 40,):
-               ClipRRect(
-                 borderRadius: BorderRadius.circular(20),
-                   child: Image.network(imageUrl,height: 40,width: 40,)
-               ),
-               const SizedBox(width: 10,),
-               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                SimpleText(
-                  text: name,
-                  fontSize: 15,
-                  fontWeight:FontWeight.w600,
-                  fontColor: Colors.black,
-                  textHeight: 0,
-                ),
-              ],
-            )
+                  dp.isEmpty ?
+                  SvgPicture.asset(
+                    "assets/svg/user_icon.svg",height: 40,width: 40,):
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.network(imageUrl,height: 40,width: 40,)
+                  ),
+                  const SizedBox(width: 10,),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SimpleText(
+                        text: name,
+                        fontSize: 15,
+                        fontWeight:FontWeight.w600,
+                        fontColor: Colors.black,
+                        textHeight: 0,
+                      ),
+                    ],
+                  )
                 ],
               ),
               const SizedBox(height: 20,),
@@ -158,7 +162,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Navigator.of(context).pushNamed(RouteName.profile);
                 },
               ),
-            ListTile(
+              ListTile(
                 leading: SvgPicture.asset("assets/svg/settings.svg"),
                 title:  const SimpleText(
                   text: 'Settings',
@@ -170,7 +174,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   // Navigator.of(context).pop()
                 },
               ),
-            ListTile(
+              ListTile(
                 leading: SvgPicture.asset("assets/svg/call.svg"),
                 title:  const SimpleText(
                   text: 'Support',
@@ -182,7 +186,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   // Navigator.of(context).pop()
                 },
               ),
-            ListTile(
+              ListTile(
                 leading: SvgPicture.asset("assets/svg/logout.svg"),
                 title:  const SimpleText(
                   text: 'Logout',
@@ -205,9 +209,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             HomeAppBar(
               tabController: _tabController,
             ),
-            const SizedBox(
-              height: 20,
-            ),
             BlocConsumer<HomeBloc, HomeState>(
               listenWhen: (previous, current) => current is HomeActionState,
               buildWhen: (previous, current) => current is! HomeActionState,
@@ -216,7 +217,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               },
               builder: (context, state) {
                 if (state is GetPostLoadingState) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Expanded(child: Center(child: CircularProgressIndicator()));
                 } else if (state is GetPostSuccessState) {
                   allPostsData.clear();
                   final data = state.listOfPosts;

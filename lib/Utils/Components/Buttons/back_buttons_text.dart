@@ -4,10 +4,12 @@ import '../Text/simple_text.dart';
 
 class BackButtonText extends StatelessWidget {
   final String titleText;
+  final VoidCallback onPressed;
 
   const BackButtonText({
     super.key,
-    required this.titleText
+    required this.titleText,
+    required this.onPressed
   });
 
   @override
@@ -15,9 +17,7 @@ class BackButtonText extends StatelessWidget {
     return Row(
       children: [
         InkWell(
-          onTap: (){
-            Navigator.of(context).pop();
-          },
+          onTap: onPressed,
           child: Container(
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(

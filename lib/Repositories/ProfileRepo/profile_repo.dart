@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import '../../Api/all_api.dart';
@@ -11,7 +12,15 @@ class ProfileRepo {
       {required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Skip": skip,
@@ -34,8 +43,15 @@ class ProfileRepo {
       {required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
-
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Skip": skip,
@@ -62,7 +78,15 @@ class ProfileRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Post_id": postId,
@@ -86,8 +110,15 @@ class ProfileRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
-
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Post_id": postId,
@@ -114,7 +145,15 @@ class ProfileRepo {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
     String name = await SharedData.getEmail("name");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       FormData formData = FormData.fromMap(
         {
           'File': await MultipartFile.fromFile(image.path.toString(),
@@ -134,14 +173,22 @@ class ProfileRepo {
       {required String name,required String age}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Name": name,
         "Age": age
-      }, AllApi.getBookmarks);
+      }, AllApi.updateProfile);
       if(result["Status"]=="success"){
-        SharedData.setUserName(name);
+        SharedData.setName(name);
         return "success";
       }
       return "something went wrong";
@@ -155,7 +202,15 @@ class ProfileRepo {
     NetworkRequest networkRequest = NetworkRequest();
     String name = await SharedData.getEmail("name");
     String dp = await SharedData.getEmail("profile");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.getMethodRequest("${AllApi.getProfilePic}$name/$dp");
       if(result["message"]=="Image 'bottom-img_compressed.jpg' not found."){
         return "something went wrong";

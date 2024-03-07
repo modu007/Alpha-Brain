@@ -32,3 +32,7 @@ class SendOtp extends RegisterEvent{
   final String email;
   SendOtp({required this.email});
 }
+
+
+class TermsAndConditionEvent extends RegisterEvent{
+}

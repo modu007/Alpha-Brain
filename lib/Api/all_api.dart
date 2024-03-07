@@ -39,8 +39,11 @@ class AllApi {
   static const updateProfile = "$baseUrl/update_profile/";
 
   //generate a token
-  static const generateToken = "$baseUrl/generate/new_token/";
+  static const generateToken = "$baseUrl1/generate/new_token/";
 
   // admin api
   static const adminApi = "$baseUrl/admin_action/";
+
+  //terms and condition
+  static const termsAndCondition = "$baseUrl1/fetch_company_terms/terms_conditions.docx";
 }

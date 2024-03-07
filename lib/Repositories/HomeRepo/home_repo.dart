@@ -11,9 +11,13 @@ class HomeRepo {
     String email = await SharedData.getEmail("email");
     var token = await SharedData.getToken("token");
     bool hasExpired = JwtDecoder.isExpired(token);
+    print(hasExpired);
     try {
      if(hasExpired){
-
+       var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+       if(res["Token"]!= null){
+         SharedData.setToken(res["Token"]);
+       }
      }
      var result = await networkRequest.postMethodRequest({
        "Email": email,
@@ -37,7 +41,16 @@ class HomeRepo {
       {required int skip,required int limit}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
+
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Skip": skip,
@@ -64,6 +77,14 @@ class HomeRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
+    if(hasExpired){
+      var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+      if(res["Token"]!= null){
+        SharedData.setToken(res["Token"]);
+      }
+    }
     try {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
@@ -88,7 +109,15 @@ class HomeRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Post_id": postId,
@@ -114,13 +143,20 @@ class HomeRepo {
       }) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
     try {
+      if(hasExpired){
+        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Post_id": postId
       },
           AllApi.adminApi);
-      print(result);
      return result;
     } catch (error) {
       print("sign up repo $error");

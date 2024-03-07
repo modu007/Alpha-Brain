@@ -105,4 +105,15 @@ class AuthRepo{
       print("sign up repo $error");
     }
   }
+
+
+  static Future getTermsAndCondition() async {
+    NetworkRequest networkRequest = NetworkRequest();
+    try {
+      return await networkRequest
+          .getMethodRequest(AllApi.termsAndCondition);
+    } catch (error) {
+      print("sign up repo $error");
+    }
+  }
 }

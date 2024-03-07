@@ -134,58 +134,58 @@ class _SignInState extends State<SignIn> {
                 },
               ),
                 const SizedBox(height: 30,),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          child: Divider(
-                            color: Color(0xffE8ECF4),
-                            thickness: 1,
-                          )),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: SimpleText(
-                          text: "Or Login with",
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w400,
-                          fontColor: Colors.black,
-                        ),
-                      ),
-                      Expanded(
-                          child: Divider(
-                            thickness: 1,
-                            color: Color(0xffE8ECF4),
-                          )),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20,),
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xffE8ECF4),
-                      )
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/svg/google.svg"),
-                      const SizedBox(width: 10,),
-                      const SimpleText(
-                        text: "Continue with Google",
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        fontColor: Color(0xff6A707C),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   margin: const EdgeInsets.symmetric(horizontal: 20),
+                //   child: const Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Expanded(
+                //           child: Divider(
+                //             color: Color(0xffE8ECF4),
+                //             thickness: 1,
+                //           )),
+                //       Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 10),
+                //         child: SimpleText(
+                //           text: "Or Login with",
+                //           fontSize: 14,
+                //           fontFamily: 'Poppins',
+                //           fontWeight: FontWeight.w400,
+                //           fontColor: Colors.black,
+                //         ),
+                //       ),
+                //       Expanded(
+                //           child: Divider(
+                //             thickness: 1,
+                //             color: Color(0xffE8ECF4),
+                //           )),
+                //     ],
+                //   ),
+                // ),
+                // const SizedBox(height: 20,),
+                // Container(
+                //   width: size.width,
+                //   padding: const EdgeInsets.symmetric(vertical: 15),
+                //   decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(10),
+                //       border: Border.all(
+                //         color: const Color(0xffE8ECF4),
+                //       )
+                //   ),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       SvgPicture.asset("assets/svg/google.svg"),
+                //       const SizedBox(width: 10,),
+                //       const SimpleText(
+                //         text: "Continue with Google",
+                //         fontSize: 15,
+                //         fontWeight: FontWeight.w500,
+                //         fontColor: Color(0xff6A707C),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(height: 15,),
               ],
             ),

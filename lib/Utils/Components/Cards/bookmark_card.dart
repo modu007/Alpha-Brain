@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Text/simple_text.dart';
@@ -219,6 +220,7 @@ class BookmarkPostCard extends StatelessWidget{
                     text: dataResult.summary.title,
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
+                    textHeight: 1,
                   ),
                   const SizedBox(height: 10,),
                   ListView.builder(
@@ -235,17 +237,19 @@ class BookmarkPostCard extends StatelessWidget{
                               children: [
                                 TextSpan(
                                   text: "${keyPoints.subHeading} ",
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      color: Color(0xff2B2B2B),
-                                      fontWeight: FontWeight.w500
+                                  style:  GoogleFonts.besley(
+                                    fontSize: 15,
+                                    color: const Color(0xff2B2B2B),
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.0,
                                   ),
                                 ),
                                 TextSpan(
                                   text: keyPoints.description,
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    color:Color(0xff2B2B2B),
+                                  style:  GoogleFonts.besley(
+                                    fontSize: 14,
+                                    color:const Color(0xff2B2B2B),
+                                    height: 1.1,
                                   ),
                                 ),
                               ],

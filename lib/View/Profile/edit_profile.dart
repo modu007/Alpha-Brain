@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
 import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
 import 'package:neuralcode/Utils/Components/Buttons/login_buttons.dart';
+import '../../Bloc/AuthBloc/UserDetailsBloc/user_details_cubit.dart';
 import '../../Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import '../../Bloc/EditProfileCubit/edit_profile_state.dart';
 import '../../Utils/Components/Text/simple_text.dart';
@@ -59,7 +60,12 @@ class _EditProfileState extends State<EditProfile> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const BackButtonText(titleText: "Edit Profile"),
+                BackButtonText(
+                  titleText: "Edit Profile",
+                  onPressed: (){
+                    BlocProvider.of<UserDetailsCubit>(context).getUserDetails();
+                    Navigator.of(context).pop();
+                    },),
                 const SizedBox(height: 20,),
                 TextFieldContainer(
                   emailController: nameController,

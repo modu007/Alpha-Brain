@@ -12,6 +12,7 @@ class NetworkRequest {
   //original
   Future postMethodRequest(Map body, String api) async {
     var token = await SharedData.getToken("token");
+    print(token);
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token}',

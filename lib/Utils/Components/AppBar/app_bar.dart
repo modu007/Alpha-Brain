@@ -17,7 +17,7 @@ class HomeAppBar extends StatelessWidget {
           Row(
             children: [
             const SimpleText(
-              text: "Alpha Brains",
+              text: "Z-Alpha Brains",
               fontSize: 24,
               fontColor: ColorClass.headingColor,
               fontWeight: FontWeight.w500,
@@ -26,7 +26,7 @@ class HomeAppBar extends StatelessWidget {
               Builder(
                 builder:(context)=>InkWell(
                   onTap: (){
-                    Scaffold.of(context).openDrawer();
+                    Scaffold.of(context).openEndDrawer();
                   },
                     child: SvgPicture.asset("assets/svg/menu.svg")))
             ],

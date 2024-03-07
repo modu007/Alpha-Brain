@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neuralcode/Api/all_api.dart';
 import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/regex.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_event.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_state.dart';
@@ -352,60 +354,132 @@ class _RegisterState extends State<Register>{
                     );
                   },
                 ),
-                const SizedBox(height: 30,),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          child: Divider(
-                            color: Color(0xffE8ECF4),
-                            thickness: 1,
-                          )),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: SimpleText(
-                          text: "Or Register with",
-                          fontSize: 14,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w400,
-                          fontColor: Colors.black,
+                // Container(
+                //   margin: const EdgeInsets.symmetric(horizontal: 20),
+                //   child: const Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Expanded(
+                //           child: Divider(
+                //             color: Color(0xffE8ECF4),
+                //             thickness: 1,
+                //           )),
+                //       Padding(
+                //         padding: EdgeInsets.symmetric(horizontal: 10),
+                //         child: SimpleText(
+                //           text: "Or Register with",
+                //           fontSize: 14,
+                //           fontFamily: 'Poppins',
+                //           fontWeight: FontWeight.w400,
+                //           fontColor: Colors.black,
+                //         ),
+                //       ),
+                //       Expanded(
+                //           child: Divider(
+                //             thickness: 1,
+                //             color: Color(0xffE8ECF4),
+                //           )),
+                //     ],
+                //   ),
+                // ),
+                // const SizedBox(height: 20,),
+                // Container(
+                //   width: size.width,
+                //   padding: const EdgeInsets.symmetric(vertical: 15),
+                //   decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(10),
+                //       border: Border.all(
+                //         color: const Color(0xffE8ECF4),
+                //       )
+                //   ),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       SvgPicture.asset("assets/svg/google.svg"),
+                //       const SizedBox(width: 10,),
+                //       const SimpleText(
+                //         text: "Continue with Google",
+                //         fontSize: 15,
+                //         fontWeight: FontWeight.w500,
+                //         fontColor: Color(0xff6A707C),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                const SizedBox(height: 20,),
+                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SimpleText(
+                            text: "By proceeding, you agree to Z Alpha Brains ",
+                            fontSize: 12),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: ()async{
+                            if (!await launchUrl(Uri.parse(AllApi.termsAndCondition))) {
+                              throw Exception('Could not launch url');
+                            }
+                            },
+                          child: const SimpleText(text: "Terms of Service.",
+                            fontSize: 12,
+                            fontColor:  Color(0xff4EB3CA),
+                            textDecoration: TextDecoration.underline,
+                          ),
                         ),
-                      ),
-                      Expanded(
-                          child: Divider(
-                            thickness: 1,
-                            color: Color(0xffE8ECF4),
-                          )),
-                    ],
-                  ),
+                        const SimpleText(
+                            text: "We will manage information about",
+                            fontSize: 12),
+                      ],
+                    ),
+                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SimpleText(
+                            text: "you as described in ",
+                            fontSize: 12),
+                        const SimpleText(
+                            text: "our ",
+                            fontSize: 12),
+                        InkWell(
+                          onTap: ()async{
+                            if (!await launchUrl(Uri.parse(AllApi.termsAndCondition))) {
+                            throw Exception('Could not launch url');
+                            }
+                          },
+                          child: const SimpleText(text: "Privacy Policy ",
+                            fontSize: 12,
+                            fontColor:  Color(0xff4EB3CA),
+                            textDecoration: TextDecoration.underline,
+                          ),
+                        ),
+                        const SimpleText(
+                            text: "and ",
+                            fontSize: 12),
+                        InkWell(
+                          onTap: ()async{
+                            if (!await launchUrl(Uri.parse(AllApi.termsAndCondition))) {
+                              throw Exception('Could not launch url');
+                            }
+                          },
+                          child: const SimpleText(text: "Cookie Policy.",
+                            fontSize: 12,
+                            fontColor:  Color(0xff4EB3CA),
+                            textDecoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
-                const SizedBox(height: 20,),
-                Container(
-                  width: size.width,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xffE8ECF4),
-                      )
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/svg/google.svg"),
-                      const SizedBox(width: 10,),
-                      const SimpleText(
-                        text: "Continue with Google",
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                        fontColor: Color(0xff6A707C),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20,),
+                const SizedBox(height: 10,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

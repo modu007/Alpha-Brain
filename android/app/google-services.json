@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "189641862419",
+    "project_id": "alpha-brains-f2ba5",
+    "storage_bucket": "alpha-brains-f2ba5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:189641862419:android:49489e30efe9a47fd67ee6",
+        "android_client_info": {
+          "package_name": "com.example.neuralcode"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaLItpdndKHH1p4ZA1BkvJAuEim6GfQGc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

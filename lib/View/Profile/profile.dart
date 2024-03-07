@@ -134,7 +134,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                     margin: const EdgeInsets.symmetric(horizontal: 15,vertical: 10),
                     child: Row(
                       children: [
-                        const BackButtonText(titleText: "Profile"),
+                         BackButtonText(
+                          titleText: "Profile",
+                          onPressed: () {
+                           Navigator.of(context).pop();
+                          },),
                         const Spacer(),
                         InkWell(
                           onTap: (){

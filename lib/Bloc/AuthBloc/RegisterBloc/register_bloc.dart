@@ -8,6 +8,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc() : super(RegisterInitial(isUsernameValid: false)) {
     on<RegisterDataEvent>(registerDataEvent);
     on<SendOtp>(sendOtp);
+    on<TermsAndConditionEvent>(termsAndConditionEvent);
   }
   FutureOr<void> registerDataEvent(
       RegisterDataEvent event, Emitter<RegisterState> emit) async {
@@ -66,4 +67,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         emit(ErrorState());
       }
     }
+
+    FutureOr<void> termsAndConditionEvent(
+        TermsAndConditionEvent event, Emitter<RegisterState> emit) async {
+      try{
+        await AuthRepo.getTermsAndCondition();
+      }
+      catch(error){
+        emit(ErrorState());
+      }
+    }
+
+
 }

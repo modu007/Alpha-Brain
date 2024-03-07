@@ -12,7 +12,7 @@ import 'Bloc/HomeBloc/home_bloc.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
 
-void main() {
+void main() async{
   runApp(const MyApp());
 }
 

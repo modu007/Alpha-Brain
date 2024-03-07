@@ -9,6 +9,7 @@ class EditProfileCubit extends Cubit<EditProfileState> {
     try{
       emit(EditProfileLoadingState());
       var result = await ProfileRepo.editProfile(name: name,age: age);
+
       if(result == "success" ){
         emit(EditProfileSuccessState());
       }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../Bloc/HomeBloc/home_bloc.dart';
 import '../../../Bloc/HomeBloc/home_event.dart';
@@ -310,6 +311,7 @@ class PostListView extends StatelessWidget{
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     fontColor: const Color(0xff002D42),
+                    textHeight: 1,
                   ),
                   const SizedBox(height: 10,),
                   ListView.builder(
@@ -327,18 +329,20 @@ class PostListView extends StatelessWidget{
                               children: [
                                 TextSpan(
                                   text: "${keyPoints.subHeading} ",
-                                  style: const TextStyle(
+                                  style:  GoogleFonts.besley(
                                       fontSize: 15,
-                                      color: Color(0xff2B2B2B),
-                                    fontWeight: FontWeight.w500
+                                      color: const Color(0xff2B2B2B),
+                                    fontWeight: FontWeight.w600,
+                                    height: 1.0,
                                   ),
                                 ),
                                 TextSpan(
                                   text: keyPoints.description,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      color:Color(0xff2B2B2B),
-                                      ),
+                                  style:  GoogleFonts.besley(
+                                      fontSize: 14,
+                                      color:const Color(0xff2B2B2B),
+                                    height: 1.1,
+                                  ),
                                 ),
                               ],
                             ),

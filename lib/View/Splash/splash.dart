@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               child: Image.asset("assets/images/logo.png"),
             ),
             const SimpleText(
-                text: "Y-Alpha Brainz",
+                text: "Z-Alpha Brainz",
                 fontSize: 25),
             const SizedBox(height: 20,),
             Container(
