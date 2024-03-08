@@ -14,7 +14,8 @@ class HomeRepo {
     print(hasExpired);
     try {
      if(hasExpired){
-       var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+       var res = await networkRequest.refreshToken({}, AllApi.generateToken);
+       print(res);
        if(res["Token"]!= null){
          SharedData.setToken(res["Token"]);
        }
@@ -46,7 +47,7 @@ class HomeRepo {
 
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -80,7 +81,7 @@ class HomeRepo {
     var token = await SharedData.getToken("token");
     bool hasExpired = JwtDecoder.isExpired(token);
     if(hasExpired){
-      var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+      var res = await networkRequest.refreshToken({}, AllApi.generateToken);
       if(res["Token"]!= null){
         SharedData.setToken(res["Token"]);
       }
@@ -113,7 +114,7 @@ class HomeRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -147,7 +148,7 @@ class HomeRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }

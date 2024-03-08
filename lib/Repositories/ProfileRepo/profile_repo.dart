@@ -16,7 +16,7 @@ class ProfileRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -47,7 +47,7 @@ class ProfileRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -82,7 +82,7 @@ class ProfileRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -114,7 +114,7 @@ class ProfileRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -149,7 +149,7 @@ class ProfileRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -177,7 +177,7 @@ class ProfileRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }
@@ -206,7 +206,7 @@ class ProfileRepo {
     bool hasExpired = JwtDecoder.isExpired(token);
     try {
       if(hasExpired){
-        var res = await networkRequest.postMethodRequest({}, AllApi.generateToken);
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
         if(res["Token"]!= null){
           SharedData.setToken(res["Token"]);
         }

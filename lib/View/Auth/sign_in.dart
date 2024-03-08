@@ -102,8 +102,8 @@ class _SignInState extends State<SignIn> {
                   listener: (context, state) {
                     if(state is InvalidEmailState){
                       Fluttertoast.showToast(
-                          msg: "Invalid email",
-                          toastLength: Toast.LENGTH_SHORT,
+                          msg: "Email id does not exist please register",
+                          toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.CENTER,
                           timeInSecForIosWeb: 1,
                           textColor: Colors.black,

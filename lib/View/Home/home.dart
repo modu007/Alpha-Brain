@@ -162,18 +162,18 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Navigator.of(context).pushNamed(RouteName.profile);
                 },
               ),
-              ListTile(
-                leading: SvgPicture.asset("assets/svg/settings.svg"),
-                title:  const SimpleText(
-                  text: 'Settings',
-                  fontSize: 15,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                onTap: () => {
-                  // Navigator.of(context).pop()
-                },
-              ),
+              // ListTile(
+              //   leading: SvgPicture.asset("assets/svg/settings.svg"),
+              //   title:  const SimpleText(
+              //     text: 'Settings',
+              //     fontSize: 15,
+              //     fontColor: Colors.black,
+              //     fontWeight: FontWeight.w600,
+              //   ),
+              //   onTap: () => {
+              //     // Navigator.of(context).pop()
+              //   },
+              // ),
               ListTile(
                 leading: SvgPicture.asset("assets/svg/call.svg"),
                 title:  const SimpleText(

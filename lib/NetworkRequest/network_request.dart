@@ -8,11 +8,35 @@ import '../SharedPrefernce/shared_pref.dart';
 import 'app_exception.dart';
 
 class NetworkRequest {
-  static const int timeOutDuration = 20;
-  //original
+  static const int timeOutDuration = 30;
+
+  Future refreshToken(Map body, String api) async {
+    var refresh = await SharedData.getToken("refresh");
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': "Bearer $refresh",
+    };
+    try {
+      http.Request request = http.Request('POST', Uri.parse(api));
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request
+          .send()
+          .timeout(const Duration(seconds: timeOutDuration));
+      print(response.statusCode);
+      return _processResponse(response);
+    } on SocketException {
+      return throw InternetException('No Internet connection', api.toString());
+    } on TimeoutException {
+      return throw RequestTimeOutException(
+          'API not responded in time', api.toString());
+    }
+  }
+
+
   Future postMethodRequest(Map body, String api) async {
     var token = await SharedData.getToken("token");
-    print(token);
+    var refresh = await SharedData.getToken("refresh");
+    print(refresh);
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token}',
