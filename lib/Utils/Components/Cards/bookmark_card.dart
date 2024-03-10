@@ -148,8 +148,8 @@ class BookmarkPostCard extends StatelessWidget{
                               children: [
                                 Image.asset("assets/images/hindustan_times.png"),
                                 const SizedBox(width: 5,),
-                                const SimpleText(
-                                  text: "The Hindu",
+                                 SimpleText(
+                                  text: dataResult.source,
                                   fontSize: 8,
                                   fontColor:Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -164,53 +164,53 @@ class BookmarkPostCard extends StatelessWidget{
                         left: 15,
                         child: Row(
                           children: [
-                            isTab1? const SizedBox():Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: const Color(0xffF8F8FA)
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      blurRadius: 2,
-                                    )
-                                  ]
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset("assets/svg/heart_filled.svg",),
-                                  const SizedBox(width: 5,),
-                                  SimpleText(
-                                    text: dataResult.love!=null ? dataResult.love.toString():"",
-                                    fontSize: 12,
-                                    fontColor: const Color(0xff060606),)
-                                ],
-                              )
-                            ),
-                            const SizedBox(width: 10,),
                             isTab1? Container(
-                              padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                      color: const Color(0xffF8F8FA)
-                                  ),
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      blurRadius: 2,
-                                    )
-                                  ]
-                              ),
-                              child: SvgPicture.asset("assets/svg/bookmarked.svg")
-                            ):const SizedBox()
+                                padding: const EdgeInsets.all(6),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color(0xffF8F8FA)
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 2,
+                                      )
+                                    ]
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset("assets/svg/heart_filled.svg",),
+                                    const SizedBox(width: 5,),
+                                    SimpleText(
+                                      text: dataResult.love!=null ? dataResult.love.toString():"",
+                                      fontSize: 12,
+                                      fontColor: const Color(0xff060606),)
+                                  ],
+                                )
+                            ):const SizedBox(),
+                            const SizedBox(width: 10,),
+                            isTab1? const SizedBox():Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: const Color(0xffF8F8FA)
+                                    ),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.grey,
+                                        blurRadius: 2,
+                                      )
+                                    ]
+                                ),
+                                child: SvgPicture.asset("assets/svg/bookmarked.svg")
+                            )
                           ],
                         ),
                       ),
@@ -237,7 +237,7 @@ class BookmarkPostCard extends StatelessWidget{
                               children: [
                                 TextSpan(
                                   text: "${keyPoints.subHeading} ",
-                                  style:  GoogleFonts.besley(
+                                  style:  GoogleFonts.roboto(
                                     fontSize: 14,
                                     color: const Color(0xff2B2B2B),
                                     fontWeight: FontWeight.w600,
@@ -246,7 +246,7 @@ class BookmarkPostCard extends StatelessWidget{
                                 ),
                                 TextSpan(
                                   text: keyPoints.description,
-                                  style:  GoogleFonts.besley(
+                                  style:  GoogleFonts.roboto(
                                     fontSize: 14,
                                     color:const Color(0xff2B2B2B),
                                     height: 1.1,

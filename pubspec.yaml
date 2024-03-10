@@ -46,13 +46,9 @@ dependencies:
   dropdown_button2: ^2.3.9
   google_fonts: ^6.1.0
   pinput: ^2.2.31
-  google_sign_in: ^6.2.1
   fluttertoast: ^8.2.4
   file_picker: ^6.1.1
   jwt_decoder: ^2.0.1
-  firebase_auth: ^4.17.6
-  firebase_core: ^2.25.5
-  cloud_firestore: ^4.15.6
 
 
 dev_dependencies:

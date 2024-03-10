@@ -182,8 +182,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   fontColor: Colors.black,
                   fontWeight: FontWeight.w600,
                 ),
-                onTap: () => {
-                  // Navigator.of(context).pop()
+                onTap: (){
+                  Navigator.of(context).pushNamed(RouteName.support);
                 },
               ),
               ListTile(

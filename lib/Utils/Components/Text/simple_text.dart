@@ -29,7 +29,7 @@ class SimpleText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: GoogleFonts.besley(
+      style: GoogleFonts.roboto(
           color: fontColor,
           fontSize: fontSize,
           fontWeight: fontWeight,

@@ -329,7 +329,7 @@ class PostListView extends StatelessWidget{
                               children: [
                                 TextSpan(
                                   text: "${keyPoints.subHeading} ",
-                                  style:  GoogleFonts.besley(
+                                  style:  GoogleFonts.roboto(
                                       fontSize: 14,
                                       color: const Color(0xff2B2B2B),
                                     fontWeight: FontWeight.w600,
@@ -338,7 +338,7 @@ class PostListView extends StatelessWidget{
                                 ),
                                 TextSpan(
                                   text: keyPoints.description,
-                                  style:  GoogleFonts.besley(
+                                  style:  GoogleFonts.roboto(
                                       fontSize: 14,
                                       color:const Color(0xff2B2B2B),
                                     height: 1.1,

@@ -7,6 +7,7 @@ import 'package:neuralcode/View/Home/home.dart';
 import 'package:neuralcode/View/Profile/edit_profile.dart';
 import 'package:neuralcode/View/Profile/profile.dart';
 import 'package:neuralcode/View/Splash/splash.dart';
+import 'package:neuralcode/View/SupportScreen/support_screen.dart';
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -15,6 +16,9 @@ class Routes {
       case RouteName.home:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Home());
+        case RouteName.support:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const SupportScreen());
         case RouteName.register:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Register());

@@ -6,4 +6,5 @@ class RouteName {
   static const String otpVerification = 'otp_verify';
   static const String profile = 'profile';
   static const String editProfile = 'edit_profile';
+  static const String support = 'support';
 }
