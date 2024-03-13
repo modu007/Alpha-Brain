@@ -1,4 +1,4 @@
-package com.example.neuralcode
+package com.ai.neuralcode
 
 import io.flutter.embedding.android.FlutterActivity
 

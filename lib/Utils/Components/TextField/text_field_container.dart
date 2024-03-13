@@ -10,7 +10,7 @@ class TextFieldContainer extends StatelessWidget {
     this.suffixIcon,
     this.onTap,
     this.readOnly,
-    this.onChanged
+    this.onChanged, this.keyboardType
   });
 
   final TextEditingController emailController;
@@ -20,6 +20,7 @@ class TextFieldContainer extends StatelessWidget {
   final void Function()? onTap;
   final bool? readOnly;
   final void Function(String)? onChanged;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,7 @@ class TextFieldContainer extends StatelessWidget {
             validator: validator,
             controller: emailController,
             maxLines: 1,
+            keyboardType: keyboardType,
             decoration:  InputDecoration(
                 suffixIcon: suffixIcon !=null ? SizedBox(
                   height: 10,

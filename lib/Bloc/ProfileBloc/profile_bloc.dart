@@ -17,7 +17,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     try{
       var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
       if(result is List<BookmarkPostModel>){
-        emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+        if(result.length==1){
+          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: []));
+        }else{
+          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+        }
       }else{
         emit(GetPostFailureState(errorMessage: "Error"));
       }
@@ -34,7 +38,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try{
         var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
         if(result is List<BookmarkPostModel>){
-          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+          if(result.length==1){
+            emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: []));
+          }else{
+            emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+          }
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
         }
@@ -47,7 +55,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       try{
         var result = await ProfileRepo.getAllBookmarksData(skip: 0, limit: 5);
         if(result is List<BookmarkPostModel>){
-          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+          if(result.length==1){
+            if(result.length==1){
+              emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: []));
+            }else{
+              emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+            }
+          }else{
+            emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+          }
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
         }

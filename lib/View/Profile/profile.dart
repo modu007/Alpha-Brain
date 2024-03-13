@@ -197,13 +197,14 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                 }
                               },
                               builder: (context, state) {
-                                if(state is UploadProfileLoadingState){
-                                  return const Center(child: CircularProgressIndicator(),);
+                                if (state is UploadProfileLoadingState) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),);
                                 }
-                                if(state is UploadProfileSuccessState){
+                                if (state is UploadProfileSuccessState) {
                                   var data = state.path;
                                   return ClipRRect(
-                                    borderRadius: BorderRadius.circular(40),
+                                    borderRadius: BorderRadius.circular(50),
                                     child: data != null
                                         ? Image.file(
                                       File(data),
@@ -213,42 +214,45 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                     )
                                         : dp.isEmpty ?
                                     ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                          "assets/svg/user_icon.svg",
+                                          height: 90,
+                                          width: 90,),
+                                      ),
+                                    ) :
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(50),
+                                      child: Image.network(
+                                        height: 90,
+                                        width: 90,
+                                        imageUrl,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  return dp.isEmpty ?
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Center(
                                       child: SvgPicture.asset(
                                         "assets/svg/user_icon.svg",
                                         height: 90,
                                         width: 90,),
-                                    ):
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(40),
-                                      child: Center(
-                                        child: Image.network(
-                                            imageUrl,
-                                            height: 90,
-                                            fit: BoxFit.cover),
-                                      ),
+                                    ),
+                                  ) :
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.network(
+                                      imageUrl, height: 90,
+                                      width: 90,
+                                      fit: BoxFit.fill,
                                     ),
                                   );
-                                }else{
-                                  return ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child:dp.isEmpty ?
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(40),
-                                        child: Center(
-                                          child: SvgPicture.asset(
-                                            "assets/svg/user_icon.svg",
-                                            height: 90,
-                                            width: 90,),
-                                        ),
-                                      ):
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(40),
-                                        child: Image.network(
-                                          imageUrl, height: 90,fit: BoxFit.cover),
-                                      )
-                                  );
                                 }
-                              },
+                              }
                             ),
                             Positioned(
                               bottom: 0,
@@ -259,8 +263,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                       .uploadPhotoEvent();
                                 },
                                 child: Container(
-                                  height: 40,
-                                  width: 40,
+                                  height: 30,
+                                  width: 30,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
@@ -312,6 +316,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                       // TODO: implement listener
                     },
                     builder: (context, state) {
+                      print(state);
                       if (state is GetPostLoadingState) {
                         return const Expanded(
                             child: Center(child: CircularProgressIndicator()));
@@ -319,7 +324,7 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                       else if(state is GetPostSuccessState){
                         allPostsData.clear();
                         final data = state.listOfPosts;
-                        if(state.listOfFutureData!=null &&state.listOfFutureData!.isEmpty){
+                        if(state.listOfFutureData !=null && state.listOfFutureData!.isEmpty){
                           isEmptyData=true;
                         }
                         allPostsData.addAll(data);
@@ -330,6 +335,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                 controller: tabController,
                                 physics: const NeverScrollableScrollPhysics(),
                                 children: [
+                                  data.isEmpty ?
+                                  const Center(
+                                    child: SimpleText(
+                                      text: 'You do not have any likes yet',
+                                      fontSize: 18,
+                                      textAlign: TextAlign.center,
+                                    ),):
                                   BookmarkPostCard(
                                     data: data,
                                     scrollController: scrollControllerTab1,
@@ -338,6 +350,20 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                     futureData: state.listOfFutureData,
                                     isDataEmpty: isEmptyData,
                                   ),
+                                  data.isEmpty ?
+                                  const Center(
+                                    child: SimpleText(
+                                      text: 'You do not have any bookmarks yet',
+                                      fontSize: 18,
+                                      textAlign: TextAlign.center,
+                                    ),):
+                                  data.isEmpty?
+                                  const Center(
+                                    child: SimpleText(
+                                      text: 'You do not have any bookmarks yet',
+                                      fontSize: 18,
+                                      textAlign: TextAlign.center,
+                                    ),):
                                   BookmarkPostCard(
                                     data: data,
                                     scrollController: scrollControllerTab2,

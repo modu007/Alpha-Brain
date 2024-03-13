@@ -263,6 +263,7 @@ class _RegisterState extends State<Register>{
                 ),
                 const SizedBox(height: 10,),
                 TextFieldContainer(
+                  keyboardType: TextInputType.emailAddress,
                   emailController: emailController,
                   hintText: "Email",
                   onChanged: (val){

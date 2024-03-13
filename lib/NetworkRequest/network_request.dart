@@ -22,7 +22,6 @@ class NetworkRequest {
       http.StreamedResponse response = await request
           .send()
           .timeout(const Duration(seconds: timeOutDuration));
-      print(response.statusCode);
       return _processResponse(response);
     } on SocketException {
       return throw InternetException('No Internet connection', api.toString());
@@ -35,8 +34,6 @@ class NetworkRequest {
 
   Future postMethodRequest(Map body, String api) async {
     var token = await SharedData.getToken("token");
-    var refresh = await SharedData.getToken("refresh");
-    print(refresh);
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token}',

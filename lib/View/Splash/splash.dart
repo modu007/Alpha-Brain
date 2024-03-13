@@ -18,14 +18,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     var token = await SharedData.getToken("token");
     if(token!= null){
       Timer(
-          const Duration(seconds: 5),
+          const Duration(seconds: 6),
               () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
               RouteName.home, (route) => false )
       );
     }else{
       Timer(
           const Duration(seconds: 5),
-              () => Navigator.of(context).pushNamed(RouteName.signIn)
+              () => Navigator.of(context).popAndPushNamed(RouteName.signIn)
       );
     }
   }

@@ -5,7 +5,10 @@ import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 
 class HomeAppBar extends StatelessWidget {
   final TabController tabController;
-  const HomeAppBar({super.key, required this.tabController});
+  const HomeAppBar({
+    super.key,
+    required this.tabController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,7 @@ class HomeAppBar extends StatelessWidget {
               const Spacer(),
               Builder(
                 builder:(context)=>InkWell(
-                  onTap: (){
+                  onTap:(){
                     Scaffold.of(context).openEndDrawer();
                   },
                     child: SvgPicture.asset("assets/svg/menu.svg")))

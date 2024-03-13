@@ -157,7 +157,7 @@ class ProfileRepo {
       FormData formData = FormData.fromMap(
         {
           'File': await MultipartFile.fromFile(image.path.toString(),
-              filename: image.name.toLowerCase()),
+              filename: name.replaceAll(' ', '').toLowerCase()),
           "Email":email,
           "Name":name
         },

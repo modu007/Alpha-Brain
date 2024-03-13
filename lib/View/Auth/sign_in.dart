@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_event.dart';
@@ -71,6 +70,7 @@ class _SignInState extends State<SignIn> {
                    headingText: "Welcome back! Glad to see you, Again!",),
                 const SizedBox(height: 40,),
                 TextFieldContainer(
+                  keyboardType: TextInputType.emailAddress,
                   emailController: emailController,
                   hintText: "Enter your email",
                   onChanged: (val){

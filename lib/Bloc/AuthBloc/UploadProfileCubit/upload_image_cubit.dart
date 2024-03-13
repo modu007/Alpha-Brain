@@ -19,7 +19,6 @@ class UploadImageCubit extends Cubit<UploadImageState> {
       if (result != null) {
         PlatformFile? file =  result.files.first;
         var resultData = await ProfileRepo.uploadProfile(image: file);
-        print(resultData);
         if (resultData["Status"] == "success"&& resultData["Message"]=="Uploaded successfully")
         {
           SharedData.setProfilePic(resultData["Display_pic"]);
