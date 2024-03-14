@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -41,7 +43,6 @@ class _RegisterState extends State<Register>{
     'Male',
     'Female',
   ];
-  String selectedValue = "Male";
   String dob = "";
   bool isEmailDone =false;
   bool isNameDone =false;
@@ -105,6 +106,46 @@ class _RegisterState extends State<Register>{
                 ),
                 BlocBuilder<UsernameCubit,UsernameState>(
                 builder: (context, state) {
+                  if(state is UsernameLoading){
+                    return Container(
+                      width: size.width,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                          color: const Color(0xffE8ECF4),
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          TextFormField(
+                            focusNode: focusNode,
+                            controller: usernameController,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "UserName",
+                                hintStyle: GoogleFonts.besley(
+                                  color: const Color(0xff8391A1),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                contentPadding: const EdgeInsets.only(left: 15,top:10)
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: SizedBox(
+                                height: 15,
+                                width: 15,
+                                child: CircularProgressIndicator(), // CircularProgressIndicator with fixed size
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
                   if(state is UsernameSuccessState){
                     isUserNameValid =true;
                     return Container(
@@ -130,7 +171,7 @@ class _RegisterState extends State<Register>{
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
                             ),
-                            contentPadding: const EdgeInsets.only(left: 15)
+                            contentPadding: const EdgeInsets.only(left: 15,top: 10)
                         ),
                       ),
                     );
@@ -343,7 +384,7 @@ class _RegisterState extends State<Register>{
                             email: emailController.text,
                             name: nameController.text,
                             age: dobController.text,
-                            gender: selectedValue,
+                            gender: genderController.text,
                           username: usernameController.text,
                           isUsernameValid:isUserNameValid,
                           fullNameValid: isFullNameDone,

@@ -2,6 +2,8 @@ abstract class UsernameState {}
 
 class UsernameInitial extends UsernameState {}
 
+class UsernameLoading extends UsernameState{}
+
 class UsernameSuccessState extends UsernameState {
   final bool isUsernameValid;
   UsernameSuccessState({required this.isUsernameValid});

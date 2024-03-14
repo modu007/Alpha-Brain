@@ -6,9 +6,11 @@ class UsernameCubit extends Cubit<UsernameState> {
   UsernameCubit() : super(UsernameInitial());
 
   Future usernameAvailability(String username)async{
+    emit(UsernameLoading());
     try{
       var result = await AuthRepo.userAvailability(userName: username);
       if(result == "success" ){
+        print("here");
         emit((UsernameSuccessState(isUsernameValid: true)));
       }else if(result =="exists"){
         emit(UsernameExistsState(isUsernameValid: false));
