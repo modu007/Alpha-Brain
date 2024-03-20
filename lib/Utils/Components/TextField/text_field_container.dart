@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+class EmailInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    final regExp = RegExp(r'^[\w@\s.]*$'); // Include . to allow dot character
+    if (regExp.hasMatch(newValue.text)) {
+      return newValue;
+    } else {
+      return oldValue;
+    }
+  }
+}
 
 class TextFieldContainer extends StatelessWidget {
   const TextFieldContainer({
@@ -10,7 +24,9 @@ class TextFieldContainer extends StatelessWidget {
     this.suffixIcon,
     this.onTap,
     this.readOnly,
-    this.onChanged, this.keyboardType
+    this.onChanged,
+    this.keyboardType,
+    this.inputFormatter
   });
 
   final TextEditingController emailController;
@@ -21,6 +37,7 @@ class TextFieldContainer extends StatelessWidget {
   final bool? readOnly;
   final void Function(String)? onChanged;
   final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatter;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +57,7 @@ class TextFieldContainer extends StatelessWidget {
               )
           ),
           child: TextFormField(
+            inputFormatters: inputFormatter,
             onChanged: onChanged,
             readOnly: readOnly ?? false,
             onTap: onTap,

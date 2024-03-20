@@ -54,7 +54,7 @@ class _RegisterState extends State<Register>{
   focusNode.addListener(() {
     if(!focusNode.hasFocus){
       BlocProvider.of<UsernameCubit>(context).usernameAvailability(
-          usernameController.text);
+          usernameController.text.toLowerCase());
     }
   });
     super.initState();
@@ -226,6 +226,9 @@ class _RegisterState extends State<Register>{
                       borderRadius: BorderRadius.circular(10)
                   ),
                   child: TextFormField(
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                    ],
                     focusNode: focusNode,
                     controller: usernameController,
                     decoration: InputDecoration(
@@ -303,6 +306,7 @@ class _RegisterState extends State<Register>{
                 ),
                 const SizedBox(height: 10,),
                 TextFieldContainer(
+                  inputFormatter: [EmailInputFormatter()],
                   keyboardType: TextInputType.emailAddress,
                   emailController: emailController,
                   hintText: "Email",
@@ -384,7 +388,7 @@ class _RegisterState extends State<Register>{
                             name: nameController.text,
                             age: dobController.text,
                             gender: genderController.text,
-                          username: usernameController.text,
+                          username: usernameController.text.toLowerCase(),
                           isUsernameValid:isUserNameValid,
                           fullNameValid: isFullNameDone,
                           isEmailValid: isEmailValid,

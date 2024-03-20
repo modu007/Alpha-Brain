@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>EditProfileCubit()),
       ],
       child: MaterialApp(
-        initialRoute: RouteName.register,
+        initialRoute: RouteName.splash,
         onGenerateRoute: Routes.generateRoute,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

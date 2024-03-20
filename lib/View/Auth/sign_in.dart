@@ -72,6 +72,7 @@ class _SignInState extends State<SignIn> {
                 TextFieldContainer(
                   keyboardType: TextInputType.emailAddress,
                   emailController: emailController,
+                  inputFormatter: [EmailInputFormatter()],
                   hintText: "Enter your email",
                   onChanged: (val){
                     if(regex.isValidEmail(val)){
