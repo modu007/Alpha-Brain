@@ -45,9 +45,9 @@ class SharedData {
     preferences.setString("profilePic", profilePic);
   }
 
-  static Future removeUserid() async {
+  static Future removeUserid(key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.clear();
+    preferences.remove(key);
   }
 }
 
@@ -82,18 +82,18 @@ class DarkThemePreference {
   }
 }
 
-class SharedName {
-  static Future getUserName(String key) async {
+class SharedFcmToken {
+  static Future getFcmToken(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get(key);
   }
 
-  static Future setUserName(String token) async {
+  static Future setFcmToken(String token) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setString("name", token);
+    preferences.setString("fcmToken", token);
   }
 
-  static Future removeUserName() async {
+  static Future removeFcmToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.clear();
   }

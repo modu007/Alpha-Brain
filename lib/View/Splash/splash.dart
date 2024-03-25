@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
@@ -18,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     var token = await SharedData.getToken("token");
     if(token!= null){
       Timer(
-          const Duration(seconds: 6),
+          const Duration(seconds: 4),
               () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
               RouteName.home, (route) => false )
       );
@@ -31,9 +33,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
   @override
   void initState() {
+    BlocProvider.of<TagsCubit>(context).getTags();
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 3),
     )..addListener(() {
       setState(() {});
     });

@@ -6,16 +6,14 @@ import '../../NetworkRequest/network_request.dart';
 
 class HomeRepo {
   static Future getAllPostDataOfForYou(
-      {required int skip,required int limit}) async {
+      {required int skip,required int limit,required String selectedTag}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
     var token = await SharedData.getToken("token");
     bool hasExpired = JwtDecoder.isExpired(token);
-    print(hasExpired);
     try {
      if(hasExpired){
        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
-       print(res);
        if(res["Token"]!= null){
          SharedData.setToken(res["Token"]);
        }
@@ -23,8 +21,10 @@ class HomeRepo {
      var result = await networkRequest.postMethodRequest({
        "Email": email,
        "Skip": skip,
-       "Limit": limit
+       "Limit": limit,
+       "Tags": selectedTag,
      }, AllApi.forYou);
+     print(result);
      if(result is List){
        List<ForYouModel> data =[];
        for(int i=0;i<result.length;i++){
@@ -39,7 +39,7 @@ class HomeRepo {
   }
 
   static Future getAllPostDataOfTopPicks(
-      {required int skip,required int limit}) async {
+      {required int skip,required int limit,required String selectedTag}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
     var token = await SharedData.getToken("token");
@@ -55,7 +55,8 @@ class HomeRepo {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Skip": skip,
-        "Limit": limit
+        "Limit": limit,
+        "Tags": selectedTag,
       }, AllApi.topPicks);
       if(result is List){
         List<ForYouModel> data =[];

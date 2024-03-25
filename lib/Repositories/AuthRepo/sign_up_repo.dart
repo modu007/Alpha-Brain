@@ -60,10 +60,12 @@ class AuthRepo{
     }) async {
     NetworkRequest networkRequest = NetworkRequest();
     try {
+      String fcmToken= await SharedFcmToken.getFcmToken("fcmToken");
       var result = await networkRequest
           .postMethodRequest({
         "Otp": otp,
-        "Email":email
+        "Email":email,
+        "FCMToken": fcmToken
       },AllApi.verifyOtp);
       if(result["Token"] != null){
         SharedData.setToken(result["Token"]);

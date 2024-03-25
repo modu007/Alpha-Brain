@@ -14,24 +14,33 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<PostLikeEvent>(postLikeEvent);
     on<BookmarkPostEvent>(bookmarkPostEvent);
     on<AdminActionEvent>(adminActionEvent);
+    on<TagSelectedEvent>(tagSelectedEvent);
   }
   FutureOr<void> getPostInitialEvent(
-      HomeEvent event, Emitter<HomeState> emit) async {
+      GetPostInitialEvent event, Emitter<HomeState> emit) async {
     emit(GetPostLoadingState());
     try{
-      var result = await HomeRepo.getAllPostDataOfForYou(skip: 0, limit: 5);
+      var result = await HomeRepo.getAllPostDataOfForYou(
+          skip: 0,
+          limit: 5,
+        selectedTag: event.selectedTag
+      );
       if(result is List<ForYouModel>){
         String email =await SharedData.getEmail("email");
         bool isAdmin =false;
         if(email == "satishlangayan@gmail.com"){
           isAdmin=true;
         }
-        emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
+        emit(GetPostSuccessState(
+            listOfPosts:result,isAdmin: isAdmin,
+            selectedTag: event.selectedTag
+        ));
       }else{
         emit(GetPostFailureState(errorMessage: "Error"));
       }
     }
     catch(error){
+      print(error.toString());
      emit(GetPostFailureState(errorMessage: "Something went wrong"));
     }
   }
@@ -41,14 +50,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(GetPostLoadingState());
     if(event.tabIndex ==0){
       try{
-        var result = await HomeRepo.getAllPostDataOfForYou(skip: 0, limit: 5);
+        var result = await HomeRepo.getAllPostDataOfForYou(
+            skip: 0, limit: 5,
+          selectedTag: event.selectedTag
+        );
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
-          emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
+          emit(GetPostSuccessState(
+              listOfPosts:result,isAdmin: isAdmin,
+              selectedTag: event.selectedTag
+          ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
         }
@@ -59,14 +74,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     else{
       try{
-        var result = await HomeRepo.getAllPostDataOfTopPicks(skip: 0, limit: 5);
+        var result = await HomeRepo.getAllPostDataOfTopPicks(
+            skip: 0, limit: 5, selectedTag: event.selectedTag);
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
-          emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
+          emit(GetPostSuccessState(
+              listOfPosts:result,isAdmin: isAdmin,
+              selectedTag: event.selectedTag
+          ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
         }
@@ -83,12 +102,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       try{
         if(event.tab==0){
            result = await HomeRepo.getAllPostDataOfForYou(
-              skip: event.skip, limit: event.limit);
-        }
+            skip: event.skip,
+            limit: event.limit,
+            selectedTag: event.selectedTag);
+      }
         else{
            result = await HomeRepo.getAllPostDataOfTopPicks(
-              skip: event.skip, limit: event.limit);
-        }
+            skip: event.skip,
+            limit: event.limit,
+            selectedTag: event.selectedTag);
+      }
         if(result is List<ForYouModel>){
           List<ForYouModel> allPostData = event.allPrevPostData;
           List<ForYouModel> resultData =[];
@@ -101,7 +124,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
-          emit(GetPostSuccessState(listOfPosts:result,isAdmin: isAdmin));
+          emit(GetPostSuccessState(
+              listOfPosts:result,isAdmin: isAdmin,
+              selectedTag: event.selectedTag
+          ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
         }
@@ -170,7 +196,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
-    emit(GetPostSuccessState(listOfPosts:data,isAdmin: isAdmin));
+    emit(GetPostSuccessState(
+        listOfPosts:data,isAdmin: isAdmin,
+        selectedTag: event.selectedTag
+    ));
     try{
         var result = await HomeRepo.reactionOnPost(
           emojisType: event.emojisType,
@@ -237,7 +266,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
-    emit(GetPostSuccessState(listOfPosts:data,isAdmin: isAdmin));
+    emit(GetPostSuccessState(
+        listOfPosts:data,isAdmin: isAdmin,
+        selectedTag: event.selectedTag
+    ));
     try{
       var result = await HomeRepo.bookmarkPost(
           postId: event.postData.id,
@@ -273,7 +305,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
-   emit(GetPostSuccessState(listOfPosts: data, isAdmin: isAdmin));
+   emit(GetPostSuccessState(
+       listOfPosts: data, isAdmin: isAdmin,
+       selectedTag: event.selectedTag
+   ));
     try{
       await HomeRepo.adminAction(
           postId: event.postData.id,
@@ -281,6 +316,57 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     catch(error){
       emit(GetPostFailureState(errorMessage: "Something went wrong"));
+    }
+  }
+
+  FutureOr<void> tagSelectedEvent(
+      TagSelectedEvent event, Emitter<HomeState> emit) async {
+    emit(GetPostLoadingState());
+    if(event.tabIndex ==0){
+      try{
+        var result = await HomeRepo.getAllPostDataOfForYou(
+            skip: 0, limit: 5,
+            selectedTag: event.selectedTag
+        );
+        if(result is List<ForYouModel>){
+          String email =await SharedData.getEmail("email");
+          bool isAdmin =false;
+          if(email == "satishlangayan@gmail.com"){
+            isAdmin=true;
+          }
+          emit(GetPostSuccessState(
+              listOfPosts:result,isAdmin: isAdmin,
+              selectedTag: event.selectedTag
+          ));
+        }else{
+          emit(GetPostFailureState(errorMessage: "Error"));
+        }
+      }
+      catch(error){
+        emit(GetPostFailureState(errorMessage: "Something went wrong"));
+      }
+    }
+    else{
+      try{
+        var result = await HomeRepo.getAllPostDataOfTopPicks(
+            skip: 0, limit: 5, selectedTag: event.selectedTag);
+        if(result is List<ForYouModel>){
+          String email =await SharedData.getEmail("email");
+          bool isAdmin =false;
+          if(email == "satishlangayan@gmail.com"){
+            isAdmin=true;
+          }
+          emit(GetPostSuccessState(
+              listOfPosts:result,isAdmin: isAdmin,
+              selectedTag: event.selectedTag
+          ));
+        }else{
+          emit(GetPostFailureState(errorMessage: "Error"));
+        }
+      }
+      catch(error){
+        emit(GetPostFailureState(errorMessage: "Something went wrong"));
+      }
     }
   }
 }

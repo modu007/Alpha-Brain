@@ -5,8 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_cubit.dart';
 import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_state.dart';
-import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_bloc.dart';
-import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_event.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:pinput/pinput.dart';
@@ -77,6 +75,7 @@ class _OtpVerificationState extends State<OtpVerification> {
               const SizedBox(height: 30,),
               Center(
                 child: Pinput(
+                  keyboardType: TextInputType.number,
                   controller: otpController,
                   length: 6,
                   showCursor: true,

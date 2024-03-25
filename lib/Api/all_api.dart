@@ -1,7 +1,7 @@
 class AllApi {
-  static const baseUrl  = 'https://www.zalphabrains.com/api';
+  static const baseUrl  = 'http://20.42.87.219/api';
 
-  static const baseUrl1  = 'https://www.zalphabrains.com';
+  static const baseUrl1  = 'http://20.42.87.219';
 
   //register user
   static const registerUser = "$baseUrl/register/user/";
@@ -46,4 +46,6 @@ class AllApi {
 
   //terms and condition
   static const termsAndCondition = "$baseUrl1/fetch_company_terms/terms_conditions.docx";
+
+  static const getTags = "$baseUrl/get_tags/";
 }

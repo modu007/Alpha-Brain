@@ -14,14 +14,17 @@ class PostListView extends StatelessWidget{
     required this.data,
     required this.scrollController,
     required this.isAdmin,
+    required this.selectedTag,
   });
   final List<ForYouModel> data;
   final ScrollController scrollController;
   final bool isAdmin;
+  final String selectedTag;
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      shrinkWrap: true,
         controller: scrollController,
         itemCount: data.length,
         itemBuilder: (context,index){
@@ -52,20 +55,9 @@ class PostListView extends StatelessWidget{
               emojiTypeBool=false;
             }
             return Container(
-              margin: const EdgeInsets.only(left: 15,right: 15,top: 0,bottom: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                      color: const Color(0xffF8F8FA)
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Color(0xffF7F8F9),
-                        spreadRadius: 4,
-                        blurRadius: 2)
-                  ]),
+              margin: const EdgeInsets.only(top: 10,),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              color: Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -112,7 +104,9 @@ class PostListView extends StatelessWidget{
                                   BlocProvider.of<HomeBloc>(context).add(
                                     AdminActionEvent(
                                         postData: data[index],
-                                        listOfData: data)
+                                        listOfData: data,
+                                        selectedTag: selectedTag
+                                    )
                                   );
                                 },
                                 child: const Icon(
@@ -144,17 +138,17 @@ class PostListView extends StatelessWidget{
                             Container(
                               height: 200,
                               decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(20),
                               ),
                               child: Center(child: Image.asset("assets/images/logo.png")),
                             ) :Container(
                               height: 200,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: NetworkImage(data[index].imageUrl!),
-                                )
+                                  borderRadius: BorderRadius.circular(8),
+                                  image: DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(data[index].imageUrl!),
+                                  )
                               ),
                             ),
                           ],
@@ -175,7 +169,7 @@ class PostListView extends StatelessWidget{
                           child:  InkWell(
                             onTap: ()async{
                               if (!await launchUrl(Uri.parse(data[index].newsUrl))) {
-                              throw Exception('Could not launch url');
+                                throw Exception('Could not launch url');
                               }
                             },
                             child: Row(
@@ -185,7 +179,7 @@ class PostListView extends StatelessWidget{
                               children: [
                                 Image.asset("assets/images/hindustan_times.png"),
                                 const SizedBox(width: 5,),
-                                 SimpleText(
+                                SimpleText(
                                   text: data[index].source,
                                   fontSize: 8,
                                   fontColor:Colors.white,
@@ -197,113 +191,156 @@ class PostListView extends StatelessWidget{
                         ),
                       ),
                       Positioned(
-                        bottom: 10,
-                        left: 15,
-                        child: Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(6),
+                        bottom: 10,left: 15,
+                          child:  Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(color: const Color(0xffF8F8FA)),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.grey,
+                                    blurRadius: 2,
+                                  )
+                                ]),
+                            child: emojiTypeBool
+                                ? InkWell(
+                              onTap: () {
+                                BlocProvider.of<HomeBloc>(context).add(
+                                  PostLikeEvent(
+                                      postData: data[index],
+                                      previousEmojiType: emojiType,
+                                      emojisType: "",
+                                      listOfData: data,
+                                      selectedTag: selectedTag
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/svg/heart_filled.svg",
+                                  ),
+                                  data[index].love != null
+                                      ? Padding(
+                                    padding:
+                                    const EdgeInsets.only(left: 6),
+                                    child: SimpleText(
+                                      text: data[index].love.toString(),
+                                      fontSize: 12,
+                                      fontColor:
+                                      const Color(0xff060606),
+                                    ),
+                                  )
+                                      : const SizedBox()
+                                ],
+                              ),
+                            )
+                                : InkWell(
+                              onTap: () {
+                                BlocProvider.of<HomeBloc>(context).add(
+                                    PostLikeEvent(
+                                        postData: data[index],
+                                        previousEmojiType: emojiType,
+                                        emojisType: "love",
+                                        listOfData: data,
+                                        selectedTag: selectedTag
+                                    ));
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    "assets/svg/heart.svg",
+                                  ),
+                                  data[index].love != null
+                                      ? const SizedBox(
+                                    width: 5,
+                                  )
+                                      : const SizedBox(),
+                                  SimpleText(
+                                    text: data[index].love != null
+                                        ? data[index].love.toString()
+                                        : "",
+                                    fontSize: 12,
+                                    fontColor: const Color(0xff060606),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              bookmarkOrNot = !bookmarkOrNot;
+                              BlocProvider.of<HomeBloc>(context).add(
+                                  BookmarkPostEvent(
+                                      postData: data[index],
+                                      listOfData: data,
+                                      bookmark: bookmarkOrNot,
+                                      selectedTag: selectedTag
+                                  ));
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   color: Colors.white,
-                                  border: Border.all(
-                                      color: const Color(0xffF8F8FA)
-                                  ),
+                                  border:
+                                  Border.all(color: const Color(0xffF8F8FA)),
                                   borderRadius: BorderRadius.circular(20),
                                   boxShadow: const [
                                     BoxShadow(
                                       color: Colors.grey,
                                       blurRadius: 2,
                                     )
-                                  ]
-                              ),
-                              child: emojiTypeBool?
-                              InkWell(
-                                onTap: (){
-                                  BlocProvider.of<HomeBloc>(context).add(
-                                      PostLikeEvent(
-                                          postData: data[index],
-                                          previousEmojiType: emojiType,
-                                          emojisType: "",
-                                          listOfData: data)
-                                  );
-                                },
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset("assets/svg/heart_filled.svg",),
-                                    data[index].love!=null ?Padding(
-                                      padding: const EdgeInsets.only(left: 6),
-                                      child: SimpleText(
-                                        text: data[index].love.toString(),
-                                        fontSize: 12,
-                                        fontColor: const Color(0xff060606),),
-                                    ):
-                                    const SizedBox()
-                                  ],
-                                ),
-                              ):
-                              InkWell(
-                                onTap: (){
-                                  BlocProvider.of<HomeBloc>(context).add(
-                                      PostLikeEvent(
-                                          postData: data[index],
-                                          previousEmojiType: emojiType,
-                                          emojisType: "love",
-                                          listOfData: data)
-                                  );
-                                },
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset("assets/svg/heart.svg",),
-                                    data[index].love!=null ?
-                                    const SizedBox(width: 5,):const SizedBox(),
-                                    SimpleText(
-                                      text: data[index].love!=null ? data[index].love.toString():"",
-                                      fontSize: 12,
-                                      fontColor: const Color(0xff060606),)
-                                  ],
-                                ),
-                              ),
+                                  ]),
+                              child: bookmarkOrNot
+                                  ? SvgPicture.asset("assets/svg/bookmarked.svg")
+                                  : SvgPicture.asset("assets/svg/bookmark.svg"),
                             ),
-                            const SizedBox(width: 10,),
-                            InkWell(
-                              onTap: (){
-                                bookmarkOrNot =!bookmarkOrNot;
-                                BlocProvider.of<HomeBloc>(context).add(
-                                    BookmarkPostEvent(
-                                        postData: data[index],
-                                        listOfData: data,
-                                        bookmark: bookmarkOrNot)
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color(0xffF8F8FA)
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2,
-                                      )
-                                    ]
-                                ),
-                                child: bookmarkOrNot ?
-                                SvgPicture.asset("assets/svg/bookmarked.svg"):
-                                SvgPicture.asset("assets/svg/bookmark.svg"),
-                              ),
-                            )
-                          ],
-                        ),
+                          ),
+                          // const Spacer(),
+                          // SleekCircularSlider(
+                          //   innerWidget: (double value) {
+                          //     return const Center(
+                          //       child: Icon(
+                          //         Icons.play_arrow_rounded,
+                          //         color: Colors.black,
+                          //         size: 24,
+                          //       ),
+                          //     );
+                          //   },
+                          //   appearance: CircularSliderAppearance(
+                          //     spinnerMode: false,
+                          //     size: 40,
+                          //     startAngle: 150,
+                          //     angleRange: 240,
+                          //     counterClockwise: false,
+                          //     customColors: CustomSliderColors(
+                          //       progressBarColors: [ColorClass.backgroundColor],
+                          //       hideShadow: false,
+                          //     ),
+                          //     customWidths: CustomSliderWidths(
+                          //       progressBarWidth: 1,
+                          //     ),
+                          //   ),
+                          //   min: 0,
+                          //   max: 100,
+                          //   initialValue: 70,
+                          // )
+                        ],
                       ),
+                      )
                     ],
                   ),
                   SimpleText(
@@ -341,7 +378,7 @@ class PostListView extends StatelessWidget{
                                   style:  GoogleFonts.roboto(
                                       fontSize: 14,
                                       color:const Color(0xff2B2B2B),
-                                    height: 1.1,
+                                    height: 1.2,
                                   ),
                                 ),
                               ],

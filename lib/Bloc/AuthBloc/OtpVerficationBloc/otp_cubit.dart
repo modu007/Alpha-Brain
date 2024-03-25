@@ -10,7 +10,6 @@ class OtpCubit extends Cubit<OtpState> {
     emit(OtpLoadingState());
     try{
       var result =await AuthRepo.otpVerification(email: email,otp: otp);
-      print(result);
       if(result == "success"){
         emit(OtpSuccessState());
       }
@@ -18,12 +17,10 @@ class OtpCubit extends Cubit<OtpState> {
         emit(OtpInvalidState());
       }
       else{
-        print("error state");
         emit(OtpErrorState());
       }
     }
     catch(e){
-      print("error state inn otp ");
       emit(OtpErrorState());
     }
   }

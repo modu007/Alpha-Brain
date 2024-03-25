@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "529956110580",
+    "project_id": "z-alpha-brains",
+    "storage_bucket": "z-alpha-brains.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529956110580:android:f17f4ef49f2edb7fc81ea1",
+        "android_client_info": {
+          "package_name": "com.ai.neuralcode"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3CbM_b9wIDmxx0N3eOP-hVt1hcjqniKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

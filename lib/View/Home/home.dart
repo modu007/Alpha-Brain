@@ -7,6 +7,7 @@ import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
+import 'package:neuralcode/Utils/Data/local_data.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import '../../Api/all_api.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
@@ -31,6 +32,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String name = "";
   String imageUrl="";
   String dp="";
+  String selectedTag ="All";
   Future getName()async{
     String result = await SharedData.getEmail("name");
     name =result;
@@ -50,14 +52,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     super.initState();
     getName();
     getImage();
-    BlocProvider.of<HomeBloc>(context).add(GetPostInitialEvent());
+    BlocProvider.of<HomeBloc>(context).add(
+        GetPostInitialEvent(
+        selectedTag: selectedTag));
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         skip=0;
         limit=5;
         BlocProvider.of<HomeBloc>(context)
-            .add(TabChangeEvent(tabIndex: _tabController.index));
+            .add(TabChangeEvent(
+          tabIndex: _tabController.index,
+          selectedTag: selectedTag
+        ));
       }
     });
     scrollControllerTab1 = ScrollController();
@@ -73,6 +80,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 limit: limit,
                 skip: skip,
                 allPrevPostData: allPostsData,
+                selectedTag: selectedTag,
                 tab: 0
             ),
           );
@@ -91,7 +99,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 limit: limit,
                 skip: skip,
                 allPrevPostData: allPostsData,
-                tab: 1
+                tab: 1,
+                selectedTag: selectedTag
             ),
           );
           isLoading = false;
@@ -116,7 +125,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         statusBarBrightness: Brightness.light));
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xffF7F8FA),
         endDrawer:  Drawer(
           backgroundColor: Colors.white,
           child: ListView(
@@ -160,18 +169,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   Navigator.of(context).pushNamed(RouteName.profile);
                 },
               ),
-              // ListTile(
-              //   leading: SvgPicture.asset("assets/svg/settings.svg"),
-              //   title:  const SimpleText(
-              //     text: 'Settings',
-              //     fontSize: 15,
-              //     fontColor: Colors.black,
-              //     fontWeight: FontWeight.w600,
-              //   ),
-              //   onTap: () => {
-              //     // Navigator.of(context).pop()
-              //   },
-              // ),
               ListTile(
                 leading: SvgPicture.asset("assets/svg/call.svg"),
                 title:  const SimpleText(
@@ -193,12 +190,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   fontWeight: FontWeight.w600,
                 ),
                 onTap: (){
-                  SharedData.removeUserid();
+                  SharedData.removeUserid("token");
+                  SharedData.removeUserid("refresh");
+                  SharedData.removeUserid("email");
+                  SharedData.removeUserid("username");
+                  SharedData.removeUserid("name");
+                  SharedData.removeUserid("profilePic");
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       RouteName.signIn, (route) => false);
                 },
               ),
-
             ],
           ),
         ),
@@ -206,6 +207,42 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           children: [
             HomeAppBar(
               tabController: _tabController,
+              widget: Container(
+                color: Colors.white,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Wrap(
+                    children: LocalData.getTags.map((tag) {
+                      return InkWell(
+                        onTap: (){
+                          selectedTag=tag;
+                          setState(() {});
+                          BlocProvider.of<HomeBloc>(context).add(
+                              TagSelectedEvent(
+                              selectedTag: tag,
+                              tabIndex: _tabController.index));
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          padding:
+                          const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: selectedTag==tag ?
+                              const Color(0xffCCEAF4):
+                              Colors.white),
+                          child: SimpleText(
+                            text: tag,
+                            fontSize: 15,
+                            fontColor: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
             ),
             BlocConsumer<HomeBloc, HomeState>(
               listenWhen: (previous, current) => current is HomeActionState,
@@ -231,11 +268,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             data: data,
                             scrollController: scrollControllerTab1,
                             isAdmin: state.isAdmin,
+                            selectedTag: selectedTag,
                           ),
                           PostListView(
                             data: data,
                             scrollController: scrollControllerTab2,
                             isAdmin: state.isAdmin,
+                            selectedTag: selectedTag,
                           ),
                         ],
                       ),
