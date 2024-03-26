@@ -14,23 +14,23 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin{
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController controller;
-  Future splash()async{
+
+  Future splash() async {
     var token = await SharedData.getToken("token");
-    if(token!= null){
+    if (token != null) {
       Timer(
           const Duration(seconds: 4),
-              () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
-              RouteName.home, (route) => false )
-      );
-    }else{
-      Timer(
-          const Duration(seconds: 5),
-              () => Navigator.of(context).popAndPushNamed(RouteName.signIn)
-      );
+          () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
+              RouteName.home, (route) => false));
+    } else {
+      Timer(const Duration(seconds: 5),
+          () => Navigator.of(context).popAndPushNamed(RouteName.signIn));
     }
   }
+
   @override
   void initState() {
     BlocProvider.of<TagsCubit>(context).getTags();
@@ -38,8 +38,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       vsync: this,
       duration: const Duration(seconds: 3),
     )..addListener(() {
-      setState(() {});
-    });
+        setState(() {});
+      });
     controller.repeat();
     super.initState();
   }
@@ -55,6 +55,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -71,13 +72,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: const Color(0xff4EB3CA)),
+                  borderRadius: BorderRadius.circular(10),
+                  color: const Color(0xff4EB3CA)),
               child: Image.asset("assets/images/logo.png"),
             ),
-            const SimpleText(
-                text: "Z-Alpha Brains",
-                fontSize: 25),
-            const SizedBox(height: 20,),
+            const SimpleText(text: "Z-Alpha Brains", fontSize: 25),
+            const SizedBox(
+              height: 20,
+            ),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 50),
               child: LinearProgressIndicator(

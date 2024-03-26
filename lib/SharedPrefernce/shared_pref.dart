@@ -35,6 +35,7 @@ class SharedData {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("username", username);
   }
+
   static Future setName(String name) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("name", name);

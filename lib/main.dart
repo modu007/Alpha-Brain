@@ -12,11 +12,15 @@ import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
+import 'package:neuralcode/Provider/dark_theme_controller.dart';
 import 'package:neuralcode/firebase_options.dart';
+import 'package:provider/provider.dart';
 import 'Bloc/HomeBloc/home_bloc.dart';
 import 'Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
+import 'SharedPrefernce/shared_pref.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
+import 'Utils/Style/style.dart';
 
 FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -40,6 +44,11 @@ void main() async{
       onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  final String languageCode =
+      await SharedLanguageData.getLanguageData('lang') ?? '';
+  languageCode == ""
+      ? await SharedLanguageData.setToken("en")
+      : await SharedLanguageData.getLanguageData("lang");
   runApp(const MyApp());
 }
 
@@ -70,15 +79,18 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>EditProfileCubit()),
         BlocProvider<TagsCubit>(
             create: (BuildContext context) =>TagsCubit()),
+        ChangeNotifierProvider<DarkThemeProvider>(
+            create: (BuildContext context) => DarkThemeProvider())
       ],
-      child: MaterialApp(
-        initialRoute: RouteName.splash,
-        onGenerateRoute: Routes.generateRoute,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+      child: Consumer<DarkThemeProvider>(
+          builder: (BuildContext context, value, child) {
+          return MaterialApp(
+            initialRoute: RouteName.splash,
+            onGenerateRoute: Routes.generateRoute,
+            debugShowCheckedModeBanner: false,
+            theme: Styles.themeData(value.darkTheme, context),
+          );
+        }
       ),
     );
   }

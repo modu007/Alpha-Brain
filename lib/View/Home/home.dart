@@ -9,9 +9,11 @@ import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Data/local_data.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import 'package:provider/provider.dart';
 import '../../Api/all_api.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
 import '../../Models/for_you_model.dart';
+import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Components/Cards/post_card.dart';
 
 class Home extends StatefulWidget {
@@ -119,88 +121,168 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light));
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffF7F8FA),
         endDrawer:  Drawer(
-          backgroundColor: Colors.white,
-          child: ListView(
+          child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
-            children: <Widget>[
-              Row(
-                children: [
-                  dp.isEmpty ?
-                  SvgPicture.asset(
-                    "assets/svg/user_icon.svg",height: 40,width: 40,):
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.network(imageUrl,height: 40,width: 40,)
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: [
+                    dp.isEmpty ?
+                    SvgPicture.asset(
+                      "assets/svg/user_icon.svg",height: 40,width: 40,):
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(imageUrl,height: 40,width: 40,)
+                    ),
+                    const SizedBox(width: 10,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SimpleText(
+                          text: name,
+                          fontSize: 15,
+                          fontWeight:FontWeight.w600,
+                          fontColor: Colors.black,
+                          textHeight: 0,
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20,),
+                ListTile(
+                  leading: SvgPicture.asset("assets/svg/user_icon.svg"),
+                  title:  const SimpleText(
+                    text: 'Profile',
+                    fontSize: 15,
+                    fontColor: Colors.black,
+                    fontWeight: FontWeight.w600,
                   ),
-                  const SizedBox(width: 10,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SimpleText(
-                        text: name,
-                        fontSize: 15,
-                        fontWeight:FontWeight.w600,
-                        fontColor: Colors.black,
-                        textHeight: 0,
+                  onTap: (){
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed(RouteName.profile);
+                  },
+                ),
+                ListTile(
+                  leading: SvgPicture.asset("assets/svg/call.svg"),
+                  title:  const SimpleText(
+                    text: 'Support',
+                    fontSize: 15,
+                    fontColor: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  onTap: (){
+                    Navigator.of(context).pushNamed(RouteName.support);
+                  },
+                ),
+                ListTile(
+                  leading: SvgPicture.asset("assets/svg/logout.svg"),
+                  title:  const SimpleText(
+                    text: 'Logout',
+                    fontSize: 15,
+                    fontColor: Colors.black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  onTap: (){
+                    SharedData.removeUserid("token");
+                    SharedData.removeUserid("refresh");
+                    SharedData.removeUserid("email");
+                    SharedData.removeUserid("username");
+                    SharedData.removeUserid("name");
+                    SharedData.removeUserid("profilePic");
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        RouteName.signIn, (route) => false);
+                  },
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.all(4),
+                      decoration:  BoxDecoration(
+                        color: const Color(0xffF0F0F0),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ],
-                  )
-                ],
-              ),
-              const SizedBox(height: 20,),
-              ListTile(
-                leading: SvgPicture.asset("assets/svg/user_icon.svg"),
-                title:  const SimpleText(
-                  text: 'Profile',
-                  fontSize: 15,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                onTap: (){
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(RouteName.profile);
-                },
-              ),
-              ListTile(
-                leading: SvgPicture.asset("assets/svg/call.svg"),
-                title:  const SimpleText(
-                  text: 'Support',
-                  fontSize: 15,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                onTap: (){
-                  Navigator.of(context).pushNamed(RouteName.support);
-                },
-              ),
-              ListTile(
-                leading: SvgPicture.asset("assets/svg/logout.svg"),
-                title:  const SimpleText(
-                  text: 'Logout',
-                  fontSize: 15,
-                  fontColor: Colors.black,
-                  fontWeight: FontWeight.w600,
-                ),
-                onTap: (){
-                  SharedData.removeUserid("token");
-                  SharedData.removeUserid("refresh");
-                  SharedData.removeUserid("email");
-                  SharedData.removeUserid("username");
-                  SharedData.removeUserid("name");
-                  SharedData.removeUserid("profilePic");
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      RouteName.signIn, (route) => false);
-                },
-              ),
-            ],
+                      child: Row(
+                        children: [
+                          Flexible(
+                            flex: 1,
+                            child: InkWell(
+                              onTap: (){
+                               if(themeChange.darkTheme==true){
+                                 themeChange.darkTheme=false;
+                               }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,vertical: 5),
+                                decoration:  BoxDecoration(
+                                  color: themeChange.darkTheme==false ?
+                                  Colors.white : const Color(0xffF0F0F0),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset("assets/svg/sun.svg"),
+                                    const SizedBox(width: 8,),
+                                    const SimpleText(
+                                      text: "Light",
+                                      fontSize: 16,
+                                      fontColor: Colors.black,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: InkWell(
+                              onTap: (){
+                                if(themeChange.darkTheme==false){
+                                  themeChange.darkTheme=true;
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,vertical: 5),
+                                decoration:  BoxDecoration(
+                                  color:themeChange.darkTheme==true ?
+                                  Colors.white:const Color(0xffF0F0F0),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SvgPicture.asset("assets/svg/moon.svg"),
+                                    const SizedBox(width: 8,),
+                                    const SimpleText(
+                                      text: "Dark",
+                                      fontSize: 16,
+                                      fontColor: Colors.black,
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         body: Column(
