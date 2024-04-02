@@ -22,11 +22,11 @@ class _SplashScreenState extends State<SplashScreen>
     var token = await SharedData.getToken("token");
     if (token != null) {
       Timer(
-          const Duration(seconds: 4),
+          const Duration(seconds: 3),
           () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
               RouteName.home, (route) => false));
     } else {
-      Timer(const Duration(seconds: 5),
+      Timer(const Duration(seconds: 3),
           () => Navigator.of(context).popAndPushNamed(RouteName.signIn));
     }
   }

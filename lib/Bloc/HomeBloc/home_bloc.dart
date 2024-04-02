@@ -25,6 +25,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           limit: 5,
         selectedTag: event.selectedTag
       );
+      await HomeRepo.activeUser();
       if(result is List<ForYouModel>){
         String email =await SharedData.getEmail("email");
         bool isAdmin =false;
@@ -35,7 +36,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             listOfPosts:result,isAdmin: isAdmin,
             selectedTag: event.selectedTag
         ));
-      }else{
+      }
+      else{
         emit(GetPostFailureState(errorMessage: "Error"));
       }
     }
@@ -149,7 +151,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       index+=1;
     }
     data.removeAt(index);
-    if(event.postData.myEmojis.isEmpty){
+    if(event.postData.myEmojis!.isEmpty){
       if(loveCount == null){
         loveCount =1;
       }else{

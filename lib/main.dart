@@ -10,6 +10,7 @@ import 'package:neuralcode/Bloc/AuthBloc/UploadProfileCubit/upload_image_cubit.d
 import 'package:neuralcode/Bloc/AuthBloc/UserDetailsBloc/user_details_cubit.dart';
 import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
+import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
 import 'package:neuralcode/Provider/dark_theme_controller.dart';
@@ -26,10 +27,14 @@ FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsP
 
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print("handling a message id ${message.messageId}");
+  print(message.data);
 }
+
 Future<void> _handleNotificationResponse(NotificationResponse response) async {
+  print(response.payload);
   print("yes");
 }
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -39,7 +44,7 @@ void main() async{
   var initializationSettings =
   PushNotificationServices.localNotificationInitialization();
   PushNotificationServices.saveFcmToken();
-  bool? intialized = await notificationsPlugin.initialize(
+  await notificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
@@ -79,13 +84,15 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>EditProfileCubit()),
         BlocProvider<TagsCubit>(
             create: (BuildContext context) =>TagsCubit()),
+        BlocProvider<NotificationPostBloc>(
+            create: (BuildContext context) =>NotificationPostBloc()),
         ChangeNotifierProvider<DarkThemeProvider>(
             create: (BuildContext context) => DarkThemeProvider())
       ],
       child: Consumer<DarkThemeProvider>(
           builder: (BuildContext context, value, child) {
           return MaterialApp(
-            initialRoute: RouteName.splash,
+            initialRoute: RouteName.notificationPost,
             onGenerateRoute: Routes.generateRoute,
             debugShowCheckedModeBanner: false,
             theme: Styles.themeData(value.darkTheme, context),

@@ -6,10 +6,12 @@ import '../../Color/colors.dart';
 class HomeAppBar extends StatelessWidget {
   final TabController tabController;
   final Widget widget;
+  final bool isVisibleWhenScroll;
   const HomeAppBar({
     super.key,
     required this.tabController,
     required this.widget,
+    required this.isVisibleWhenScroll,
   });
 
   @override
@@ -19,22 +21,25 @@ class HomeAppBar extends StatelessWidget {
       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Column(
         children: [
-          Row(
-            children: [
-              const SimpleText(
-                text: "Z-Alpha Brains",
-                fontSize: 24,
-                fontColor: ColorClass.headingColor,
-                fontWeight: FontWeight.w500,
-              ),
-              const Spacer(),
-              Builder(
-                  builder: (context) => InkWell(
-                      onTap: () {
-                        Scaffold.of(context).openEndDrawer();
-                      },
-                      child: SvgPicture.asset("assets/svg/menu.svg")))
-            ],
+          Visibility(
+            visible: isVisibleWhenScroll,
+            child: Row(
+              children: [
+                const SimpleText(
+                  text: "Z-Alpha Brains",
+                  fontSize: 24,
+                  fontColor: ColorClass.headingColor,
+                  fontWeight: FontWeight.w500,
+                ),
+                const Spacer(),
+                Builder(
+                    builder: (context) => InkWell(
+                        onTap: () {
+                          Scaffold.of(context).openEndDrawer();
+                        },
+                        child: SvgPicture.asset("assets/svg/menu.svg")))
+              ],
+            ),
           ),
           TabBar(
             indicatorSize: TabBarIndicatorSize.tab,

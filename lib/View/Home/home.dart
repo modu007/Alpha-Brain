@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
-import 'package:neuralcode/Utils/Components/AppBar/app_bar.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
-import 'package:neuralcode/Utils/Data/local_data.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:provider/provider.dart';
 import '../../Api/all_api.dart';
 import '../../Bloc/HomeBloc/home_bloc.dart';
 import '../../Models/for_you_model.dart';
 import '../../Provider/dark_theme_controller.dart';
+import '../../Utils/Components/AppBar/app_bar.dart';
 import '../../Utils/Components/Cards/post_card.dart';
+import '../../Utils/Data/local_data.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -35,6 +36,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   String imageUrl="";
   String dp="";
   String selectedTag ="All";
+  bool isVisible=true;
   Future getName()async{
     String result = await SharedData.getEmail("name");
     name =result;
@@ -72,6 +74,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     scrollControllerTab1 = ScrollController();
     scrollControllerTab2 = ScrollController();
     scrollControllerTab1.addListener(() async {
+      if(scrollControllerTab1.position
+          .userScrollDirection == ScrollDirection.forward && isVisible!=true
+      ){
+        isVisible =true;
+        setState(() {});
+      }else if(scrollControllerTab1.position
+          .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
+        isVisible=false;
+        setState(() {});
+      }
       if (scrollControllerTab1.position.pixels >=
           scrollControllerTab1.position.maxScrollExtent) {
         if (!isLoading) {
@@ -110,7 +122,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       }
     });
   }
-
   @override
   void dispose() {
     _tabController.dispose();
@@ -218,9 +229,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             flex: 1,
                             child: InkWell(
                               onTap: (){
-                               if(themeChange.darkTheme==true){
-                                 themeChange.darkTheme=false;
-                               }
+                                if(themeChange.darkTheme==true){
+                                  themeChange.darkTheme=false;
+                                }
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -288,6 +299,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         body: Column(
           children: [
             HomeAppBar(
+              isVisibleWhenScroll: isVisible,
               tabController: _tabController,
               widget: Container(
                 color: Colors.white,
@@ -301,8 +313,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                           setState(() {});
                           BlocProvider.of<HomeBloc>(context).add(
                               TagSelectedEvent(
-                              selectedTag: tag,
-                              tabIndex: _tabController.index));
+                                  selectedTag: tag,
+                                  tabIndex: _tabController.index));
                         },
                         child: Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
@@ -329,13 +341,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             BlocConsumer<HomeBloc, HomeState>(
               listenWhen: (previous, current) => current is HomeActionState,
               buildWhen: (previous, current) => current is! HomeActionState,
-              listener: (context, state) {
-                // TODO: implement listener
-              },
+              listener: (context, state) {},
               builder: (context, state) {
                 if (state is GetPostLoadingState) {
                   return const Expanded(child: Center(child: CircularProgressIndicator()));
-                } else if (state is GetPostSuccessState) {
+                }
+                else if (state is GetPostSuccessState) {
                   allPostsData.clear();
                   final data = state.listOfPosts;
                   allPostsData.addAll(data);
@@ -362,7 +373,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       ),
                     ),
                   );
-                } else if (state is GetPostFailureState) {
+                }
+                else if (state is GetPostFailureState) {
                   return Center(
                     child: SimpleText(
                       text: state.errorMessage,
@@ -381,6 +393,33 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class CustomSliverAppBar extends StatelessWidget {
+  final List<String> tabs;
+  final bool innerBoxIsScrolled;
+
+  const CustomSliverAppBar({
+    Key? key,
+    required this.tabs,
+    required this.innerBoxIsScrolled,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      title: const Text('Books'),
+      floating: true,
+      pinned: false,
+      snap: true,
+      primary: true,
+      forceElevated: innerBoxIsScrolled,
+      bottom: TabBar(
+        // These are the widgets to put in each tab in the tab bar.
+        tabs: tabs.map((String name) => Tab(text: name)).toList(),
       ),
     );
   }

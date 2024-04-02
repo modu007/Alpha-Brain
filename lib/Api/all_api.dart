@@ -48,4 +48,13 @@ class AllApi {
   static const termsAndCondition = "$baseUrl1/fetch_company_terms/terms_conditions.docx";
 
   static const getTags = "$baseUrl/get_tags/";
+
+  //active user
+  static const activeUser = "$baseUrl/active_status/";
+
+  //get news by id
+  static const getNewsById = "$baseUrl/post_id/";
+
+  //user notified repo
+  static const userNotified = "$baseUrl/user_notified/";
 }

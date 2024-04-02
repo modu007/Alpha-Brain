@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-ForYouModel forYouModelFromJson(String str) => ForYouModel.fromJson(json.decode(str));
+ForYouModel forYouModelFromJson(String str) =>
+    ForYouModel.fromJson(json.decode(str));
 
 String forYouModelToJson(ForYouModel data) => json.encode(data.toJson());
 
@@ -12,8 +13,8 @@ class ForYouModel {
   final String id;
   final String dateTime;
   final String? imageUrl;
-  final List<dynamic>? myBookmark;
-  final List<dynamic> myEmojis;
+  final List? myBookmark;
+  final List? myEmojis;
   final String newsUrl;
   final String source;
   final Summary summary;
@@ -53,8 +54,8 @@ class ForYouModel {
     "_id": id,
     "date_time": dateTime,
     "image_url": imageUrl,
-    "my_bookmark": List<dynamic>.from(myBookmark!.map((x) => x)),
-    "my_emojis": List<dynamic>.from(myEmojis.map((x) => x)),
+    "my_bookmark": List.from(myBookmark!.map((x) => x)),
+    "my_emojis": List.from(myEmojis!.map((x) => x)),
     "news_url": newsUrl,
     "source": source,
     "summary": summary.toJson(),

@@ -24,7 +24,6 @@ class HomeRepo {
        "Limit": limit,
        "Tags": selectedTag,
      }, AllApi.forYou);
-     print(result);
      if(result is List){
        List<ForYouModel> data =[];
        for(int i=0;i<result.length;i++){
@@ -161,7 +160,29 @@ class HomeRepo {
           AllApi.adminApi);
      return result;
     } catch (error) {
-      print("sign up repo $error");
+      print("adminAction repo $error");
+    }
+  }
+
+  static Future activeUser() async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
+    try {
+      if(hasExpired){
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
+      var result = await networkRequest.postMethodRequest({
+        "EmailId": email,
+      },
+          AllApi.activeUser);
+     return result;
+    } catch (error) {
+      print("activeUser repo $error");
     }
   }
 }
