@@ -31,9 +31,11 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
 }
 
 Future<void> _handleNotificationResponse(NotificationResponse response) async {
-  print(response.payload);
-  print("yes");
+  print("here");
+
 }
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +51,13 @@ void main() async{
       onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
+    navigatorKey.currentState?.restorablePushNamed(
+        RouteName.splash,arguments: {
+      "fromBackground":true,
+      "postId":remoteMessage.data["post_id"]
+    });
+  });
   final String languageCode =
       await SharedLanguageData.getLanguageData('lang') ?? '';
   languageCode == ""
@@ -92,7 +101,8 @@ class MyApp extends StatelessWidget {
       child: Consumer<DarkThemeProvider>(
           builder: (BuildContext context, value, child) {
           return MaterialApp(
-            initialRoute: RouteName.notificationPost,
+            navigatorKey: navigatorKey,
+            initialRoute: RouteName.splash,
             onGenerateRoute: Routes.generateRoute,
             debugShowCheckedModeBanner: false,
             theme: Styles.themeData(value.darkTheme, context),

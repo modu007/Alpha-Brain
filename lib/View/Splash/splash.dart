@@ -6,9 +6,14 @@ import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import '../../Utils/Routes/navigation_service.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final bool? fromBackGround;
+  final String? postId;
+  const SplashScreen({super.key,
+    this.fromBackGround,
+    this.postId});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -20,14 +25,21 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future splash() async {
     var token = await SharedData.getToken("token");
-    if (token != null) {
-      Timer(
-          const Duration(seconds: 3),
-          () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
-              RouteName.home, (route) => false));
-    } else {
-      Timer(const Duration(seconds: 3),
-          () => Navigator.of(context).popAndPushNamed(RouteName.signIn));
+    if(widget.fromBackGround != null){
+      if(widget.fromBackGround == true){
+        NavigationService.navigateToNotificationPost(widget.postId!);
+      }
+    }else{
+      if (token != null) {
+        Timer(
+            const Duration(seconds: 3),
+                () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
+                RouteName.home, (route) => false));
+      }
+      else {
+        Timer(const Duration(seconds: 3),
+                () => Navigator.of(context).popAndPushNamed(RouteName.signIn));
+      }
     }
   }
 

@@ -5,14 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_bloc.dart';
 import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_event.dart';
 import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_state.dart';
-import 'package:neuralcode/Models/for_you_model.dart';
+import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../Utils/Components/Buttons/back_buttons_text.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 
 class NotificationPost extends StatefulWidget {
-  final ForYouModel postData;
-  const NotificationPost({super.key, required this.postData});
+  final String postId;
+  const NotificationPost({super.key, required this.postId});
 
   @override
   State<NotificationPost> createState() => _NotificationPostState();
@@ -22,7 +22,7 @@ class _NotificationPostState extends State<NotificationPost> {
   @override
   void initState() {
     BlocProvider.of<NotificationPostBloc>(context).add(
-        GetPostInitialEvent());
+        GetPostInitialEvent(postId: widget.postId));
     super.initState();
   }
   @override
@@ -50,8 +50,8 @@ class _NotificationPostState extends State<NotificationPost> {
                     BackButtonText(
                       titleText: "Z-Alpha Brain",
                       onPressed: () {
-                        Navigator.of(context).pop();
-                      },),
+                          Navigator.of(context).popAndPushNamed(RouteName.home);
+                        },),
                     Container(
                       margin: const EdgeInsets.only(top: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 20),

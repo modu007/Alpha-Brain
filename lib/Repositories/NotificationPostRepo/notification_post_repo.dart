@@ -1,4 +1,5 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:neuralcode/Models/notification_post_model.dart';
 import '../../Api/all_api.dart';
 import '../../Models/for_you_model.dart';
 import '../../NetworkRequest/network_request.dart';
@@ -22,7 +23,7 @@ class NotificationRepo{
       }, AllApi.getNewsById);
       if(result is List){
         print(result[0]);
-        return ForYouModel.fromJson(result[0]);
+        return NotificationPostModel.fromJson(result[0]);
       }
       return "something went wrong";
     } catch (error) {

@@ -1,6 +1,14 @@
-//
-// class NavigationService {
-//   static void navigateToSignIn() {
-//     navigatorKey.currentState?.restorablePushNamedAndRemoveUntil(RouteName.signIn, (route) => false);
-//   }
-// }
+import 'package:neuralcode/Utils/Routes/route_name.dart';
+import '../../main.dart';
+
+class NavigationService {
+  static void navigateToNotificationPost(String postId) {
+    navigatorKey.currentState
+        ?.restorablePushNamedAndRemoveUntil(
+        RouteName.notificationPost, (route) => false,
+      arguments:{
+          "postId":postId
+      }
+    );
+  }
+}
