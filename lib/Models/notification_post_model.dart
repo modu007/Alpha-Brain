@@ -1,13 +1,17 @@
 import 'dart:convert';
 
-NotificationPostModel notificationPostModelFromJson(String str) => NotificationPostModel.fromJson(json.decode(str));
+NotificationPostModel notificationPostModelFromJson(String str) =>
+    NotificationPostModel.fromJson(json.decode(str));
 
-String notificationPostModelToJson(NotificationPostModel data) => json.encode(data.toJson());
+String notificationPostModelToJson(NotificationPostModel data) =>
+    json.encode(data.toJson());
 
 class NotificationPostModel {
   final String id;
   final String dateTime;
   final String? imageUrl;
+  final List<dynamic>? myBookmark;
+  final List<dynamic>? myEmojis;
   final String newsUrl;
   final String source;
   final Summary summary;
@@ -18,6 +22,8 @@ class NotificationPostModel {
     required this.id,
     required this.dateTime,
     required this.imageUrl,
+    required this.myBookmark,
+    required this.myEmojis,
     required this.newsUrl,
     required this.source,
     required this.summary,
@@ -25,27 +31,32 @@ class NotificationPostModel {
     required this.yt,
   });
 
-  factory NotificationPostModel.fromJson(Map<String, dynamic> json) => NotificationPostModel(
-    id: json["_id"],
-    dateTime: json["date_time"],
-    imageUrl: json["image_url"],
-    newsUrl: json["news_url"],
-    source: json["source"],
-    summary: Summary.fromJson(json["summary"]),
-    tags: List<String>.from(json["tags"].map((x) => x)),
-    yt: json["yt"],
-  );
+  factory NotificationPostModel.fromJson(Map<String, dynamic> json) =>
+      NotificationPostModel(
+        id: json["_id"],
+        dateTime: json["date_time"],
+        imageUrl: json["image_url"],
+        myBookmark: List<dynamic>.from(json["my_bookmark"].map((x) => x)),
+        myEmojis: List<dynamic>.from(json["my_emojis"].map((x) => x)),
+        newsUrl: json["news_url"],
+        source: json["source"],
+        summary: Summary.fromJson(json["summary"]),
+        tags: List<String>.from(json["tags"].map((x) => x)),
+        yt: json["yt"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "_id": id,
-    "date_time": dateTime,
-    "image_url": imageUrl,
-    "news_url": newsUrl,
-    "source": source,
-    "summary": summary.toJson(),
-    "tags": List<dynamic>.from(tags.map((x) => x)),
-    "yt": yt,
-  };
+        "_id": id,
+        "date_time": dateTime,
+        "image_url": imageUrl,
+        "my_bookmark": List.from(myBookmark!.map((x) => x)),
+        "my_emojis": List.from(myEmojis!.map((x) => x)),
+        "news_url": newsUrl,
+        "source": source,
+        "summary": summary.toJson(),
+        "tags": List<dynamic>.from(tags.map((x) => x)),
+        "yt": yt,
+      };
 }
 
 class Summary {
@@ -58,14 +69,15 @@ class Summary {
   });
 
   factory Summary.fromJson(Map<String, dynamic> json) => Summary(
-    keyPoints: List<KeyPoint>.from(json["key_points"].map((x) => KeyPoint.fromJson(x))),
-    title: json["title"],
-  );
+        keyPoints: List<KeyPoint>.from(
+            json["key_points"].map((x) => KeyPoint.fromJson(x))),
+        title: json["title"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "key_points": List<dynamic>.from(keyPoints.map((x) => x.toJson())),
-    "title": title,
-  };
+        "key_points": List<dynamic>.from(keyPoints.map((x) => x.toJson())),
+        "title": title,
+      };
 }
 
 class KeyPoint {
@@ -78,12 +90,12 @@ class KeyPoint {
   });
 
   factory KeyPoint.fromJson(Map<String, dynamic> json) => KeyPoint(
-    description: json["description"],
-    subHeading: json["sub_heading"],
-  );
+        description: json["description"],
+        subHeading: json["sub_heading"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "description": description,
-    "sub_heading": subHeading,
-  };
+        "description": description,
+        "sub_heading": subHeading,
+      };
 }

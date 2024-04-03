@@ -32,7 +32,6 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
 
 Future<void> _handleNotificationResponse(NotificationResponse response) async {
   print("here");
-
 }
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

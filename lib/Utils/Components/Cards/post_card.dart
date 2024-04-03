@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -300,7 +299,7 @@ class PostListView extends StatelessWidget {
                     ),
                     SimpleText(
                       text: data[index].summary.title,
-                      fontSize: 16,
+                      fontSize: 17,
                       fontWeight: FontWeight.w600,
                       fontColor: const Color(0xff002D42),
                       textHeight: 1,
