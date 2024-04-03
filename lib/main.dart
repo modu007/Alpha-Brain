@@ -52,11 +52,20 @@ void main() async{
   PushNotificationServices.incomingMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
-    navigatorKey.currentState?.restorablePushNamed(
-        RouteName.splash,arguments: {
-      "fromBackground":true,
-      "postId":remoteMessage.data["post_id"]
-    });
+   navigatorKey.currentState?.restorablePushNamed(
+       RouteName.notificationPost,
+     arguments: {
+       "postId" :remoteMessage.data["post_id"]
+     });
+  });
+  FirebaseMessaging.instance.getInitialMessage().then((message) {
+    if (message != null) {
+      navigatorKey.currentState?.restorablePushNamed(
+          RouteName.splash,arguments: {
+        "fromBackground":true,
+        "postId":message.data["post_id"]
+      });
+    }
   });
   final String languageCode =
       await SharedLanguageData.getLanguageData('lang') ?? '';

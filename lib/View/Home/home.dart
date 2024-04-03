@@ -298,7 +298,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
         body: Column(
           children: [
-            HomeAppBar(
+             isVisible? HomeAppBar(
               isVisibleWhenScroll: isVisible,
               tabController: _tabController,
               widget: Container(
@@ -337,7 +337,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 ),
               ),
-            ),
+            ):
+             const SizedBox(),
             BlocConsumer<HomeBloc, HomeState>(
               listenWhen: (previous, current) => current is HomeActionState,
               buildWhen: (previous, current) => current is! HomeActionState,
@@ -393,33 +394,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class CustomSliverAppBar extends StatelessWidget {
-  final List<String> tabs;
-  final bool innerBoxIsScrolled;
-
-  const CustomSliverAppBar({
-    Key? key,
-    required this.tabs,
-    required this.innerBoxIsScrolled,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverAppBar(
-      title: const Text('Books'),
-      floating: true,
-      pinned: false,
-      snap: true,
-      primary: true,
-      forceElevated: innerBoxIsScrolled,
-      bottom: TabBar(
-        // These are the widgets to put in each tab in the tab bar.
-        tabs: tabs.map((String name) => Tab(text: name)).toList(),
       ),
     );
   }
