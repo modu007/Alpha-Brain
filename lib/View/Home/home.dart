@@ -15,6 +15,7 @@ import '../../Models/for_you_model.dart';
 import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Components/AppBar/app_bar.dart';
 import '../../Utils/Components/Cards/post_card.dart';
+import '../../Utils/Components/Text/simple_text2.dart';
 import '../../Utils/Data/local_data.dart';
 
 class Home extends StatefulWidget {
@@ -24,10 +25,11 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
   late TabController _tabController;
   late ScrollController scrollControllerTab1;
   late ScrollController scrollControllerTab2;
+
   int skip = 0;
   int limit = 5;
   List<ForYouModel> allPostsData = [];
@@ -157,11 +159,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SimpleText(
+                        SimpleText2(
                           text: name,
                           fontSize: 15,
                           fontWeight:FontWeight.w600,
-                          fontColor: Colors.black,
+                          fontColor: themeChange.darkTheme?
+                              const Color(0xffafafaf): Colors.black,
                           textHeight: 0,
                         ),
                       ],
@@ -170,11 +173,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                 ),
                 const SizedBox(height: 20,),
                 ListTile(
-                  leading: SvgPicture.asset("assets/svg/user_icon.svg"),
-                  title:  const SimpleText(
+                  leading:themeChange.darkTheme==false?
+                  SvgPicture.asset("assets/svg/user_icon.svg"):
+                  SvgPicture.asset("assets/svg/user_profile_dark.svg"),
+                  title:SimpleText2(
                     text: 'Profile',
                     fontSize: 15,
-                    fontColor: Colors.black,
+                    fontColor: themeChange.darkTheme?
+                    const Color(0xffafafaf): Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                   onTap: (){
@@ -183,11 +189,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   },
                 ),
                 ListTile(
-                  leading: SvgPicture.asset("assets/svg/call.svg"),
-                  title:  const SimpleText(
+                  leading:themeChange.darkTheme==false?
+                  SvgPicture.asset("assets/svg/call.svg"):
+                  SvgPicture.asset("assets/svg/call_dark.svg"),
+                  title:SimpleText2(
                     text: 'Support',
                     fontSize: 15,
-                    fontColor: Colors.black,
+                    fontColor: themeChange.darkTheme?
+                    const Color(0xffafafaf): Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                   onTap: (){
@@ -195,11 +204,15 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   },
                 ),
                 ListTile(
-                  leading: SvgPicture.asset("assets/svg/logout.svg"),
-                  title:  const SimpleText(
+                  leading:themeChange.darkTheme==false?
+                  SvgPicture.asset("assets/svg/logout.svg"):
+                  SvgPicture.asset("assets/svg/logout.svg",
+                    color: const Color(0xffafafaf),),
+                  title:   SimpleText2(
                     text: 'Logout',
                     fontSize: 15,
-                    fontColor: Colors.black,
+                    fontColor: themeChange.darkTheme?
+                    const Color(0xffafafaf): Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                   onTap: (){
@@ -220,7 +233,9 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                       margin: const EdgeInsets.symmetric(horizontal: 10),
                       padding: const EdgeInsets.all(4),
                       decoration:  BoxDecoration(
-                        color: const Color(0xffF0F0F0),
+                        color:themeChange.darkTheme?
+                        const Color(0xff2F2F2F):
+                        const Color(0xffF0F0F0),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
@@ -237,19 +252,23 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 10,vertical: 5),
                                 decoration:  BoxDecoration(
-                                  color: themeChange.darkTheme==false ?
-                                  Colors.white : const Color(0xffF0F0F0),
+                                  color: themeChange.darkTheme ?
+                                  const Color(0xff2F2F2F) :
+                                  Colors.white,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    SvgPicture.asset("assets/svg/sun.svg"),
+                                   themeChange.darkTheme?
+                                SvgPicture.asset("assets/svg/sun_dark.svg"):
+                                   SvgPicture.asset("assets/svg/sun.svg"),
                                     const SizedBox(width: 8,),
-                                    const SimpleText(
+                                    SimpleText2(
                                       text: "Light",
                                       fontSize: 16,
-                                      fontColor: Colors.black,
+                                      fontColor: themeChange.darkTheme?
+                                      Colors.white:Colors.black,
                                     )
                                   ],
                                 ),
@@ -269,18 +288,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                                     horizontal: 10,vertical: 5),
                                 decoration:  BoxDecoration(
                                   color:themeChange.darkTheme==true ?
-                                  Colors.white:const Color(0xffF0F0F0),
+                                  const Color(0xff474747) :const Color(0xffF0F0F0),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    themeChange.darkTheme?
+                                    SvgPicture.asset("assets/svg/moon_dark.svg"):
                                     SvgPicture.asset("assets/svg/moon.svg"),
                                     const SizedBox(width: 8,),
-                                    const SimpleText(
+                                    SimpleText2(
                                       text: "Dark",
                                       fontSize: 16,
-                                      fontColor: Colors.black,
+                                      fontColor: themeChange.darkTheme?
+                                      Colors.white:Colors.black,
                                     )
                                   ],
                                 ),
@@ -298,47 +320,59 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         ),
         body: Column(
           children: [
-             isVisible? HomeAppBar(
-              isVisibleWhenScroll: isVisible,
-              tabController: _tabController,
-              widget: Container(
-                color: Colors.white,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Wrap(
-                    children: LocalData.getTags.map((tag) {
-                      return InkWell(
-                        onTap: (){
-                          selectedTag=tag;
-                          setState(() {});
-                          BlocProvider.of<HomeBloc>(context).add(
-                              TagSelectedEvent(
-                                  selectedTag: tag,
-                                  tabIndex: _tabController.index));
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 5),
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
+            AnimatedOpacity(
+              opacity: isVisible ? 1 : 0,
+              duration: const Duration(milliseconds: 400),
+              curve:  Curves.fastOutSlowIn,
+              child: isVisible ?
+              HomeAppBar(
+                darkTheme: themeChange.darkTheme,
+                isVisibleWhenScroll: isVisible,
+                tabController: _tabController,
+                widget: Container(
+                        color: themeChange.darkTheme
+                            ? const Color(0xff121212)
+                            : Colors.white,
+                        child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Wrap(
+                      children: LocalData.getTags.map((tag) {
+                        return InkWell(
+                          onTap: (){
+                            selectedTag=tag;
+                            setState(() {});
+                            BlocProvider.of<HomeBloc>(context).add(
+                                TagSelectedEvent(
+                                    selectedTag: tag,
+                                    tabIndex: _tabController.index
+                                )
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: selectedTag==tag ?
-                              const Color(0xffCCEAF4):
-                              Colors.white),
-                          child: SimpleText(
-                            text: tag,
-                            fontSize: 15,
-                            fontColor: Colors.black,
-                            fontWeight: FontWeight.w500,
+                              color: selectedTag==tag ? const Color(0xffCCEAF4) :
+                              themeChange.darkTheme?
+                              const Color(0xff121212):
+                              Colors.white,
+                            ),
+                            child: SimpleText(
+                              text: tag,
+                              fontSize: 15,
+                              fontColor: Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
-              ),
-            ):
-             const SizedBox(),
+              ):
+              const SizedBox(),
+            ),
             BlocConsumer<HomeBloc, HomeState>(
               listenWhen: (previous, current) => current is HomeActionState,
               buildWhen: (previous, current) => current is! HomeActionState,
@@ -363,12 +397,14 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                             scrollController: scrollControllerTab1,
                             isAdmin: state.isAdmin,
                             selectedTag: selectedTag,
+                            isDarkMode: themeChange.darkTheme,
                           ),
                           PostListView(
                             data: data,
                             scrollController: scrollControllerTab2,
                             isAdmin: state.isAdmin,
                             selectedTag: selectedTag,
+                            isDarkMode: themeChange.darkTheme,
                           ),
                         ],
                       ),

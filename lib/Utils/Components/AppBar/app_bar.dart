@@ -7,17 +7,19 @@ class HomeAppBar extends StatelessWidget {
   final TabController tabController;
   final Widget widget;
   final bool isVisibleWhenScroll;
+  final bool darkTheme;
   const HomeAppBar({
     super.key,
     required this.tabController,
     required this.widget,
     required this.isVisibleWhenScroll,
+    required this.darkTheme,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: darkTheme?const Color(0xff121212):Colors.white,
       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Column(
         children: [
@@ -37,7 +39,7 @@ class HomeAppBar extends StatelessWidget {
                         onTap: () {
                           Scaffold.of(context).openEndDrawer();
                         },
-                        child: SvgPicture.asset("assets/svg/menu.svg")))
+                        child: SvgPicture.asset("assets/svg/menu_dark.svg")))
               ],
             ),
           ),

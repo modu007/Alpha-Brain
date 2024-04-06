@@ -75,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen>
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light));
     return Scaffold(
-      backgroundColor: const Color(0xff4EB3CA),
+      backgroundColor: const Color(0xffd4edf4),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -85,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
               padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: const Color(0xff4EB3CA)),
+                  color: const Color(0xffd4edf4)),
               child: Image.asset("assets/images/logo.png"),
             ),
             const SimpleText(text: "Z-Alpha Brains", fontSize: 25),

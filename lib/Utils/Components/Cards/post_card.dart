@@ -15,12 +15,14 @@ class PostListView extends StatelessWidget {
     required this.scrollController,
     required this.isAdmin,
     required this.selectedTag,
+    required this.isDarkMode,
   });
 
   final List<ForYouModel> data;
   final ScrollController scrollController;
   final bool isAdmin;
   final String selectedTag;
+  final bool isDarkMode;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class PostListView extends StatelessWidget {
               return Container(
                 margin: const EdgeInsets.only(top: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                color: Colors.white,
+                color:isDarkMode?const Color(0xff1e1e1e):Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -103,38 +105,30 @@ class PostListView extends StatelessWidget {
                               border: Border.all(color: const Color(0xffCDC8BC)),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: InkWell(
-                              onTap: () async {
-                                if (!await launchUrl(
-                                    Uri.parse(data[index].newsUrl))) {
-                                  throw Exception('Could not launch url');
-                                }
-                              },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    height: 15,
-                                    width: 15,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(25),
-                                      child: Image.asset("assets/images/logo.png"),
-                                    ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 15,
+                                  width: 15,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(25),
+                                    child: Image.asset("assets/images/logo.png"),
                                   ),
-                                  const SizedBox(
-                                    width: 3,
-                                  ),
-                                  const SimpleText(
-                                    text: "Alpha Brain",
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                    textHeight: 1,
-                                    fontColor: Colors.white,
-                                  ),
-                                ],
-                              ),
+                                ),
+                                const SizedBox(
+                                  width: 3,
+                                ),
+                                const SimpleText(
+                                  text: "Alpha Brain",
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w600,
+                                  textHeight: 1,
+                                  fontColor: Colors.white,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -322,7 +316,8 @@ class PostListView extends StatelessWidget {
                                     text: "${keyPoints.subHeading} ",
                                     style: GoogleFonts.roboto(
                                       fontSize: 14,
-                                      color: const Color(0xff2B2B2B),
+                                      color: isDarkMode ?
+                                      Colors.white :const Color(0xff2B2B2B),
                                       fontWeight: FontWeight.w600,
                                       height: 1.0,
                                     ),
@@ -331,7 +326,8 @@ class PostListView extends StatelessWidget {
                                     text: keyPoints.description,
                                     style: GoogleFonts.roboto(
                                       fontSize: 14,
-                                      color: const Color(0xff2B2B2B),
+                                      color: isDarkMode ?
+                                      Colors.white :const Color(0xff2B2B2B),
                                       height: 1.2,
                                     ),
                                   ),

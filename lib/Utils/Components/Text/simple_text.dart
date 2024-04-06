@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../../../Provider/dark_theme_controller.dart';
 
 class SimpleText extends StatelessWidget {
   final String text;
@@ -27,10 +29,11 @@ class SimpleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Text(
       text,
       style: GoogleFonts.roboto(
-          color: fontColor,
+          color: themeChange.darkTheme?Colors.white:fontColor,
           fontSize: fontSize,
           fontWeight: fontWeight,
           height: textHeight,
