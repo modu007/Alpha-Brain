@@ -18,10 +18,12 @@ class GetPostSuccessState extends HomeState{
   final List<ForYouModel> listOfPosts;
   final bool isAdmin;
   final String selectedTag;
+  final bool languageChange;
   GetPostSuccessState({
     required this.listOfPosts,
     required this.isAdmin,
     required this.selectedTag,
+    required this.languageChange,
   });
 }
 

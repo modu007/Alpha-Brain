@@ -21,8 +21,15 @@ class Routes {
         return MaterialPageRoute(
             builder: (BuildContext context) => const SupportScreen());
         case RouteName.register:
-        return MaterialPageRoute(
-            builder: (BuildContext context) => const Register());
+        if(argument is Map){
+          return MaterialPageRoute(
+              builder: (BuildContext context) =>  Register(
+                emailId: argument["emailId"],
+              ));
+        }else{
+          return MaterialPageRoute(
+              builder: (BuildContext context) => const Register());
+        }
         case RouteName.splash:
         if(argument is Map){
           return MaterialPageRoute(

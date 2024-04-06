@@ -9,7 +9,7 @@ class OtpCubit extends Cubit<OtpState> {
    Future addAddress(String otp,String email)async{
     emit(OtpLoadingState());
     try{
-      var result =await AuthRepo.otpVerification(email: email,otp: otp);
+      var result = await AuthRepo.otpVerification(email: email, otp: otp);
       if(result == "success"){
         emit(OtpSuccessState());
       }

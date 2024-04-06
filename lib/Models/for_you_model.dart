@@ -14,6 +14,7 @@ class ForYouModel {
   final String newsUrl;
   final String source;
   final Summary summary;
+  final Summary? summaryHi; // Updated to be nullable
   final List<String> tags;
   final bool yt;
   final int? love;
@@ -27,9 +28,10 @@ class ForYouModel {
     required this.newsUrl,
     required this.source,
     required this.summary,
+    required this.summaryHi,
     required this.tags,
     required this.yt,
-    required this.love
+    required this.love,
   });
 
   factory ForYouModel.fromJson(Map<String, dynamic> json) => ForYouModel(
@@ -41,6 +43,9 @@ class ForYouModel {
     newsUrl: json["news_url"],
     source: json["source"],
     summary: Summary.fromJson(json["summary"]),
+    summaryHi: json["summary_hi"] != null
+        ? Summary.fromJson(json["summary_hi"])
+        : null,
     tags: List<String>.from(json["tags"].map((x) => x)),
     yt: json["yt"],
     love: json["love"],
@@ -55,6 +60,7 @@ class ForYouModel {
     "news_url": newsUrl,
     "source": source,
     "summary": summary.toJson(),
+    "summary_hi": summaryHi?.toJson(), // Include summary_hi only if it's not null
     "tags": List<dynamic>.from(tags.map((x) => x)),
     "yt": yt,
     "love": love,
@@ -71,7 +77,8 @@ class Summary {
   });
 
   factory Summary.fromJson(Map<String, dynamic> json) => Summary(
-    keyPoints: List<KeyPoint>.from(json["key_points"].map((x) => KeyPoint.fromJson(x))),
+    keyPoints: List<KeyPoint>.from(
+        json["key_points"].map((x) => KeyPoint.fromJson(x))),
     title: json["title"],
   );
 

@@ -18,9 +18,9 @@ import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
 import '../../Utils/Routes/route_name.dart';
 
-//dd
 class Register extends StatefulWidget {
-  const Register({super.key});
+  final String? emailId;
+  const Register({super.key, this.emailId});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -49,6 +49,9 @@ class _RegisterState extends State<Register>{
 
 @override
   void initState() {
+  if(widget.emailId != null){
+    emailController.text= widget.emailId!;
+  }
   genderController.text ="Male";
   BlocProvider.of<UsernameCubit>(context).userInitialEvent();
   focusNode.addListener(() {

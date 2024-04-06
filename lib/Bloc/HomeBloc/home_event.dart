@@ -79,6 +79,17 @@ class TagSelectedEvent extends HomeEvent{
   });
 }
 
+class LanguageChange extends HomeEvent{
+  final String selectedTag;
+  final bool language;
+  final List<ForYouModel> listOfPost;
+  LanguageChange({
+    required this.language,
+    required this.listOfPost,
+    required this.selectedTag,
+  });
+}
+
 
 
 

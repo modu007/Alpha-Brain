@@ -50,6 +50,11 @@ class SharedData {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove(key);
   }
+
+  static Future language(bool language) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("language", language);
+  }
 }
 
 class SharedLanguageData {

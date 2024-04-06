@@ -15,6 +15,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<BookmarkPostEvent>(bookmarkPostEvent);
     on<AdminActionEvent>(adminActionEvent);
     on<TagSelectedEvent>(tagSelectedEvent);
+    on<LanguageChange>(languageChange);
   }
   FutureOr<void> getPostInitialEvent(
       GetPostInitialEvent event, Emitter<HomeState> emit) async {
@@ -32,9 +33,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(email == "satishlangayan@gmail.com"){
           isAdmin=true;
         }
+        bool language = await SharedData.getToken("language");
         emit(GetPostSuccessState(
             listOfPosts:result,isAdmin: isAdmin,
-            selectedTag: event.selectedTag
+            selectedTag: event.selectedTag,
+          languageChange: language
         ));
       }
       else{
@@ -62,9 +65,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
+          bool language = await SharedData.getToken("language");
           emit(GetPostSuccessState(
               listOfPosts:result,isAdmin: isAdmin,
-              selectedTag: event.selectedTag
+              selectedTag: event.selectedTag,
+            languageChange: language
           ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -84,9 +89,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
+          bool language = await SharedData.getToken("language");
           emit(GetPostSuccessState(
               listOfPosts:result,isAdmin: isAdmin,
-              selectedTag: event.selectedTag
+              selectedTag: event.selectedTag,
+            languageChange: language
           ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -122,13 +129,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           result.addAll(allPostData);
           result.addAll(resultData);
           String email =await SharedData.getEmail("email");
+          bool language = await SharedData.getToken("language");
           bool isAdmin =false;
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
           emit(GetPostSuccessState(
               listOfPosts:result,isAdmin: isAdmin,
-              selectedTag: event.selectedTag
+              selectedTag: event.selectedTag,
+            languageChange: language
           ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -158,6 +167,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         loveCount = loveCount+1;
       }
       data.insert(index, ForYouModel(
+        summaryHi: event.postData.summaryHi,
         id: event.postData.id,
         dateTime: event.postData.dateTime,
         imageUrl: event.postData.imageUrl,
@@ -180,6 +190,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         loveCount = loveCount!-1;
       }
       data.insert(index, ForYouModel(
+        summaryHi: event.postData.summaryHi,
         id: event.postData.id,
         dateTime: event.postData.dateTime,
         imageUrl: event.postData.imageUrl,
@@ -194,13 +205,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ));
     }
     String email =await SharedData.getEmail("email");
+    bool language = await SharedData.getToken("language");
     bool isAdmin =false;
     if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
     emit(GetPostSuccessState(
         listOfPosts:data,isAdmin: isAdmin,
-        selectedTag: event.selectedTag
+        selectedTag: event.selectedTag,
+      languageChange: language
     ));
     try{
         var result = await HomeRepo.reactionOnPost(
@@ -232,6 +245,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     data.removeAt(index);
     if(event.bookmark){
       data.insert(index, ForYouModel(
+          summaryHi: event.postData.summaryHi,
           id: event.postData.id,
           dateTime: event.postData.dateTime,
           imageUrl: event.postData.imageUrl,
@@ -250,6 +264,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ));
     }else{
       data.insert(index, ForYouModel(
+          summaryHi: event.postData.summaryHi,
           id: event.postData.id,
           dateTime: event.postData.dateTime,
           imageUrl: event.postData.imageUrl,
@@ -268,9 +283,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
+    bool language = await SharedData.getToken("language");
     emit(GetPostSuccessState(
         listOfPosts:data,isAdmin: isAdmin,
-        selectedTag: event.selectedTag
+        selectedTag: event.selectedTag,
+      languageChange: language
     ));
     try{
       var result = await HomeRepo.bookmarkPost(
@@ -303,13 +320,15 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
    data.addAll(event.listOfData);
    data.removeAt(index);
     String email =await SharedData.getEmail("email");
+    bool language = await SharedData.getToken("language");
     bool isAdmin =false;
     if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
    emit(GetPostSuccessState(
        listOfPosts: data, isAdmin: isAdmin,
-       selectedTag: event.selectedTag
+       selectedTag: event.selectedTag,
+     languageChange: language
    ));
     try{
       await HomeRepo.adminAction(
@@ -336,9 +355,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
+          bool language = await SharedData.getToken("language");
           emit(GetPostSuccessState(
               listOfPosts:result,isAdmin: isAdmin,
-              selectedTag: event.selectedTag
+              selectedTag: event.selectedTag,
+            languageChange: language
           ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -358,9 +379,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           if(email == "satishlangayan@gmail.com"){
             isAdmin=true;
           }
+          bool language = await SharedData.getToken("language");
           emit(GetPostSuccessState(
               listOfPosts:result,isAdmin: isAdmin,
-              selectedTag: event.selectedTag
+              selectedTag: event.selectedTag,
+            languageChange: language
           ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -370,5 +393,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(GetPostFailureState(errorMessage: "Something went wrong"));
       }
     }
+  }
+
+  FutureOr<void> languageChange(
+      LanguageChange event, Emitter<HomeState> emit) async {
+    bool isAdmin =false;
+    String email =await SharedData.getEmail("email");
+    if(email == "satishlangayan@gmail.com"){
+      isAdmin=true;
+    }
+    emit(GetPostSuccessState(
+        listOfPosts: event.listOfPost,
+        isAdmin: isAdmin,
+        selectedTag: event.selectedTag,
+        languageChange: event.language));
   }
 }

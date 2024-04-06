@@ -56,6 +56,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    SharedData.language(false);
     getName();
     getImage();
     BlocProvider.of<HomeBloc>(context).add(
@@ -398,6 +399,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             isAdmin: state.isAdmin,
                             selectedTag: selectedTag,
                             isDarkMode: themeChange.darkTheme,
+                            language: state.languageChange,
                           ),
                           PostListView(
                             data: data,
@@ -405,6 +407,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             isAdmin: state.isAdmin,
                             selectedTag: selectedTag,
                             isDarkMode: themeChange.darkTheme,
+                            language: state.languageChange,
                           ),
                         ],
                       ),

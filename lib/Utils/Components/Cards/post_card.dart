@@ -8,7 +8,7 @@ import '../../../Bloc/HomeBloc/home_event.dart';
 import '../../../Models/for_you_model.dart';
 import '../Text/simple_text.dart';
 
-class PostListView extends StatelessWidget {
+class PostListView extends StatefulWidget {
   const PostListView({
     super.key,
     required this.data,
@@ -16,6 +16,7 @@ class PostListView extends StatelessWidget {
     required this.isAdmin,
     required this.selectedTag,
     required this.isDarkMode,
+    required this.language,
   });
 
   final List<ForYouModel> data;
@@ -23,18 +24,21 @@ class PostListView extends StatelessWidget {
   final bool isAdmin;
   final String selectedTag;
   final bool isDarkMode;
+  final bool language;
 
+  @override
+  State<PostListView> createState() => _PostListViewState();
+}
+
+class _PostListViewState extends State<PostListView> {
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
-      child: ListView.separated(
-          separatorBuilder: (context, child) => const Divider(
-            height: 1,
-          ),
-          controller: scrollController,
-          itemCount: data.length,
+      child: ListView.builder(
+          controller: widget.scrollController,
+          itemCount: widget.data.length,
           itemBuilder: (context, index) {
-            if (index == data.length - 1) {
+            if (index == widget.data.length - 1) {
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 5),
                 child: const Center(
@@ -43,16 +47,17 @@ class PostListView extends StatelessWidget {
               );
             }
             else {
+              bool translateHindi=widget.language;
               bool emojiTypeBool = false;
               var emojiType = "";
               bool bookmarkOrNot = false;
-              if (data[index].myBookmark!.isNotEmpty) {
+              if (widget.data[index].myBookmark!.isNotEmpty) {
                 bookmarkOrNot = true;
               } else {
                 bookmarkOrNot = false;
               }
-              if (data[index].myEmojis!.isNotEmpty) {
-                emojiType = data[index].myEmojis?[0]["emoji"];
+              if (widget.data[index].myEmojis!.isNotEmpty) {
+                emojiType = widget.data[index].myEmojis?[0]["emoji"];
                 emojiTypeBool = true;
               } else {
                 emojiType = "";
@@ -61,7 +66,7 @@ class PostListView extends StatelessWidget {
               return Container(
                 margin: const EdgeInsets.only(top: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                color:isDarkMode?const Color(0xff1e1e1e):Colors.white,
+                color:widget.isDarkMode?const Color(0xff1e1e1e):Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -72,7 +77,7 @@ class PostListView extends StatelessWidget {
                           height: 210,
                           child: Column(
                             children: [
-                              data[index].imageUrl == null
+                              widget.data[index].imageUrl == null
                                   ? Container(
                                       height: 200,
                                       decoration: BoxDecoration(
@@ -89,7 +94,7 @@ class PostListView extends StatelessWidget {
                                           image: DecorationImage(
                                             fit: BoxFit.fill,
                                             image: NetworkImage(
-                                                data[index].imageUrl!),
+                                                widget.data[index].imageUrl!),
                                           )),
                                     ),
                             ],
@@ -143,11 +148,11 @@ class PostListView extends StatelessWidget {
                             onTap: () {
                               BlocProvider.of<HomeBloc>(context).add(
                                 PostLikeEvent(
-                                    postData: data[index],
+                                    postData: widget.data[index],
                                     previousEmojiType: emojiType,
                                     emojisType: "",
-                                    listOfData: data,
-                                    selectedTag: selectedTag),
+                                    listOfData: widget.data,
+                                    selectedTag: widget.selectedTag),
                               );
                             },
                             child: Row(
@@ -160,13 +165,13 @@ class PostListView extends StatelessWidget {
                                 SvgPicture.asset(
                                   "assets/svg/like_filled.svg",
                                 ),
-                                data[index].love != null
+                                widget.data[index].love != null
                                     ? Padding(
                                   padding:
                                   const EdgeInsets.only(
                                       left: 6),
                                   child: SimpleText(
-                                    text: data[index]
+                                    text: widget.data[index]
                                         .love
                                         .toString(),
                                     fontSize: 12,
@@ -182,11 +187,11 @@ class PostListView extends StatelessWidget {
                             onTap: () {
                               BlocProvider.of<HomeBloc>(context).add(
                                   PostLikeEvent(
-                                      postData: data[index],
+                                      postData: widget.data[index],
                                       previousEmojiType: emojiType,
                                       emojisType: "love",
-                                      listOfData: data,
-                                      selectedTag: selectedTag));
+                                      listOfData: widget.data,
+                                      selectedTag: widget.selectedTag));
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -198,14 +203,14 @@ class PostListView extends StatelessWidget {
                                 SvgPicture.asset(
                                   "assets/svg/like.svg",
                                 ),
-                                data[index].love != null
+                                widget.data[index].love != null
                                     ? const SizedBox(
                                   width: 5,
                                 )
                                     : const SizedBox(),
                                 SimpleText(
-                                  text: data[index].love != null
-                                      ? data[index].love.toString()
+                                  text: widget.data[index].love != null
+                                      ? widget.data[index].love.toString()
                                       : "",
                                   fontSize: 12,
                                   fontColor: const Color(0xff060606),
@@ -221,41 +226,57 @@ class PostListView extends StatelessWidget {
                               bookmarkOrNot = !bookmarkOrNot;
                               BlocProvider.of<HomeBloc>(context).add(
                                   BookmarkPostEvent(
-                                      postData: data[index],
-                                      listOfData: data,
+                                      postData: widget.data[index],
+                                      listOfData: widget.data,
                                       bookmark: bookmarkOrNot,
-                                      selectedTag: selectedTag));
+                                      selectedTag: widget.selectedTag));
                             },
                             child: bookmarkOrNot
-                                ? SvgPicture.asset(
+                                ? widget.isDarkMode? SvgPicture.asset(
+                                        "assets/svg/bookmark_dark.svg")
+                                    :SvgPicture.asset(
                                 "assets/svg/bookmarked.svg")
                                 : SvgPicture.asset(
                                 "assets/svg/bookmark.svg"),
                           ),
                           const Spacer(),
-                          isAdmin
+                          widget.isAdmin
                               ? InkWell(
                               onTap: () {
                                 BlocProvider.of<HomeBloc>(context).add(
                                     AdminActionEvent(
-                                        postData: data[index],
-                                        listOfData: data,
-                                        selectedTag: selectedTag));
+                                        postData: widget.data[index],
+                                        listOfData: widget.data,
+                                        selectedTag: widget.selectedTag));
                               },
                               child: const Icon(
                                 Icons.delete_outline,
                                 color: Colors.red,
                               ))
                               : const SizedBox(),
-                          Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: const Color(0xffD8D8D8)
-                              )
+                          InkWell(
+                            onTap: (){
+                              translateHindi=!translateHindi;
+                             BlocProvider.of<HomeBloc>(context).add(
+                               LanguageChange(
+                                   language: translateHindi,
+                                   listOfPost: widget.data,
+                                   selectedTag: widget.selectedTag
+                               )
+                             );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: const Color(0xffD8D8D8)
+                                )
+                              ),
+                              child: widget.isDarkMode ?
+                              SvgPicture.asset("assets/svg/translate_dark.svg"):
+                              SvgPicture.asset("assets/svg/translate.svg"),
                             ),
-                            child: SvgPicture.asset("assets/svg/translate.svg"),
                           )
                           // SleekCircularSlider(
                           //   innerWidget: (double value) {
@@ -292,7 +313,7 @@ class PostListView extends StatelessWidget {
                       color: Color(0xffE8ECF4),
                     ),
                     SimpleText(
-                      text: data[index].summary.title,
+                      text: widget.data[index].summary.title,
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                       fontColor: const Color(0xff002D42),
@@ -304,29 +325,34 @@ class PostListView extends StatelessWidget {
                     ListView.builder(
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: data[index].summary.keyPoints.length,
+                        itemCount: translateHindi &&
+                                widget.data[index].summaryHi != null
+                            ? widget.data[index].summaryHi?.keyPoints.length:
+                        widget.data[index].summary.keyPoints.length,
                         itemBuilder: (context, keyIndex) {
-                          var keyPoints = data[index].summary.keyPoints[keyIndex];
+                          var keyPoints =translateHindi && widget.data[index].summaryHi!= null ?
+                          widget.data[index].summaryHi?.keyPoints[keyIndex]:
+                          widget.data[index].summary.keyPoints[keyIndex];
                           return Container(
                             margin: const EdgeInsets.symmetric(vertical: 5),
                             child: RichText(
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "${keyPoints.subHeading} ",
+                                    text: "${keyPoints?.subHeading} ",
                                     style: GoogleFonts.roboto(
                                       fontSize: 14,
-                                      color: isDarkMode ?
+                                      color: widget.isDarkMode ?
                                       Colors.white :const Color(0xff2B2B2B),
                                       fontWeight: FontWeight.w600,
                                       height: 1.0,
                                     ),
                                   ),
                                   TextSpan(
-                                    text: keyPoints.description,
+                                    text: keyPoints?.description,
                                     style: GoogleFonts.roboto(
                                       fontSize: 14,
-                                      color: isDarkMode ?
+                                      color: widget.isDarkMode ?
                                       Colors.white :const Color(0xff2B2B2B),
                                       height: 1.2,
                                     ),
@@ -345,7 +371,7 @@ class PostListView extends StatelessWidget {
                     InkWell(
                       onTap: () async {
                         if (!await launchUrl(
-                            Uri.parse(data[index].newsUrl))) {
+                            Uri.parse(widget.data[index].newsUrl))) {
                           throw Exception('Could not launch url');
                         }
                       },
@@ -360,7 +386,7 @@ class PostListView extends StatelessWidget {
                           const SizedBox(width: 2,),
                           InkWell(
                             child: SimpleText(
-                              text: data[index].source,
+                              text: widget.data[index].source,
                               fontSize: 10,
                               fontColor: Colors.grey,
                               fontWeight: FontWeight.bold,
