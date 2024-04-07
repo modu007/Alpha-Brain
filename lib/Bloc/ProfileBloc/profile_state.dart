@@ -19,7 +19,10 @@ class GetPostFailureState extends ProfileState {
 class GetPostSuccessState extends ProfileState{
   final List<BookmarkPostModel> listOfPosts;
   final List<BookmarkPostModel>? listOfFutureData;
+  final bool language;
   GetPostSuccessState({
     required this.listOfPosts,
-    required this.listOfFutureData});
+    required this.listOfFutureData,
+    required this.language,
+  });
 }

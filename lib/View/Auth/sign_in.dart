@@ -7,6 +7,8 @@ import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_event.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_state.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import 'package:provider/provider.dart';
+import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
@@ -30,6 +32,7 @@ class _SignInState extends State<SignIn> {
   }
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
@@ -50,10 +53,12 @@ class _SignInState extends State<SignIn> {
                 onTap: (){
                   Navigator.pushReplacementNamed(context, RouteName.register);
                 },
-                child: const SimpleText(
+                child:  SimpleText(
                     text:"Register Now" ,
                     fontSize: 14,
-                    fontColor:  Color(0xff4EB3CA),
+                    fontColor:themeChange.darkTheme?
+                        const Color(0xff4EB3CA)
+                    :const Color(0xff4EB3CA),
                     fontWeight: FontWeight.bold),
               )
             ],

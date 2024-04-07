@@ -10,9 +10,12 @@ import 'package:neuralcode/Bloc/AuthBloc/UserDetailsBloc/user_details_state.dart
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_state.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
+import 'package:neuralcode/Utils/Color/colors.dart';
 import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
+import 'package:provider/provider.dart';
 import '../../Bloc/ProfileBloc/profile_event.dart';
+import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Components/Cards/bookmark_card.dart';
 import '../../Utils/Routes/route_name.dart';
 import 'dart:io';
@@ -112,13 +115,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light));
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: BlocBuilder<UserDetailsCubit, UserDetailsState>(
           builder: (context, state) {
             if(state is UserDetailsLoadingState){
@@ -155,9 +158,11 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                   color: const Color(0xffE8ECF4),
                                 )
                             ),
-                            child: const SimpleText(
+                            child:  SimpleText(
                               text: "Edit Profile",
-                              fontColor: Color(0xff4EB3CA),
+                              fontColor: themeChange.darkTheme?
+                                  const Color(0xff4EB3CA):
+                              const Color(0xff4EB3CA),
                               fontSize: 14,
                             ),
                           ),
@@ -349,6 +354,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                     isTab1: isTab1,
                                     futureData: state.listOfFutureData,
                                     isDataEmpty: isEmptyData,
+                                    isDarkMode: themeChange.darkTheme,
+                                    language: state.language,
                                   ),
                                   data.isEmpty ?
                                   const Center(
@@ -371,6 +378,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                                     isTab1: isTab1,
                                     futureData: state.listOfFutureData,
                                     isDataEmpty: isEmptyData,
+                                    isDarkMode: themeChange.darkTheme,
+                                    language: state.language,
                                   ),
                                 ],
                               ),

@@ -4,23 +4,32 @@ import 'package:neuralcode/Bloc/ProfileBloc/profile_event.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_state.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
 import '../../Repositories/ProfileRepo/profile_repo.dart';
+import '../../SharedPrefernce/shared_pref.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(ProfileInitial()) {
     on<GetPostInitialEvent>(getPostInitialEvent);
     on<TabChangeEvent>(tabChangeEvent);
     on<PaginationEvent>(paginationEvent);
+    on<LanguageChangeBloc>(languageChange);
   }
   FutureOr<void> getPostInitialEvent(
       ProfileEvent event, Emitter<ProfileState> emit) async {
     emit(GetPostLoadingState());
     try{
       var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
+      bool language = await SharedData.getToken("language");
       if(result is List<BookmarkPostModel>){
         if(result.length==1){
-          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: []));
+          emit(GetPostSuccessState(
+              listOfPosts:result,listOfFutureData: [],
+            language: language
+          ));
         }else{
-          emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+          emit(GetPostSuccessState(
+              listOfPosts:result,listOfFutureData: null,
+            language: language
+          ));
         }
       }else{
         emit(GetPostFailureState(errorMessage: "Error"));
@@ -37,11 +46,18 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     if(event.tabIndex ==0){
       try{
         var result = await ProfileRepo.getAllLikesData(skip: 0, limit: 5);
+        bool language = await SharedData.getToken("language");
+
         if(result is List<BookmarkPostModel>){
           if(result.length==1){
-            emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: []));
+            emit(GetPostSuccessState(
+                listOfPosts: result, listOfFutureData: [], language: language));
           }else{
-            emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+            emit(GetPostSuccessState(
+                listOfPosts:result,
+                listOfFutureData: null,
+              language: language
+            ));
           }
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -54,15 +70,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     else{
       try{
         var result = await ProfileRepo.getAllBookmarksData(skip: 0, limit: 5);
+        bool language = await SharedData.getToken("language");
         if(result is List<BookmarkPostModel>){
           if(result.length==1){
             if(result.length==1){
-              emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: []));
+              emit(GetPostSuccessState(
+                  listOfPosts:result,
+                  listOfFutureData: [],
+                language: language
+              ));
             }else{
-              emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+              emit(GetPostSuccessState(
+                  listOfPosts: result, listOfFutureData: null,language:language
+              ));
             }
           }else{
-            emit(GetPostSuccessState(listOfPosts:result,listOfFutureData: null));
+            emit(GetPostSuccessState(
+                listOfPosts:result,
+                listOfFutureData: null,
+              language: language
+            ));
           }
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -90,6 +117,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if(result is List<BookmarkPostModel>){
         List<BookmarkPostModel> allPostData = event.allPrevPostData;
         List<BookmarkPostModel>? listOfFutureData=[];
+        bool language = await SharedData.getToken("language");
         if(result.isNotEmpty) {
           listOfFutureData = null;
         }
@@ -100,7 +128,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         result.addAll(resultData);
         emit(GetPostSuccessState(
             listOfPosts:result,
-            listOfFutureData: listOfFutureData));
+            listOfFutureData: listOfFutureData,
+          language: language
+        ));
       }else{
         emit(GetPostFailureState(errorMessage: "Error"));
       }
@@ -108,5 +138,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     catch(error){
       emit(GetPostFailureState(errorMessage: "Something went wrong"));
     }
+  }
+
+  FutureOr<void> languageChange(
+      LanguageChangeBloc event, Emitter<ProfileState> emit) async {
+    bool language = await SharedData.getToken("language");
+        emit(GetPostSuccessState(
+            listOfPosts:event.listOfData,
+            listOfFutureData: event.allPrevPostData,
+          language: language
+        ));
   }
 }

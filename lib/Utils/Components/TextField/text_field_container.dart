@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../../../Provider/dark_theme_controller.dart';
 
 class EmailInputFormatter extends TextInputFormatter {
   @override
@@ -41,6 +44,7 @@ class TextFieldContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     return Column(
       children: [
         Container(
@@ -50,7 +54,8 @@ class TextFieldContainer extends StatelessWidget {
               right: 10,
               left: 15),
           decoration: BoxDecoration(
-              color: const Color(0xffE8ECF4),
+              color: themeChange.darkTheme?
+              const Color(0xff2F2F2F):const Color(0xffE8ECF4),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: const Color(0xffE8ECF4),
@@ -65,7 +70,13 @@ class TextFieldContainer extends StatelessWidget {
             controller: emailController,
             maxLines: 1,
             keyboardType: keyboardType,
-            decoration:  InputDecoration(
+            style: GoogleFonts.besley(
+                color: themeChange.darkTheme
+                    ? Colors.white
+                    : const Color(0xff8391A1),
+                fontSize: 15,
+                fontWeight: FontWeight.w600),
+            decoration:InputDecoration(
                 suffixIcon: suffixIcon !=null ? SizedBox(
                   height: 10,
                   width: 10,
@@ -74,10 +85,12 @@ class TextFieldContainer extends StatelessWidget {
                 border: InputBorder.none,
                 hintText: hintText,
                 hintStyle: GoogleFonts.besley(
-                    color: const Color(0xff8391A1),
+                    color: themeChange.darkTheme
+                        ? Colors.white
+                        : const Color(0xff8391A1),
                     fontSize: 15,
                     fontWeight:FontWeight.w600
-                )
+                ),
             ),
           ),
         ),

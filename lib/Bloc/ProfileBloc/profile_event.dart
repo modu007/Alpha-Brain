@@ -1,3 +1,5 @@
+import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
+
 import '../../Models/bookmark_post_model.dart';
 
 abstract class ProfileEvent {}
@@ -48,6 +50,17 @@ class BookmarkPostEvent extends ProfileEvent{
 
 class UploadPhotoEvent extends ProfileEvent{
 
+}
+
+class LanguageChangeBloc extends ProfileEvent{
+  final List<BookmarkPostModel> listOfData;
+  final bool language;
+  final List<BookmarkPostModel> allPrevPostData;
+  LanguageChangeBloc({
+    required this.listOfData,
+    required this.language,
+    required this.allPrevPostData
+});
 }
 
 

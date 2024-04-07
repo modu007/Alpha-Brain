@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
 import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
 import 'package:neuralcode/Utils/Components/Buttons/login_buttons.dart';
+import 'package:provider/provider.dart';
 import '../../Bloc/AuthBloc/UserDetailsBloc/user_details_cubit.dart';
 import '../../Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import '../../Bloc/EditProfileCubit/edit_profile_state.dart';
+import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Components/Text/simple_text.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
 import '../../Utils/Regex/regex.dart';
@@ -48,6 +50,7 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     Size size = MediaQuery.of(context).size;
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
@@ -60,6 +63,7 @@ class _EditProfileState extends State<EditProfile> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                const SizedBox(height: 10,),
                 BackButtonText(
                   titleText: "Edit Profile",
                   onPressed: (){

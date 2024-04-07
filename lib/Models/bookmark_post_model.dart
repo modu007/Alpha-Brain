@@ -40,6 +40,7 @@ class LikedPost {
   final String newsUrl;
   final String source;
   final Summary summary;
+  final Summary? summaryHi; // Updated to be nullable
   final List<String> tags;
 
   LikedPost({
@@ -52,6 +53,7 @@ class LikedPost {
     required this.source,
     required this.summary,
     required this.tags,
+    required this.summaryHi,
   });
 
   factory LikedPost.fromJson(Map<String, dynamic> json) => LikedPost(
@@ -64,6 +66,9 @@ class LikedPost {
     source: json["source"],
     summary: Summary.fromJson(json["summary"]),
     tags: List<String>.from(json["tags"].map((x) => x)),
+    summaryHi: json["summary_hi"] != null
+        ? Summary.fromJson(json["summary_hi"])
+        : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -75,6 +80,7 @@ class LikedPost {
     "news_url": newsUrl,
     "source": source,
     "summary": summary.toJson(),
+    "summary_hi": summaryHi?.toJson(),
     "tags": List<dynamic>.from(tags.map((x) => x)),
   };
 }

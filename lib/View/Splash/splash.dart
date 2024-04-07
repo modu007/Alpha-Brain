@@ -32,12 +32,12 @@ class _SplashScreenState extends State<SplashScreen>
     }else{
       if (token != null) {
         Timer(
-            const Duration(seconds: 3),
+            const Duration(seconds: 4),
                 () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
                 RouteName.home, (route) => false));
       }
       else {
-        Timer(const Duration(seconds: 3),
+        Timer(const Duration(seconds: 4),
                 () => Navigator.of(context).popAndPushNamed(RouteName.signIn));
       }
     }

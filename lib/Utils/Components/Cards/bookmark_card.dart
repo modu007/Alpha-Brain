@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
+import 'package:neuralcode/Bloc/ProfileBloc/profile_event.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Text/simple_text.dart';
@@ -14,6 +17,8 @@ class BookmarkPostCard extends StatelessWidget{
     required this.isTab1,
     required this.futureData,
     required this.isDataEmpty,
+    required this.isDarkMode,
+    required this.language,
   });
   final List<BookmarkPostModel> data;
   final List<BookmarkPostModel>? futureData;
@@ -21,6 +26,8 @@ class BookmarkPostCard extends StatelessWidget{
   final bool isLoading;
   final bool isTab1;
   final bool isDataEmpty;
+  final bool isDarkMode;
+  final bool language;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -36,89 +43,40 @@ class BookmarkPostCard extends StatelessWidget{
             );
           }
           else{
+            bool translateHindi=language;
             var dataResult = data[index].likedPost[0];
             return Container(
-              margin: const EdgeInsets.only(left: 15,right: 15,top: 0,bottom: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                      color: const Color(0xffF8F8FA)
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                        color: Color(0xffF7F8F9),
-                        spreadRadius: 4,
-                        blurRadius: 2)
-                  ]),
+              margin: const EdgeInsets.only(top: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              color: isDarkMode?const Color(0xff1e1e1e):Colors.white,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 15),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          height: 50,
-                          width: 50,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(25),
-                            child: Image.asset("assets/images/logo.png"),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SimpleText(
-                              text: "Alpha Brain",
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              textHeight: 1,
-                            ),
-                            SimpleText(
-                              text: "@alphabrain",
-                              fontSize: 12,
-                              textHeight: 2,
-                              fontColor: Color(0xff8698A9),
-                            )
-                          ],
-                        ),
-                        const Spacer(),
-                        SimpleText(
-                          text: dataResult.dateTime.split("2024")[0],
-                          fontSize: 12,
-                          fontColor: const Color(0xff8698A9),
-                        )
-                      ],
-                    ),
-                  ),
                   Stack(
                     children: [
                       SizedBox(
-                        height: 220,
+                        height: 210,
                         child: Column(
                           children: [
-                            dataResult.imageUrl ==null ?
-                            Container(
+                            dataResult.imageUrl == null
+                                ? Container(
                               height: 200,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: Center(child: Image.asset("assets/images/logo.png")),
-                            ) :Container(
+                              child: Center(
+                                  child: Image.asset(
+                                      "assets/images/logo.png")),
+                            )
+                                : Container(
                               height: 200,
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(8),
                                   image: DecorationImage(
                                     fit: BoxFit.fill,
-                                    image: NetworkImage(dataResult.imageUrl!),
-                                  )
-                              ),
+                                    image: NetworkImage(
+                                        dataResult.imageUrl!),
+                                  )),
                             ),
                           ],
                         ),
@@ -129,93 +87,82 @@ class BookmarkPostCard extends StatelessWidget{
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border.all(
-                                color: const Color(0xffCDC8BC)
-                            ),
+                            color: Colors.black26,
+                            border: Border.all(color: const Color(0xffCDC8BC)),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child:  InkWell(
-                            onTap: ()async{
-                              if (!await launchUrl(Uri.parse(dataResult.newsUrl))) {
-                                throw Exception('Could not launch url');
-                              }
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.asset("assets/images/hindustan_times.png"),
-                                const SizedBox(width: 5,),
-                                 SimpleText(
-                                  text: dataResult.source,
-                                  fontSize: 8,
-                                  fontColor:Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                )
-                              ],
-                            ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 15,
+                                width: 15,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
+                                  child: Image.asset("assets/images/logo.png"),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 3,
+                              ),
+                              const SimpleText(
+                                text: "Alpha Brain",
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                textHeight: 1,
+                                fontColor: Colors.white,
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 10,
-                        left: 15,
-                        child: Row(
-                          children: [
-                            isTab1? Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color(0xffF8F8FA)
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2,
-                                      )
-                                    ]
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SvgPicture.asset("assets/svg/heart_filled.svg",),
-                                    const SizedBox(width: 5,),
-                                    SimpleText(
-                                      text: dataResult.love!=null ? dataResult.love.toString():"",
-                                      fontSize: 12,
-                                      fontColor: const Color(0xff060606),)
-                                  ],
-                                )
-                            ):const SizedBox(),
-                            const SizedBox(width: 10,),
-                            isTab1? const SizedBox():Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: const Color(0xffF8F8FA)
-                                    ),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 2,
-                                      )
-                                    ]
-                                ),
-                                child: SvgPicture.asset("assets/svg/bookmarked.svg")
-                            )
-                          ],
                         ),
                       ),
                     ],
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5.0),
+                    child: Row(
+                      children: [
+                        isTab1?
+                        SvgPicture.asset("assets/svg/heart_filled.svg",):
+                        isDarkMode?
+                        SvgPicture.asset("assets/svg/bookmark_dark.svg",):
+                        SvgPicture.asset("assets/svg/bookmarked.svg",),
+                        const SizedBox(width: 5,),
+                        SimpleText(
+                          text: dataResult.love!=null ? dataResult.love.toString():"",
+                          fontSize: 12,
+                          fontColor: const Color(0xff060606),),
+                        const Spacer(),
+                        InkWell(
+                          onTap: (){
+                            translateHindi=!translateHindi;
+                            BlocProvider.of<ProfileBloc>(context).add(
+                                LanguageChangeBloc(
+                                    language: translateHindi,
+                                  listOfData: data,
+                                 allPrevPostData: futureData==null ?[]:futureData!,
+                                )
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: const Color(0xffD8D8D8)
+                                )
+                            ),
+                            child:isDarkMode ?
+                            SvgPicture.asset("assets/svg/translate_dark.svg"):
+                            SvgPicture.asset("assets/svg/translate.svg"),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
                   SimpleText(
                     text: dataResult.summary.title,
                     fontSize: 16,
@@ -226,38 +173,74 @@ class BookmarkPostCard extends StatelessWidget{
                   ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: dataResult.summary.keyPoints.length,
-                      itemBuilder: (context,keyIndex){
-                        var keyPoints = dataResult.summary.keyPoints[keyIndex];
+                      itemCount: translateHindi &&
+                          dataResult.summaryHi != null
+                          ? dataResult.summaryHi?.keyPoints.length:
+                      dataResult.summary.keyPoints.length,
+                      itemBuilder: (context, keyIndex) {
+                        var keyPoints =translateHindi && dataResult.summaryHi!= null ?
+                        dataResult.summaryHi?.keyPoints[keyIndex]:
+                        dataResult.summary.keyPoints[keyIndex];
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 5),
                           child: RichText(
                             text: TextSpan(
                               children: [
-                                TextSpan(
-                                  text: "${keyPoints.subHeading} ",
-                                  style:  GoogleFonts.roboto(
-                                    fontSize: 14,
-                                    color: const Color(0xff2B2B2B),
-                                    fontWeight: FontWeight.w600,
-                                    height: 1.0,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: keyPoints.description,
-                                  style:  GoogleFonts.roboto(
-                                    fontSize: 14,
-                                    color:const Color(0xff2B2B2B),
-                                    height: 1.1,
-                                  ),
-                                ),
-                              ],
+                            TextSpan(
+                            text: "${keyPoints?.subHeading} ",
+                              style: GoogleFonts.roboto(
+                                fontSize: 14,
+                                color: isDarkMode ?
+                                Colors.white :const Color(0xff2B2B2B),
+                                fontWeight: FontWeight.w600,
+                                height: 1.0,
+                              ),
+                            ),
+                            TextSpan(
+                              text: keyPoints?.description,
+                              style: GoogleFonts.roboto(
+                                fontSize: 14,
+                                color: isDarkMode ?
+                                Colors.white :const Color(0xff2B2B2B),
+                                height: 1.2,
+                              ),
+                            )],
                             ),
                           ),
                         );
                       }),
                   const SizedBox(height: 10,),
+                  const Divider(
+                    color: Color(0xffE8ECF4),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      if (!await launchUrl(Uri.parse(dataResult.newsUrl))) {
+                        throw Exception('Could not launch url');
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        const SimpleText(
+                          text: "source:",
+                          fontSize: 10,
+                          fontColor: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        const SizedBox(width: 2,),
+                        InkWell(
+                          child: SimpleText(
+                            text:dataResult.source,
+                            fontSize: 10,
+                            fontColor: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 5,),
                 ],
               ),
             );
