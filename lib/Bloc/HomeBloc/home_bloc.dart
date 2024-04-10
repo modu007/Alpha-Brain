@@ -33,11 +33,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(email == "satishlangayan@gmail.com"){
           isAdmin=true;
         }
-        bool language = await SharedData.getToken("language");
+        bool? language = await SharedData.getToken("language");
+        if(language == null){
+          SharedData.language(false);
+        }
         emit(GetPostSuccessState(
             listOfPosts:result,isAdmin: isAdmin,
             selectedTag: event.selectedTag,
-          languageChange: language
+          languageChange: language!
         ));
       }
       else{
@@ -45,7 +48,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
     }
     catch(error){
-      print(error.toString());
      emit(GetPostFailureState(errorMessage: "Something went wrong"));
     }
   }
@@ -397,15 +399,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> languageChange(
       LanguageChange event, Emitter<HomeState> emit) async {
+    emit(GetPostLoadingState());
     bool isAdmin =false;
     String email =await SharedData.getEmail("email");
+    SharedData.language(event.language==true?true:false);
     if(email == "satishlangayan@gmail.com"){
       isAdmin=true;
     }
+    List<ForYouModel> data = event.listOfPost;
     emit(GetPostSuccessState(
-        listOfPosts: event.listOfPost,
+        listOfPosts: data,
         isAdmin: isAdmin,
         selectedTag: event.selectedTag,
         languageChange: event.language));
+    try{
+      await HomeRepo.changeLanguage(language: event.language==true?"hi":"en");
+    }
+    catch(e){
+      emit(GetPostFailureState(errorMessage: "Something went wrong"));
+    }
   }
 }

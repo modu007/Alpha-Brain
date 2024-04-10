@@ -185,4 +185,27 @@ class HomeRepo {
       print("activeUser repo $error");
     }
   }
+
+  static Future changeLanguage({required language}) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
+    try {
+      if(hasExpired){
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
+      var result = await networkRequest.postMethodRequest({
+        "Preferred_language": language,
+        "Email": email
+      },
+          AllApi.selectLanguage);
+      return result;
+    } catch (error) {
+      print("activeUser repo $error");
+    }
+  }
 }

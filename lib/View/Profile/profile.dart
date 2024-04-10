@@ -10,7 +10,6 @@ import 'package:neuralcode/Bloc/AuthBloc/UserDetailsBloc/user_details_state.dart
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_state.dart';
 import 'package:neuralcode/Models/bookmark_post_model.dart';
-import 'package:neuralcode/Utils/Color/colors.dart';
 import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:provider/provider.dart';

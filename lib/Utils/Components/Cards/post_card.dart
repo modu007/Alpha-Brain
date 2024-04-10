@@ -313,7 +313,10 @@ class _PostListViewState extends State<PostListView> {
                       color: Color(0xffE8ECF4),
                     ),
                     SimpleText(
-                      text: widget.data[index].summary.title,
+                      text:translateHindi &&
+                          widget.data[index].summaryHi != null ?
+                      widget.data[index].summaryHi!.title
+                      :widget.data[index].summary.title,
                       fontSize: 17,
                       fontWeight: FontWeight.w600,
                       fontColor: const Color(0xff002D42),

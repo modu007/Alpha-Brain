@@ -10,6 +10,7 @@ class RegisterDataEvent extends RegisterEvent{
   final bool isEmailValid;
   final bool fullNameValid;
   final bool dob;
+  final String language;
   RegisterDataEvent({
     required this.email,
     required this.name,
@@ -20,6 +21,7 @@ class RegisterDataEvent extends RegisterEvent{
     required this.isEmailValid,
     required this.fullNameValid,
     required this.dob,
+    required this.language,
   });
 }
 

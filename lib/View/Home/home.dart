@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
@@ -29,6 +30,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   late TabController _tabController;
   late ScrollController scrollControllerTab1;
   late ScrollController scrollControllerTab2;
+  TextEditingController languageController= TextEditingController();
 
   int skip = 0;
   int limit = 5;
@@ -39,6 +41,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   String dp="";
   String selectedTag ="All";
   bool isVisible=true;
+  List<ForYouModel> dataForLanguage=[];
   Future getName()async{
     String result = await SharedData.getEmail("name");
     name =result;
@@ -56,9 +59,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    SharedData.language(false);
     getName();
     getImage();
+    languageController.text="English";
     BlocProvider.of<HomeBloc>(context).add(
         GetPostInitialEvent(
         selectedTag: selectedTag));
@@ -230,88 +233,155 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 Expanded(
                   child: Align(
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 10),
-                      padding: const EdgeInsets.all(4),
-                      decoration:  BoxDecoration(
-                        color:themeChange.darkTheme?
-                        const Color(0xff2F2F2F):
-                        const Color(0xffF0F0F0),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: InkWell(
-                              onTap: (){
-                                if(themeChange.darkTheme==true){
-                                  themeChange.darkTheme=false;
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,vertical: 5),
-                                decoration:  BoxDecoration(
-                                  color: themeChange.darkTheme ?
-                                  const Color(0xff2F2F2F) :
-                                  Colors.white,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                   themeChange.darkTheme?
-                                SvgPicture.asset("assets/svg/sun_dark.svg"):
-                                   SvgPicture.asset("assets/svg/sun.svg"),
-                                    const SizedBox(width: 8,),
-                                    SimpleText2(
-                                      text: "Light",
-                                      fontSize: 16,
-                                      fontColor: themeChange.darkTheme?
-                                      Colors.white:Colors.black,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Divider(
+                            color: Color(0xffD1D3D4),
                           ),
-                          Flexible(
-                            flex: 1,
-                            child: InkWell(
-                              onTap: (){
-                                if(themeChange.darkTheme==false){
-                                  themeChange.darkTheme=true;
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,vertical: 5),
-                                decoration:  BoxDecoration(
-                                  color:themeChange.darkTheme==true ?
-                                  const Color(0xff474747) :const Color(0xffF0F0F0),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    themeChange.darkTheme?
-                                    SvgPicture.asset("assets/svg/moon_dark.svg"):
-                                    SvgPicture.asset("assets/svg/moon.svg"),
-                                    const SizedBox(width: 8,),
-                                    SimpleText2(
-                                      text: "Dark",
-                                      fontSize: 16,
-                                      fontColor: themeChange.darkTheme?
-                                      Colors.white:Colors.black,
-                                    )
-                                  ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 15.0,left: 10,right: 10),
+                          child: Row(
+                            children: [
+                              SvgPicture.asset("assets/svg/globe.svg"),
+                              const SizedBox(width: 5,),
+                              const SimpleText(text: "Language", fontSize: 15,
+                              fontColor: Color(0xff060606),),
+                              const Spacer(),
+                              Flexible(
+                                child: DropdownButtonFormField<String>(
+                                  icon: SvgPicture.asset("assets/svg/drop_down.svg"),
+                                  value: languageController.text.isEmpty
+                                      ? null
+                                      : languageController.text,
+                                  onChanged: (String? newValue) {
+                                    if (newValue != null) {
+                                      if(newValue != languageController.text){
+                                        languageController.text = newValue;
+                                        BlocProvider.of<HomeBloc>(context)
+                                            .add(LanguageChange(
+                                            language:
+                                            languageController.text ==
+                                                "English"
+                                                ? false
+                                                : true,
+                                            listOfPost: allPostsData,
+                                            selectedTag: selectedTag));
+                                      }
+                                      }
+                                  },
+                                  items: ['English', 'Hindi']
+                                      .map<DropdownMenuItem<String>>(
+                                        (String value) => DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    ),
+                                  ).toList(),
+                                  style: const TextStyle(
+                                    color: Color(0xff4EB3CA),
+                                    fontSize: 17
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText: "Language",
+                                    border: InputBorder.none,
+                                    hintStyle: GoogleFonts.besley(
+                                      color: const Color(0xff4EB3CA),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
+                          padding: const EdgeInsets.all(4),
+                          decoration:  BoxDecoration(
+                            color:themeChange.darkTheme?
+                            const Color(0xff2F2F2F):
+                            const Color(0xffF0F0F0),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                flex: 1,
+                                child: InkWell(
+                                  onTap: (){
+                                    if(themeChange.darkTheme==true){
+                                      themeChange.darkTheme=false;
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,vertical: 5),
+                                    decoration:  BoxDecoration(
+                                      color: themeChange.darkTheme ?
+                                      const Color(0xff2F2F2F) :
+                                      Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                       themeChange.darkTheme?
+                                    SvgPicture.asset("assets/svg/sun_dark.svg"):
+                                       SvgPicture.asset("assets/svg/sun.svg"),
+                                        const SizedBox(width: 8,),
+                                        SimpleText2(
+                                          text: "Light",
+                                          fontSize: 16,
+                                          fontColor: themeChange.darkTheme?
+                                          Colors.white:Colors.black,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: InkWell(
+                                  onTap: (){
+                                    if(themeChange.darkTheme==false){
+                                      themeChange.darkTheme=true;
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,vertical: 5),
+                                    decoration:  BoxDecoration(
+                                      color:themeChange.darkTheme==true ?
+                                      const Color(0xff474747) :const Color(0xffF0F0F0),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        themeChange.darkTheme?
+                                        SvgPicture.asset("assets/svg/moon_dark.svg"):
+                                        SvgPicture.asset("assets/svg/moon.svg"),
+                                        const SizedBox(width: 8,),
+                                        SimpleText2(
+                                          text: "Dark",
+                                          fontSize: 16,
+                                          fontColor: themeChange.darkTheme?
+                                          Colors.white:Colors.black,
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 )
@@ -383,8 +453,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   return const Expanded(child: Center(child: CircularProgressIndicator()));
                 }
                 else if (state is GetPostSuccessState) {
-                  allPostsData.clear();
-                  final data = state.listOfPosts;
+                 final List<ForYouModel> data = [];
+                  data.addAll(state.listOfPosts);
+                 allPostsData.clear();
                   allPostsData.addAll(data);
                   return Expanded(
                     child: DefaultTabController(

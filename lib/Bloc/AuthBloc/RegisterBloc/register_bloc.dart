@@ -4,6 +4,8 @@ import 'package:neuralcode/Bloc/AuthBloc/RegisterBloc/register_event.dart';
 import 'package:neuralcode/Bloc/AuthBloc/RegisterBloc/register_state.dart';
 import 'package:neuralcode/Repositories/AuthRepo/sign_up_repo.dart';
 
+import '../../../SharedPrefernce/shared_pref.dart';
+
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   RegisterBloc() : super(RegisterInitial(isUsernameValid: false)) {
     on<RegisterDataEvent>(registerDataEvent);
@@ -17,14 +19,15 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         if(event.dob){
           if(event.isUsernameValid){
             emit(RegisterLoadingState());
+            SharedData.language(event.language=="Hindi"?true:false);
             try{
               var result = await AuthRepo.registerUserData(
                   fullName: event.name,
                   email: event.email,
                   gender: event.gender,
                   age: event.age,
-                  username: event.username
-              );
+                  username: event.username,
+                  language: event.language == "Hindi" ? "hi" : "en");
               if(result == "success" ){
                 emit(RegistrationSuccessFullState(email: event.email));
               }

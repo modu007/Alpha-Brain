@@ -9,6 +9,7 @@ class AuthRepo{
     required String gender,
     required String age,
     required String username,
+    required String language,
   }) async {
     NetworkRequest networkRequest = NetworkRequest();
     try {
@@ -18,7 +19,8 @@ class AuthRepo{
         "Email": email,
         "Gender":gender,
         "Age": age,
-        "Username": username
+        "Username": username,
+        "Preferred_language": language
       },AllApi.registerUser);
       if(result["Status"]=="success"){
         return "success";

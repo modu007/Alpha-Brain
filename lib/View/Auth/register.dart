@@ -32,6 +32,7 @@ class _RegisterState extends State<Register>{
   TextEditingController emailController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController genderController = TextEditingController();
+  TextEditingController languageController = TextEditingController();
   final focusNode = FocusNode();
   bool isEmailValid = false;
   bool isFullNameDone = false;
@@ -53,6 +54,7 @@ class _RegisterState extends State<Register>{
     emailController.text= widget.emailId!;
   }
   genderController.text ="Male";
+  languageController.text ="English";
   BlocProvider.of<UsernameCubit>(context).userInitialEvent();
   focusNode.addListener(() {
     if(!focusNode.hasFocus){
@@ -322,6 +324,43 @@ class _RegisterState extends State<Register>{
                     }
                   },
                 ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      right: 25,left: 15,top: 10,bottom: 10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xffE8ECF4),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
+                    value: languageController.text.isEmpty
+                        ? null
+                        : languageController.text,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        languageController.text = newValue;
+                      }
+                    },
+                    items: ['Hindi', 'English']
+                        .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      ),
+                    ).toList(),
+                    decoration: InputDecoration(
+                      hintText: "Select Language",
+                      border: InputBorder.none,
+                      hintStyle: GoogleFonts.besley(
+                        color: const Color(0xff8391A1),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10,),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: Center(
@@ -395,7 +434,8 @@ class _RegisterState extends State<Register>{
                           isUsernameValid:isUserNameValid,
                           fullNameValid: isFullNameDone,
                           isEmailValid: isEmailValid,
-                          dob: isDobDone
+                          dob: isDobDone,
+                          language: languageController.text
                         ));
                       },
                       centerText: "Register",

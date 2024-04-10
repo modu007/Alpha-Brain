@@ -57,4 +57,7 @@ class AllApi {
 
   //user notified repo
   static const userNotified = "$baseUrl/user_notified/";
+
+  //select language
+  static const selectLanguage = "$baseUrl/change_language/";
 }
