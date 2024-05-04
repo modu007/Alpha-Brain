@@ -323,12 +323,11 @@ class _RegisterState extends State<Register> {
                   keyboardType: TextInputType.emailAddress,
                   emailController: emailController,
                   hintText: "Email",
-                  onChanged: (val){
-                    if(regex.isValidEmail(val)){
-                      isEmailValid=true;
-                    }
-                    else{
-                      isEmailValid=false;
+                  onChanged: (val) {
+                    if (val.contains('@')) {
+                      isEmailValid = true;
+                    } else {
+                      isEmailValid = false;
                     }
                   },
                 ),
@@ -378,6 +377,7 @@ class _RegisterState extends State<Register> {
                       child: SimpleText(
                         text:
                             "A verification code will be sent to the email you provide.",
+                        textAlign: TextAlign.center,
                         fontSize: 12,
                         fontColor: Color(0xff6A707C),
                       ),
@@ -395,19 +395,15 @@ class _RegisterState extends State<Register> {
                       } else {
                         BlocProvider.of<RegisterBloc>(context)
                             .add(SendOtp(email: state.email));
-                    }
-                    }
-                    if(state is OtpSendState){
-                      Navigator.of(context).pushNamed(
-                        RouteName.otpVerification,arguments: {
-                          "email":state.email
-                      });
                       }
-                    if(state is OtpSendState){
-                      Navigator.of(context).pushNamed(
-                        RouteName.otpVerification,arguments: {
-                          "email":state.email
-                      });
+                    }
+                    if (state is OtpSendState) {
+                      Navigator.of(context).pushNamed(RouteName.otpVerification,
+                          arguments: {"email": state.email});
+                    }
+                    if (state is OtpSendState) {
+                      Navigator.of(context).pushNamed(RouteName.otpVerification,
+                          arguments: {"email": state.email});
                     }
                     if (state is OtpSendState) {
                       Navigator.of(context).pushNamed(RouteName.otpVerification,

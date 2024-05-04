@@ -91,7 +91,7 @@ class _SignInState extends State<SignIn> {
                   inputFormatter: [EmailInputFormatter()],
                   hintText: "Enter your email",
                   onChanged: (val) {
-                    if (regex.isValidEmail(val)) {
+                    if (val.contains('@')) {
                       setState(() {
                         isValidEmail = true;
                       });

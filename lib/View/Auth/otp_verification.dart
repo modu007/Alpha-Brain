@@ -24,12 +24,9 @@ class _OtpVerificationState extends State<OtpVerification> {
   TextEditingController otpController = TextEditingController();
   bool isValidate = false;
 
-
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
@@ -44,7 +41,7 @@ class _OtpVerificationState extends State<OtpVerification> {
               Row(
                 children: [
                   InkWell(
-                    onTap: (){
+                    onTap: () {
                       Navigator.of(context).pop();
                     },
                     child: Container(
@@ -54,25 +51,32 @@ class _OtpVerificationState extends State<OtpVerification> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: const Color(0xffE8ECF4),
-                          )
-                      ),
-                      child:SvgPicture.asset("assets/svg/back_arrow.svg"),
+                          )),
+                      child: SvgPicture.asset("assets/svg/back_arrow.svg"),
                     ),
                   ),
-                  const SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   BackButtonContainer(
                     onPressed: () {},
-                    headingText: "OTP Verification",),
+                    headingText: "OTP Verification",
+                  ),
                 ],
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               const SimpleText(
-                text: "Enter the verification code we just sent on your email address. ",
+                text:
+                    "Enter the verification code we just sent on your email address. ",
                 fontSize: 16,
                 fontColor: Color(0xff838BA1),
                 fontWeight: FontWeight.w500,
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
               Center(
                 child: Pinput(
                   keyboardType: TextInputType.number,
@@ -84,8 +88,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                       setState(() {
                         isValidate = true;
                       });
-                    }
-                    else {
+                    } else {
                       isValidate = false;
                     }
                   },
@@ -95,9 +98,9 @@ class _OtpVerificationState extends State<OtpVerification> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color: isValidate == true ?
-                          const Color(0xff4EB3CA) :
-                          Colors.red),
+                          color: isValidate == true
+                              ? const Color(0xff4EB3CA)
+                              : Colors.red),
                     ),
                     textStyle: const TextStyle(
                       fontSize: 20,
@@ -106,41 +109,54 @@ class _OtpVerificationState extends State<OtpVerification> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30,),
+              const SizedBox(
+                height: 30,
+              ),
               BlocConsumer<OtpCubit, OtpState>(
                 listener: (context, state) {
-                 if(state is OtpSuccessState){
-                   Navigator.pushNamedAndRemoveUntil(
-                       context,
-                       RouteName.home,
-                           (route) => false);
-                 }
-                 if(state is OtpInvalidState){
-                   Fluttertoast.showToast(
-                       msg: "Invalid otp",
-                       toastLength: Toast.LENGTH_SHORT,
-                       gravity: ToastGravity.CENTER,
-                       timeInSecForIosWeb: 1,
-                       textColor: Colors.black,
-                       fontSize: 15.0
-                   );
-                 }
+                  if (state is OtpSuccessState) {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, RouteName.home, (route) => false);
+                  }
+                  if (state is OtpInvalidState) {
+                    Fluttertoast.showToast(
+                        msg: "Invalid otp",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        textColor: Colors.black,
+                        fontSize: 15.0);
+                  }
                 },
                 builder: (context, state) {
-                  if(state is OtpLoadingState){
-                    return const Center(child: CircularProgressIndicator(),);
+                  if (state is OtpLoadingState) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
                   return LoginButtons(
                     size: size,
                     onPressed: () {
                       if (isValidate) {
-                        BlocProvider.of<OtpCubit>(context).addAddress(
-                            otpController.text, widget.email);
+                        BlocProvider.of<OtpCubit>(context)
+                            .addAddress(otpController.text, widget.email);
                       }
                     },
                     centerText: "Verify",
                   );
                 },
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Center(
+                  child: SimpleText(
+                    text:
+                        "A verification code will be sent to the email you provide. If you don't see the email in your inbox, please check your spam folder.",
+                    textAlign: TextAlign.center,
+                    fontSize: 12,
+                    fontColor: Color(0xff6A707C),
+                  ),
+                ),
               ),
             ],
           ),
