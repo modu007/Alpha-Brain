@@ -14,13 +14,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
   FutureOr<void> registerDataEvent(
       RegisterDataEvent event, Emitter<RegisterState> emit) async {
-    if(event.fullNameValid){
-      if(event.isEmailValid){
-        if(event.dob){
-          if(event.isUsernameValid){
+    if (event.fullNameValid) {
+      if (event.isEmailValid) {
+        if (event.dob) {
+          if (event.isUsernameValid) {
             emit(RegisterLoadingState());
-            SharedData.language(event.language=="Hindi"?true:false);
-            try{
+            SharedData.language(event.language == "Hindi" ? true : false);
+            try {
               var result = await AuthRepo.registerUserData(
                   fullName: event.name,
                   email: event.email,
@@ -28,58 +28,54 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
                   age: event.age,
                   username: event.username,
                   language: event.language == "Hindi" ? "hi" : "en");
-              if(result == "success" ){
-                emit(RegistrationSuccessFullState(email: event.email));
+              if (event.isGoogleSignIn) {
+                await AuthRepo.otpVerification(
+                    email: event.email, otp: "gmail_verified");
               }
-              else{
+              if (result == "success") {
+                emit(RegistrationSuccessFullState(email: event.email));
+              } else {
                 emit(ErrorState());
               }
-            }
-            catch(error){
+            } catch (error) {
               emit(ErrorState());
             }
-          }else{
+          } else {
             emit(UsernameInvalidState());
           }
-        }else{
+        } else {
           emit(DobInvalidState());
         }
-      }else{
+      } else {
         emit(EmailInvalidState());
       }
-    }else{
+    } else {
       emit(FullNameInvalidState());
     }
   }
 
-  FutureOr<void> sendOtp(
-      SendOtp event, Emitter<RegisterState> emit) async {
+  FutureOr<void> sendOtp(SendOtp event, Emitter<RegisterState> emit) async {
     emit(RegisterLoadingState());
-      try{
-        var result = await AuthRepo.signInUser(
-          email: event.email,
-        );
-        if(result == "success"){
-          emit(OtpSendState(email: event.email));
-        }
-        else{
-          emit(ErrorState());
-        }
-      }
-      catch(error){
+    try {
+      var result = await AuthRepo.signInUser(
+        email: event.email,
+      );
+      if (result == "success") {
+        emit(OtpSendState(email: event.email));
+      } else {
         emit(ErrorState());
       }
+    } catch (error) {
+      emit(ErrorState());
     }
+  }
 
-    FutureOr<void> termsAndConditionEvent(
-        TermsAndConditionEvent event, Emitter<RegisterState> emit) async {
-      try{
-        await AuthRepo.getTermsAndCondition();
-      }
-      catch(error){
-        emit(ErrorState());
-      }
+  FutureOr<void> termsAndConditionEvent(
+      TermsAndConditionEvent event, Emitter<RegisterState> emit) async {
+    try {
+      await AuthRepo.getTermsAndCondition();
+    } catch (error) {
+      emit(ErrorState());
     }
-
-
+  }
 }

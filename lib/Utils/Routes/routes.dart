@@ -25,6 +25,7 @@ class Routes {
           return MaterialPageRoute(
               builder: (BuildContext context) =>  Register(
                 emailId: argument["emailId"],
+                isGoogleSignIn: argument["isGoogleSignIn"] ?? false,
               ));
         }else{
           return MaterialPageRoute(

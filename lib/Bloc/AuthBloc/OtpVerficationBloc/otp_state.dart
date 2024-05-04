@@ -8,4 +8,6 @@ class OtpSuccessState extends OtpState{}
 
 class OtpInvalidState extends OtpState{}
 
+class NewUserState extends OtpState{}
+
 class OtpErrorState extends OtpState{}

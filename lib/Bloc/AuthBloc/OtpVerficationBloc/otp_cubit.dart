@@ -16,6 +16,9 @@ class OtpCubit extends Cubit<OtpState> {
       else if(result =="otp does not match"){
         emit(OtpInvalidState());
       }
+      else if(result =="new_user"){
+        emit(NewUserState());
+      }
       else{
         emit(OtpErrorState());
       }

@@ -52,10 +52,11 @@ dependencies:
   sleek_circular_slider: ^2.0.1
   flutter_local_notifications: ^15.1.1
   firebase_messaging: ^14.6.8
-  firebase_auth: ^4.7.3
+  firebase_auth: ^4.16.0
   firebase_core: ^2.15.1
   cloud_firestore: ^4.9.0
   provider: ^6.1.1
+  google_sign_in: ^6.2.1
 
 
 dev_dependencies:

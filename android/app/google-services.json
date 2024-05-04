@@ -12,7 +12,20 @@
           "package_name": "com.ai.neuralcode"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "529956110580-70p7ssq8bq3ors43fga7kkkt0bpk6ifp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ai.neuralcode",
+            "certificate_hash": "b558ba5b6f11994a6c622a3c198ee3ff22bb15d3"
+          }
+        },
+        {
+          "client_id": "529956110580-4bp7obl7mgce22c3vhlg9hnccmhdq8q3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB3CbM_b9wIDmxx0N3eOP-hVt1hcjqniKU"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529956110580-4bp7obl7mgce22c3vhlg9hnccmhdq8q3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "529956110580-b14q0g14vvfv5jq5a6moro8cs91kl704.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.neuralcode.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }

@@ -11,6 +11,7 @@ class RegisterDataEvent extends RegisterEvent{
   final bool fullNameValid;
   final bool dob;
   final String language;
+  final bool isGoogleSignIn;
   RegisterDataEvent({
     required this.email,
     required this.name,
@@ -22,6 +23,7 @@ class RegisterDataEvent extends RegisterEvent{
     required this.fullNameValid,
     required this.dob,
     required this.language,
+    required this.isGoogleSignIn,
   });
 }
 
