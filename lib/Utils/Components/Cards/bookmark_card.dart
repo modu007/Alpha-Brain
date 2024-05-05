@@ -135,38 +135,42 @@ class BookmarkPostCard extends StatelessWidget{
                           fontSize: 12,
                           fontColor: const Color(0xff060606),),
                         const Spacer(),
-                        InkWell(
-                          onTap: (){
-                            translateHindi=!translateHindi;
-                            BlocProvider.of<ProfileBloc>(context).add(
-                                LanguageChangeBloc(
-                                    language: translateHindi,
-                                  listOfData: data,
-                                 allPrevPostData: futureData==null ?[]:futureData!,
-                                )
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: const Color(0xffD8D8D8)
-                                )
-                            ),
-                            child:isDarkMode ?
-                            SvgPicture.asset("assets/svg/translate_dark.svg"):
-                            SvgPicture.asset("assets/svg/translate.svg"),
-                          ),
-                        )
+                        // dataResult.summaryHi != null ?
+                        // InkWell(
+                        //   onTap: (){
+                        //     translateHindi=!translateHindi;
+                        //     BlocProvider.of<ProfileBloc>(context).add(
+                        //         LanguageChangeBloc(
+                        //             language: translateHindi,
+                        //           listOfData: data,
+                        //          allPrevPostData: futureData==null ?[]:futureData!,
+                        //         )
+                        //     );
+                        //   },
+                        //   child: Container(
+                        //     padding: const EdgeInsets.all(6),
+                        //     decoration: BoxDecoration(
+                        //         shape: BoxShape.circle,
+                        //         border: Border.all(
+                        //             color: const Color(0xffD8D8D8)
+                        //         )
+                        //     ),
+                        //     child:isDarkMode ?
+                        //     SvgPicture.asset("assets/svg/translate_dark.svg"):
+                        //     SvgPicture.asset("assets/svg/translate.svg"),
+                        //   ),
+                        // ):const SizedBox()
                       ],
                     ),
                   ),
                   const SizedBox(height: 10,),
                   SimpleText(
-                    text: dataResult.summary.title,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
+                    text: translateHindi && dataResult.summaryHi != null
+                        ? dataResult.summaryHi!.title
+                        : dataResult.summary.title,
+                    fontSize: 17.5,
+                    fontWeight: FontWeight.w400,
+                    fontColor: const Color(0xff002D42),
                     textHeight: 1,
                   ),
                   const SizedBox(height: 10,),

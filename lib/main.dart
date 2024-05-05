@@ -51,7 +51,7 @@ void main() async{
   PushNotificationServices.incomingMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
-   navigatorKey.currentState?.restorablePushNamed(
+    navigatorKey.currentState?.restorablePushNamed(
        RouteName.notificationPost,
      arguments: {
        "postId" :remoteMessage.data["post_id"]

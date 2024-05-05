@@ -30,7 +30,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if(result is List<ForYouModel>){
         String email =await SharedData.getEmail("email");
         bool isAdmin =false;
-        if(email == "satishlangayan@gmail.com"){
+        if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
           isAdmin=true;
         }
         bool? language = await SharedData.getToken("language");
@@ -64,7 +64,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
-          if(email == "satishlangayan@gmail.com"){
+          if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
             isAdmin=true;
           }
           bool language = await SharedData.getToken("language");
@@ -78,6 +78,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
       }
       catch(error){
+        print(error.toString());
         emit(GetPostFailureState(errorMessage: "Something went wrong"));
       }
     }
@@ -88,7 +89,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
-          if(email == "satishlangayan@gmail.com"){
+          if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
             isAdmin=true;
           }
           bool language = await SharedData.getToken("language");
@@ -133,7 +134,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           String email =await SharedData.getEmail("email");
           bool language = await SharedData.getToken("language");
           bool isAdmin =false;
-          if(email == "satishlangayan@gmail.com"){
+          if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
             isAdmin=true;
           }
           emit(GetPostSuccessState(
@@ -209,7 +210,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     String email =await SharedData.getEmail("email");
     bool language = await SharedData.getToken("language");
     bool isAdmin =false;
-    if(email == "satishlangayan@gmail.com"){
+    if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
       isAdmin=true;
     }
     emit(GetPostSuccessState(
@@ -282,7 +283,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     String email =await SharedData.getEmail("email");
     bool isAdmin =false;
-    if(email == "satishlangayan@gmail.com"){
+    if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
       isAdmin=true;
     }
     bool language = await SharedData.getToken("language");
@@ -324,7 +325,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     String email =await SharedData.getEmail("email");
     bool language = await SharedData.getToken("language");
     bool isAdmin =false;
-    if(email == "satishlangayan@gmail.com"){
+    if(email == "satishlangayan@gmail.com"|| email=="rangashubham1108@gmail.com"){
       isAdmin=true;
     }
    emit(GetPostSuccessState(
@@ -354,7 +355,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
-          if(email == "satishlangayan@gmail.com"){
+          if(email == "satishlangayan@gmail.com" || email=="rangashubham1108@gmail.com"){
             isAdmin=true;
           }
           bool language = await SharedData.getToken("language");
@@ -378,7 +379,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
           bool isAdmin =false;
-          if(email == "satishlangayan@gmail.com"){
+          if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
             isAdmin=true;
           }
           bool language = await SharedData.getToken("language");
@@ -403,7 +404,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     bool isAdmin =false;
     String email =await SharedData.getEmail("email");
     SharedData.language(event.language==true?true:false);
-    if(email == "satishlangayan@gmail.com"){
+    if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
       isAdmin=true;
     }
     List<ForYouModel> data = event.listOfPost;

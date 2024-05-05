@@ -109,6 +109,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       }
     });
     scrollControllerTab2.addListener(() {
+      if(scrollControllerTab2.position
+          .userScrollDirection == ScrollDirection.forward && isVisible!=true
+      ){
+        isVisible =true;
+        setState(() {});
+      }else if(scrollControllerTab2.position
+          .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
+        isVisible=false;
+        setState(() {});
+      }
       if (scrollControllerTab2.position.pixels >=
           scrollControllerTab2.position.maxScrollExtent) {
         if (!isLoading) {
@@ -259,18 +269,16 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       : languageController.text,
                                   onChanged: (String? newValue) {
                                     if (newValue != null) {
-                                      if(newValue != languageController.text){
-                                        languageController.text = newValue;
-                                        BlocProvider.of<HomeBloc>(context)
-                                            .add(LanguageChange(
-                                            language:
-                                            languageController.text ==
-                                                "English"
-                                                ? false
-                                                : true,
-                                            listOfPost: allPostsData,
-                                            selectedTag: selectedTag));
-                                      }
+                                      languageController.text = newValue;
+                                      BlocProvider.of<HomeBloc>(context)
+                                          .add(LanguageChange(
+                                          language:
+                                          languageController.text ==
+                                              "English"
+                                              ? false
+                                              : true,
+                                          listOfPost: allPostsData,
+                                          selectedTag: selectedTag));
                                       }
                                   },
                                   items: ['English', 'Hindi']
@@ -392,8 +400,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         body: Column(
           children: [
             AnimatedOpacity(
-              opacity: isVisible ? 1 : 0,
-              duration: const Duration(milliseconds: 400),
+              opacity: isVisible ? 1.0 : 0,
+              duration: const Duration(seconds: 2),
               curve:  Curves.fastOutSlowIn,
               child: isVisible ?
               HomeAppBar(
@@ -431,8 +439,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             ),
                             child: SimpleText(
                               text: tag,
-                              fontSize: 15,
-                              fontColor: Colors.black,
+                              fontSize: 14,
+                              fontColor: const Color(0xff56626c),
                               fontWeight: FontWeight.w500,
                             ),
                           ),

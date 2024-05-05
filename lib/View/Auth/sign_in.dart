@@ -129,11 +129,12 @@ class _SignInState extends State<SignIn> {
                       });
                       Fluttertoast.showToast(
                           msg: "Email id does not exist please register",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
                           textColor: Colors.black,
-                          fontSize: 15.0);
+                          backgroundColor: Colors.white,
+                          fontSize: 15.0
+                      );
                     }
                     if (state is SignInSuccessState) {
                       Navigator.pushNamed(context, RouteName.otpVerification,

@@ -14,6 +14,7 @@ class TagsCubit extends Cubit<TagsState> {
           .postMethodRequest({
         "Email": "satishlangayan@gmail.com"
       },AllApi.getTags);
+      print(result);
       LocalData.getTags.clear();
       if(result is List){
         LocalData.getTags.addAll(result);

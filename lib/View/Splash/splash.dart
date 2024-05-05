@@ -24,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController controller;
 
   Future splash() async {
+    BlocProvider.of<TagsCubit>(context).getTags();
     var token = await SharedData.getToken("token");
     if(widget.fromBackGround != null){
       if(widget.fromBackGround == true){
@@ -32,12 +33,12 @@ class _SplashScreenState extends State<SplashScreen>
     }else{
       if (token != null) {
         Timer(
-            const Duration(seconds: 4),
+            const Duration(seconds: 3),
                 () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
                 RouteName.home, (route) => false));
       }
       else {
-        Timer(const Duration(seconds: 4),
+        Timer(const Duration(seconds: 3),
                 () => Navigator.of(context).popAndPushNamed(RouteName.signIn));
       }
     }
@@ -45,10 +46,9 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void initState() {
-    BlocProvider.of<TagsCubit>(context).getTags();
     controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 5),
     )..addListener(() {
         setState(() {});
       });
