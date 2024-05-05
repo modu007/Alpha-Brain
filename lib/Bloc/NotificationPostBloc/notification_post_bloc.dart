@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Models/notification_post_model.dart';
+import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import '../../Repositories/HomeRepo/home_repo.dart';
 import '../../Repositories/NotificationPostRepo/notification_post_repo.dart';
 import 'notification_post_event.dart';
@@ -22,9 +23,11 @@ class NotificationPostBloc extends Bloc<NotificationPostEvent, NotificationPostS
           postId: event.postId);
       await NotificationRepo.userNotifiedRepo(
           postId: event.postId);
+      bool language =await SharedData.getToken("language");
       if(result is NotificationPostModel){
         emit(NotificationPostSuccess(
             listOfPosts:result,
+          language: language
         ));
       }else{
         emit(NotificationPostError(errorMessage: "Error"));
@@ -52,7 +55,9 @@ class NotificationPostBloc extends Bloc<NotificationPostEvent, NotificationPostS
          source:  event.postData.source,
          summary:  event.postData.summary,
          tags:  event.postData.tags,
-         yt:  event.postData.yt);
+         yt:  event.postData.yt,
+        summaryHi: event.postData.summaryHi,love: event.postData.love,
+      );
    }else{
      result = NotificationPostModel(
          id: event.postData.id,
@@ -64,9 +69,12 @@ class NotificationPostBloc extends Bloc<NotificationPostEvent, NotificationPostS
          source:  event.postData.source,
          summary:  event.postData.summary,
          tags:  event.postData.tags,
-         yt:  event.postData.yt);
+         yt:  event.postData.yt,
+       summaryHi: event.postData.summaryHi,love: event.postData.love,
+     );
    }
-   emit(NotificationPostSuccess(listOfPosts: result,));
+    bool language =await SharedData.getToken("language");
+   emit(NotificationPostSuccess(listOfPosts: result,language: language));
     try{
       var result = await HomeRepo.reactionOnPost(
           emojisType: event.emojisType,
@@ -101,7 +109,9 @@ FutureOr<void> bookmarkPostEvent(
           source:  event.postData.source,
           summary:  event.postData.summary,
           tags:  event.postData.tags,
-          yt:  event.postData.yt);
+          yt:  event.postData.yt,
+        summaryHi: event.postData.summaryHi,love: event.postData.love,
+      );
     }else{
       result = NotificationPostModel(
           id: event.postData.id,
@@ -113,9 +123,10 @@ FutureOr<void> bookmarkPostEvent(
           source:  event.postData.source,
           summary:  event.postData.summary,
           tags:  event.postData.tags,
-          yt:  event.postData.yt);
+          yt:  event.postData.yt, summaryHi: event.postData.summaryHi,love: event.postData.love,);
     }
-    emit(NotificationPostSuccess(listOfPosts: result));
+    bool language =await SharedData.getToken("language");
+    emit(NotificationPostSuccess(listOfPosts: result,language: language));
     try{
       var result = await HomeRepo.bookmarkPost(
           postId: event.postData.id,

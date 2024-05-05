@@ -8,6 +8,8 @@ import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_state.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:pinput/pinput.dart';
+import 'package:provider/provider.dart';
+import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 
@@ -27,6 +29,7 @@ class _OtpVerificationState extends State<OtpVerification> {
 
   @override
   Widget build(BuildContext context) {
+    final themeChange = Provider.of<DarkThemeProvider>(context);
     Size size = MediaQuery
         .of(context)
         .size;
@@ -99,9 +102,10 @@ class _OtpVerificationState extends State<OtpVerification> {
                           const Color(0xff4EB3CA) :
                           Colors.red),
                     ),
-                    textStyle: const TextStyle(
+                    textStyle:  TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
+                      color: themeChange.darkTheme?Colors.white:Colors.black
                     ),
                   ),
                 ),
@@ -119,9 +123,9 @@ class _OtpVerificationState extends State<OtpVerification> {
                    Fluttertoast.showToast(
                        msg: "Invalid otp",
                        toastLength: Toast.LENGTH_SHORT,
-                       gravity: ToastGravity.CENTER,
-                       timeInSecForIosWeb: 1,
+                       gravity: ToastGravity.BOTTOM,
                        textColor: Colors.black,
+                       backgroundColor: Colors.white,
                        fontSize: 15.0
                    );
                  }

@@ -388,9 +388,9 @@ class _RegisterState extends State<Register>{
                       Fluttertoast.showToast(
                           msg: "Invalid username",
                           toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
+                          gravity: ToastGravity.BOTTOM,
                           textColor: Colors.black,
+                          backgroundColor: Colors.white,
                           fontSize: 15.0
                       );
                     }
@@ -398,9 +398,10 @@ class _RegisterState extends State<Register>{
                       Fluttertoast.showToast(
                           msg: "Either the name field is empty or the length should be greater than 3 characters ",
                           toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
+                          gravity: ToastGravity.BOTTOM,
                           textColor: Colors.black,
+                          backgroundColor: Colors.white,
+
                           fontSize: 15.0
                       );
                     }
@@ -408,9 +409,9 @@ class _RegisterState extends State<Register>{
                       Fluttertoast.showToast(
                           msg: "Invalid Email",
                           toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
+                          gravity: ToastGravity.BOTTOM,
                           textColor: Colors.black,
+                          backgroundColor: Colors.white,
                           fontSize: 15.0
                       );
                     }

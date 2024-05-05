@@ -36,7 +36,7 @@ class _NotificationPostState extends State<NotificationPost> {
     return SafeArea(
       child: Scaffold(
         body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: SingleChildScrollView(
             child: BlocConsumer<NotificationPostBloc, NotificationPostState>(
               listener: (context, state) {
@@ -71,7 +71,7 @@ class _NotificationPostState extends State<NotificationPost> {
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
                         color: Colors.white,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,15 +233,15 @@ class _NotificationPostState extends State<NotificationPost> {
                                             "assets/svg/bookmark.svg"),
                                   ),
                                   const Spacer(),
-                                  Container(
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                            color: const Color(0xffD8D8D8))),
-                                    child: SvgPicture.asset(
-                                        "assets/svg/translate.svg"),
-                                  )
+                                  // Container(
+                                  //   padding: const EdgeInsets.all(6),
+                                  //   decoration: BoxDecoration(
+                                  //       shape: BoxShape.circle,
+                                  //       border: Border.all(
+                                  //           color: const Color(0xffD8D8D8))),
+                                  //   child: SvgPicture.asset(
+                                  //       "assets/svg/translate.svg"),
+                                  // )
                                 ],
                               ),
                             ),
@@ -249,9 +249,11 @@ class _NotificationPostState extends State<NotificationPost> {
                               color: Color(0xffE8ECF4),
                             ),
                             SimpleText(
-                              text: state.listOfPosts.summary.title,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
+                              text: state.language==true &&  state.listOfPosts.summaryHi!= null ?
+                              state.listOfPosts.summaryHi!.title
+                                  : state.listOfPosts.summary.title,
+                              fontSize: 17.5,
+                              fontWeight: FontWeight.w400,
                               fontColor: const Color(0xff002D42),
                               textHeight: 1,
                             ),
@@ -259,10 +261,14 @@ class _NotificationPostState extends State<NotificationPost> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount:
-                                    state.listOfPosts.summary.keyPoints.length,
+                                state.language==true &&  state.listOfPosts.summaryHi!= null ?
+                                    state.listOfPosts.summaryHi?.keyPoints.length:
+                                state.listOfPosts.summary.keyPoints.length,
                                 itemBuilder: (context, keyIndex) {
-                                  var keyPoints = state
-                                      .listOfPosts.summary.keyPoints[keyIndex];
+                                  var keyPoints =
+                                  state.language==true &&  state.listOfPosts.summaryHi!= null ?
+                                  state.listOfPosts.summaryHi?.keyPoints[keyIndex]
+                                  :state.listOfPosts.summary.keyPoints[keyIndex];
                                   return Container(
                                     margin:
                                         const EdgeInsets.symmetric(vertical: 5),
@@ -270,7 +276,7 @@ class _NotificationPostState extends State<NotificationPost> {
                                       text: TextSpan(
                                         children: [
                                           TextSpan(
-                                            text: "${keyPoints.subHeading} ",
+                                            text: "${keyPoints?.subHeading} ",
                                             style: GoogleFonts.roboto(
                                               fontSize: 14,
                                               color: const Color(0xff2B2B2B),
@@ -279,7 +285,7 @@ class _NotificationPostState extends State<NotificationPost> {
                                             ),
                                           ),
                                           TextSpan(
-                                            text: keyPoints.description,
+                                            text: keyPoints?.description,
                                             style: GoogleFonts.roboto(
                                               fontSize: 14,
                                               color: const Color(0xff2B2B2B),

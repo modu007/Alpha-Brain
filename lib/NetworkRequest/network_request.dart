@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
-import 'package:jwt_decoder/jwt_decoder.dart';
 import '../SharedPrefernce/shared_pref.dart';
 import 'app_exception.dart';
 
@@ -56,7 +55,6 @@ class NetworkRequest {
 
   Future putMethodRequest(Map body, String api) async {
     var token = await SharedData.getToken("token");
-    bool hasExpired = JwtDecoder.isExpired(token);
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token'

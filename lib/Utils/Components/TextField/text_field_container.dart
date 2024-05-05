@@ -5,11 +5,13 @@ import 'package:provider/provider.dart';
 
 import '../../../Provider/dark_theme_controller.dart';
 
+import 'package:flutter/services.dart';
+
 class EmailInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
-    final regExp = RegExp(r'^[\w@\s.]*$'); // Include . to allow dot character
+    final regExp = RegExp(r'^[\w@.]*$'); // Removed \s from the regex
     if (regExp.hasMatch(newValue.text)) {
       return newValue;
     } else {
@@ -17,6 +19,7 @@ class EmailInputFormatter extends TextInputFormatter {
     }
   }
 }
+
 
 class TextFieldContainer extends StatelessWidget {
   const TextFieldContainer({

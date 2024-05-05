@@ -254,30 +254,31 @@ class _PostListViewState extends State<PostListView> {
                                 color: Colors.red,
                               ))
                               : const SizedBox(),
-                          InkWell(
-                            onTap: (){
-                              translateHindi=!translateHindi;
-                             BlocProvider.of<HomeBloc>(context).add(
-                               LanguageChange(
-                                   language: translateHindi,
-                                   listOfPost: widget.data,
-                                   selectedTag: widget.selectedTag
-                               )
-                             );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: const Color(0xffD8D8D8)
-                                )
-                              ),
-                              child: widget.isDarkMode ?
-                              SvgPicture.asset("assets/svg/translate_dark.svg"):
-                              SvgPicture.asset("assets/svg/translate.svg"),
-                            ),
-                          )
+                          // widget.data[index].summaryHi != null ?
+                          // InkWell(
+                          //   onTap: (){
+                          //     translateHindi=!translateHindi;
+                          //    BlocProvider.of<HomeBloc>(context).add(
+                          //      LanguageChange(
+                          //          language: translateHindi,
+                          //          listOfPost: widget.data,
+                          //          selectedTag: widget.selectedTag
+                          //      )
+                          //    );
+                          //   },
+                          //   child: Container(
+                          //     padding: const EdgeInsets.all(6),
+                          //     decoration: BoxDecoration(
+                          //       shape: BoxShape.circle,
+                          //       border: Border.all(
+                          //         color: const Color(0xffD8D8D8)
+                          //       )
+                          //     ),
+                          //     child: widget.isDarkMode ?
+                          //     SvgPicture.asset("assets/svg/translate_dark.svg"):
+                          //     SvgPicture.asset("assets/svg/translate.svg"),
+                          //   ),
+                          // ):const SizedBox()
                           // SleekCircularSlider(
                           //   innerWidget: (double value) {
                           //     return const Center(
@@ -317,8 +318,8 @@ class _PostListViewState extends State<PostListView> {
                           widget.data[index].summaryHi != null ?
                       widget.data[index].summaryHi!.title
                       :widget.data[index].summary.title,
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 17.5,
+                      fontWeight: FontWeight.w400,
                       fontColor: const Color(0xff002D42),
                       textHeight: 1,
                     ),

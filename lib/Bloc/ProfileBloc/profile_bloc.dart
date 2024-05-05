@@ -146,7 +146,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(GetPostSuccessState(
             listOfPosts:event.listOfData,
             listOfFutureData: event.allPrevPostData,
-          language: language
+          language: event.language
         ));
   }
 }

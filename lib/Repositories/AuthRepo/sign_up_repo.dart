@@ -68,7 +68,9 @@ class AuthRepo{
         "Email":email,
         "FCMToken": fcmToken
       },AllApi.verifyOtp);
+      print(result);
       if(result["Token"] != null){
+        print("here");
         SharedData.setToken(result["Token"]);
         SharedData.setRefreshToken(result["Refresh_Token"]);
         SharedData.setEmail(result["Email"]);

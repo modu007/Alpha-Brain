@@ -109,16 +109,13 @@ class _SignInState extends State<SignIn> {
                     if(state is InvalidEmailState){
                       Navigator.of(context).pushNamed(
                           RouteName.register,
-                        arguments: {
-                            "emailId":emailController.text,
-                        }
                       );
                       Fluttertoast.showToast(
                           msg: "Email id does not exist please register",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
                           textColor: Colors.black,
+                          backgroundColor: Colors.white,
                           fontSize: 15.0
                       );
                     }

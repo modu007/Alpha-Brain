@@ -10,8 +10,10 @@ class NotificationPostLoading extends NotificationPostState {}
 
 class NotificationPostSuccess extends NotificationPostState {
   final NotificationPostModel listOfPosts;
+  final bool language;
   NotificationPostSuccess({
     required this.listOfPosts,
+    required this.language
   });
 }
 

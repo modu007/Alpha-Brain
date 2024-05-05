@@ -320,7 +320,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                       // TODO: implement listener
                     },
                     builder: (context, state) {
-                      print(state);
                       if (state is GetPostLoadingState) {
                         return const Expanded(
                             child: Center(child: CircularProgressIndicator()));
