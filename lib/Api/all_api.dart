@@ -3,6 +3,10 @@ class AllApi {
 
   static const baseUrl1  = 'https://www.zalphabrains.in';
 
+  // static const baseUrl  = 'http://20.42.87.219/api';
+
+  // static const baseUrl1  = 'http://20.42.87.219';
+
   //register user
   static const registerUser = "$baseUrl/register/user/";
 

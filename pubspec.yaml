@@ -1,7 +1,7 @@
 name: neuralcode
 description: "A new Flutter project."
 publish_to: 'none'
-version: 1.1.3+11
+version: 1.1.4+12
 
 environment:
   sdk: '>=3.2.2 <4.0.0'
@@ -19,7 +19,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   url_launcher: ^6.2.4
   colorful_safe_area: ^1.0.0
-  google_fonts: ^6.1.0
+  google_fonts: ^5.1.0
   pinput: ^2.2.31
   fluttertoast: ^8.2.5
   file_picker: ^6.1.1
