@@ -1,11 +1,11 @@
 class AllApi {
-  static const baseUrl  = 'https://www.zalphabrains.in/api';
+  // static const baseUrl  = 'https://www.zalphabrains.in/api';
+  //
+  // static const baseUrl1  = 'https://www.zalphabrains.in';
 
-  static const baseUrl1  = 'https://www.zalphabrains.in';
+  static const baseUrl  = 'http://20.42.87.219/api';
 
-  // static const baseUrl  = 'http://20.42.87.219/api';
-
-  // static const baseUrl1  = 'http://20.42.87.219';
+  static const baseUrl1  = 'http://20.42.87.219';
 
   //register user
   static const registerUser = "$baseUrl/register/user/";
@@ -64,4 +64,13 @@ class AllApi {
 
   //select language
   static const selectLanguage = "$baseUrl/change_language/";
+
+  //save interests
+  static const saveInterests = "$baseUrl/save_user_interest/";
+
+  //get interests
+  static const getInterests = "$baseUrl/get_interest/";
+
+  // list of interests
+  static const listOfInterests = "$baseUrl/list_interest/";
 }

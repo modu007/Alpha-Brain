@@ -8,4 +8,5 @@ class RouteName {
   static const String editProfile = 'edit_profile';
   static const String support = 'support';
   static const String notificationPost = 'notification_post';
+  static const String interests = 'interests';
 }

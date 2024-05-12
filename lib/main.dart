@@ -10,6 +10,8 @@ import 'package:neuralcode/Bloc/AuthBloc/UploadProfileCubit/upload_image_cubit.d
 import 'package:neuralcode/Bloc/AuthBloc/UserDetailsBloc/user_details_cubit.dart';
 import 'package:neuralcode/Bloc/AuthBloc/UsernameCubit/username_cubit.dart';
 import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
+import 'package:neuralcode/Bloc/GetInterets/get_interests_cubit.dart';
+import 'package:neuralcode/Bloc/InterestCubit/interests_cubit.dart';
 import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_bloc.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
 import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
@@ -41,6 +43,14 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+  List? customInterests = await SharedData.getToken("custom");
+  List? savedInterests = await SharedData.getToken("interests");
+  if(customInterests==null){
+    SharedData.saveCustomInterests([]);
+  }
+  if(savedInterests==null){
+    SharedData.saveInterests([]);
+  }
   PushNotificationServices.firebaseCloudMessaging();
   var initializationSettings =
   PushNotificationServices.localNotificationInitialization();
@@ -103,6 +113,10 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) =>TagsCubit()),
         BlocProvider<NotificationPostBloc>(
             create: (BuildContext context) =>NotificationPostBloc()),
+        BlocProvider<InterestsCubit>(
+            create: (BuildContext context) =>InterestsCubit()),
+        BlocProvider<GetInterestsCubit>(
+            create: (BuildContext context) =>GetInterestsCubit()),
         ChangeNotifierProvider<DarkThemeProvider>(
             create: (BuildContext context) => DarkThemeProvider())
       ],

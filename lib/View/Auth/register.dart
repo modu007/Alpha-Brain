@@ -12,7 +12,6 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_event.dart';
 import '../../Bloc/AuthBloc/RegisterBloc/register_state.dart';
-import '../../Bloc/AuthBloc/UsernameCubit/username_state.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
@@ -115,145 +114,145 @@ class _RegisterState extends State<Register> {
                     }
                   },
                 ),
-                BlocBuilder<UsernameCubit, UsernameState>(
-                  builder: (context, state) {
-                    if (state is UsernameLoading) {
-                      return Container(
-                        width: size.width,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                            color: const Color(0xffE8ECF4),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            TextFormField(
-                              focusNode: focusNode,
-                              controller: usernameController,
-                              decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "UserName",
-                                  hintStyle: GoogleFonts.besley(
-                                    color: const Color(0xff8391A1),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 15, top: 10)),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 20),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: SizedBox(
-                                  height: 15,
-                                  width: 15,
-                                  child:
-                                      CircularProgressIndicator(), // CircularProgressIndicator with fixed size
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    if (state is UsernameSuccessState) {
-                      isUserNameValid = true;
-                      return Container(
-                        width: size.width,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                            color: const Color(0xffE8ECF4),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: TextFormField(
-                          focusNode: focusNode,
-                          controller: usernameController,
-                          decoration: InputDecoration(
-                              suffixIcon: SizedBox(
-                                height: 10,
-                                width: 10,
-                                child: Image.asset("assets/images/Right.jpg"),
-                              ),
-                              border: InputBorder.none,
-                              hintText: "UserName",
-                              hintStyle: GoogleFonts.besley(
-                                color: const Color(0xff8391A1),
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              contentPadding:
-                                  const EdgeInsets.only(left: 15, top: 10)),
-                        ),
-                      );
-                    } else if (state is UsernameExistsState) {
-                      isUserNameValid = false;
-                      return Column(
-                        children: [
-                          Container(
-                            width: size.width,
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            decoration: BoxDecoration(
-                                color: const Color(0xffE8ECF4),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: TextFormField(
-                              focusNode: focusNode,
-                              controller: usernameController,
-                              decoration: InputDecoration(
-                                  suffixIcon: SizedBox(
-                                    height: 10,
-                                    width: 10,
-                                    child:
-                                        Image.asset("assets/images/Cancel.jpg"),
-                                  ),
-                                  border: InputBorder.none,
-                                  hintText: "UserName",
-                                  hintStyle: GoogleFonts.besley(
-                                    color: const Color(0xff8391A1),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 15)),
-                            ),
-                          ),
-                          const Align(
-                            alignment: Alignment.topLeft,
-                            child: SimpleText(
-                              text:
-                                  "That username has taken. Please enter another.",
-                              fontSize: 12,
-                              fontColor: Colors.red,
-                            ),
-                          )
-                        ],
-                      );
-                    }
-                    isUserNameValid = false;
-                    return Container(
-                      width: size.width,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                          color: const Color(0xffE8ECF4),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: TextFormField(
-                        inputFormatters: [
-                          FilteringTextInputFormatter.deny(RegExp(r'\s')),
-                        ],
-                        focusNode: focusNode,
-                        controller: usernameController,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "UserName",
-                            hintStyle: GoogleFonts.besley(
-                              color: const Color(0xff8391A1),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            contentPadding: const EdgeInsets.only(left: 15)),
-                      ),
-                    );
-                  },
-                ),
+                // BlocBuilder<UsernameCubit, UsernameState>(
+                //   builder: (context, state) {
+                //     if (state is UsernameLoading) {
+                //       return Container(
+                //         width: size.width,
+                //         padding: const EdgeInsets.symmetric(vertical: 10),
+                //         decoration: BoxDecoration(
+                //             color: const Color(0xffE8ECF4),
+                //             borderRadius: BorderRadius.circular(10)),
+                //         child: Stack(
+                //           alignment: Alignment.center,
+                //           children: [
+                //             TextFormField(
+                //               focusNode: focusNode,
+                //               controller: usernameController,
+                //               decoration: InputDecoration(
+                //                   border: InputBorder.none,
+                //                   hintText: "UserName",
+                //                   hintStyle: GoogleFonts.besley(
+                //                     color: const Color(0xff8391A1),
+                //                     fontSize: 15,
+                //                     fontWeight: FontWeight.w600,
+                //                   ),
+                //                   contentPadding:
+                //                       const EdgeInsets.only(left: 15, top: 10)),
+                //             ),
+                //             const Padding(
+                //               padding: EdgeInsets.only(right: 20),
+                //               child: Align(
+                //                 alignment: Alignment.centerRight,
+                //                 child: SizedBox(
+                //                   height: 15,
+                //                   width: 15,
+                //                   child:
+                //                       CircularProgressIndicator(), // CircularProgressIndicator with fixed size
+                //                 ),
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       );
+                //     }
+                //     if (state is UsernameSuccessState) {
+                //       isUserNameValid = true;
+                //       return Container(
+                //         width: size.width,
+                //         padding: const EdgeInsets.symmetric(vertical: 10),
+                //         decoration: BoxDecoration(
+                //             color: const Color(0xffE8ECF4),
+                //             borderRadius: BorderRadius.circular(10)),
+                //         child: TextFormField(
+                //           focusNode: focusNode,
+                //           controller: usernameController,
+                //           decoration: InputDecoration(
+                //               suffixIcon: SizedBox(
+                //                 height: 10,
+                //                 width: 10,
+                //                 child: Image.asset("assets/images/Right.jpg"),
+                //               ),
+                //               border: InputBorder.none,
+                //               hintText: "UserName",
+                //               hintStyle: GoogleFonts.besley(
+                //                 color: const Color(0xff8391A1),
+                //                 fontSize: 15,
+                //                 fontWeight: FontWeight.w600,
+                //               ),
+                //               contentPadding:
+                //                   const EdgeInsets.only(left: 15, top: 10)),
+                //         ),
+                //       );
+                //     } else if (state is UsernameExistsState) {
+                //       isUserNameValid = false;
+                //       return Column(
+                //         children: [
+                //           Container(
+                //             width: size.width,
+                //             padding: const EdgeInsets.symmetric(vertical: 10),
+                //             decoration: BoxDecoration(
+                //                 color: const Color(0xffE8ECF4),
+                //                 borderRadius: BorderRadius.circular(10)),
+                //             child: TextFormField(
+                //               focusNode: focusNode,
+                //               controller: usernameController,
+                //               decoration: InputDecoration(
+                //                   suffixIcon: SizedBox(
+                //                     height: 10,
+                //                     width: 10,
+                //                     child:
+                //                         Image.asset("assets/images/Cancel.jpg"),
+                //                   ),
+                //                   border: InputBorder.none,
+                //                   hintText: "UserName",
+                //                   hintStyle: GoogleFonts.besley(
+                //                     color: const Color(0xff8391A1),
+                //                     fontSize: 15,
+                //                     fontWeight: FontWeight.w600,
+                //                   ),
+                //                   contentPadding:
+                //                       const EdgeInsets.only(left: 15)),
+                //             ),
+                //           ),
+                //           const Align(
+                //             alignment: Alignment.topLeft,
+                //             child: SimpleText(
+                //               text:
+                //                   "That username has taken. Please enter another.",
+                //               fontSize: 12,
+                //               fontColor: Colors.red,
+                //             ),
+                //           )
+                //         ],
+                //       );
+                //     }
+                //     isUserNameValid = false;
+                //     return Container(
+                //       width: size.width,
+                //       padding: const EdgeInsets.symmetric(vertical: 10),
+                //       decoration: BoxDecoration(
+                //           color: const Color(0xffE8ECF4),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: TextFormField(
+                //         inputFormatters: [
+                //           FilteringTextInputFormatter.deny(RegExp(r'\s')),
+                //         ],
+                //         focusNode: focusNode,
+                //         controller: usernameController,
+                //         decoration: InputDecoration(
+                //             border: InputBorder.none,
+                //             hintText: "UserName",
+                //             hintStyle: GoogleFonts.besley(
+                //               color: const Color(0xff8391A1),
+                //               fontSize: 15,
+                //               fontWeight: FontWeight.w600,
+                //             ),
+                //             contentPadding: const EdgeInsets.only(left: 15)),
+                //       ),
+                //     );
+                //   },
+                // ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -451,7 +450,7 @@ class _RegisterState extends State<Register> {
                     return LoginButtons(
                       size: size,
                       onPressed: () async {
-                        print(isEmailValid);
+                        FocusManager.instance.primaryFocus?.unfocus();
                         BlocProvider.of<RegisterBloc>(context)
                             .add(RegisterDataEvent(
                           email: emailController.text,

@@ -22,6 +22,7 @@ class PushNotificationServices {
 
   static void saveFcmToken() async {
     await FirebaseMessaging.instance.getToken().then((value) async {
+      print(value);
       await SharedFcmToken.setFcmToken(value!);
     });
   }

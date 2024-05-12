@@ -39,7 +39,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   String name = "";
   String imageUrl="";
   String dp="";
-  String selectedTag ="All";
+  String selectedTag ="For you";
   bool isVisible=true;
   List<ForYouModel> dataForLanguage=[];
   Future getName()async{
@@ -236,6 +236,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     SharedData.removeUserid("username");
                     SharedData.removeUserid("name");
                     SharedData.removeUserid("profilePic");
+                    SharedData.removeUserid("custom");
+                    SharedData.removeUserid("interests");
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         RouteName.signIn, (route) => false);
                   },
@@ -408,46 +410,183 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 darkTheme: themeChange.darkTheme,
                 isVisibleWhenScroll: isVisible,
                 tabController: _tabController,
-                widget: Container(
-                        color: themeChange.darkTheme
-                            ? const Color(0xff121212)
-                            : Colors.white,
-                        child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Wrap(
-                      children: LocalData.getTags.map((tag) {
-                        return InkWell(
-                          onTap: (){
-                            selectedTag=tag;
-                            setState(() {});
-                            BlocProvider.of<HomeBloc>(context).add(
-                                TagSelectedEvent(
-                                    selectedTag: tag,
-                                    tabIndex: _tabController.index
-                                )
-                            );
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: selectedTag==tag ? const Color(0xffCCEAF4) :
-                              themeChange.darkTheme?
-                              const Color(0xff121212):
-                              Colors.white,
+                widget: Row(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap:(){
+                                if(selectedTag!="For you"){
+                                  setState(() {
+                                    selectedTag="For you";
+                                  });
+                                  skip=0;
+                                  limit=5;
+                                  BlocProvider.of<HomeBloc>(context)
+                                      .add(TabChangeEvent(
+                                      tabIndex: 0,
+                                      selectedTag: selectedTag
+                                  ));
+                                }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              selectedTag == "For you" ? 10 : 4,
+                                          vertical: 6),
+                                      decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedTag=="For you" ? const Color(0xffCCEAF4) :
+                                  themeChange.darkTheme?
+                                  const Color(0xff121212):
+                                  Colors.white,
+                                ),
+                                child: const SimpleText(
+                                  text: "For you",
+                                  fontSize: 14,
+                                  fontColor: Color(0xff56626c),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
-                            child: SimpleText(
-                              text: tag,
-                              fontSize: 14,
-                              fontColor: const Color(0xff56626c),
-                              fontWeight: FontWeight.w500,
+                            InkWell(
+                              onTap:(){
+                              if(selectedTag!="Top Picks"){
+                                setState(() {
+                                  selectedTag="Top Picks";
+                                });
+                                skip=0;
+                                limit=5;
+                                BlocProvider.of<HomeBloc>(context)
+                                    .add(TabChangeEvent(
+                                    tabIndex: 1,
+                                    selectedTag: selectedTag
+                                ));
+                              }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal:
+                                              selectedTag == "Top Picks" ? 10 : 4,
+                                          vertical: 6),
+                                      decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedTag=="Top Picks" ? const Color(0xffCCEAF4) :
+                                  themeChange.darkTheme?
+                                  const Color(0xff121212):
+                                  Colors.white,
+                                ),
+                                child: const SimpleText(
+                                  text: "Top Picks",
+                                  fontSize: 14,
+                                  fontColor: Color(0xff56626c),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
+                            Container(color: themeChange.darkTheme
+                                        ? const Color(0xff121212)
+                                        : Colors.white,
+                                    child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Wrap(
+                                  children: LocalData.getUserInterestsSelected.map((tag) {
+                                    return InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          selectedTag=tag;
+                                        });
+                                        BlocProvider.of<HomeBloc>(context).add(
+                                            TagSelectedEvent(
+                                                selectedTag: tag,
+                                                tabIndex: _tabController.index
+                                            )
+                                        );
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                                        padding: EdgeInsets.symmetric(horizontal:selectedTag==tag? 10:4, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: selectedTag==tag ? const Color(0xffCCEAF4) :
+                                          themeChange.darkTheme?
+                                          const Color(0xff121212):
+                                          Colors.white,
+                                        ),
+                                        child: SimpleText(
+                                          text:  LocalData.capitalizeFirstLetter(tag),
+                                          fontSize: 14,
+                                          fontColor: const Color(0xff56626c),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                            Container(color: themeChange.darkTheme
+                                ? const Color(0xff121212)
+                                : Colors.white,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Wrap(
+                                  children: LocalData.getCustomTags.map((tag) {
+                                    return InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          selectedTag=tag;
+                                        });
+                                        BlocProvider.of<HomeBloc>(context).add(
+                                            TagSelectedEvent(
+                                                selectedTag: tag,
+                                                tabIndex: _tabController.index
+                                            )
+                                        );
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                                        padding: EdgeInsets.symmetric(horizontal:selectedTag==tag? 10:4, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: selectedTag==tag ? const Color(0xffCCEAF4) :
+                                          themeChange.darkTheme?
+                                          const Color(0xff121212):
+                                          Colors.white,
+                                        ),
+                                        child: SimpleText(
+                                          text: LocalData.capitalizeFirstLetter(tag),
+                                          fontSize: 14,
+                                          fontColor: const Color(0xff56626c),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
+                    InkWell(
+                      onTap: (){
+                        Navigator.of(context).pushNamed(RouteName.interests);
+                      },
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 15,),
+                          SvgPicture.asset("assets/svg/filter.svg",width: 20,height: 18,)
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ):
               const SizedBox(),

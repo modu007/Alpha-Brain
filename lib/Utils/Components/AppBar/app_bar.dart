@@ -43,28 +43,7 @@ class HomeAppBar extends StatelessWidget {
               ],
             ),
           ),
-          TabBar(
-            indicatorSize: TabBarIndicatorSize.tab,
-            controller: tabController,
-            dividerColor: Colors.transparent,
-            indicatorColor: const Color(0xff4EB3CA),
-            unselectedLabelStyle: const TextStyle(color: Color(0xff8698A9)),
-            labelColor: Colors.black,
-            tabs: const [
-              Tab(
-                  child: SimpleText(
-                text: 'For you',
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              )),
-              Tab(
-                  child: SimpleText(
-                text: 'Top picks',
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              )),
-            ],
-          ),
+          const SizedBox(height: 10,),
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(

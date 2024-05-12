@@ -4,6 +4,7 @@ import 'package:neuralcode/View/Auth/otp_verification.dart';
 import 'package:neuralcode/View/Auth/register.dart';
 import 'package:neuralcode/View/Auth/sign_in.dart';
 import 'package:neuralcode/View/Home/home.dart';
+import 'package:neuralcode/View/Interests/intrests.dart';
 import 'package:neuralcode/View/NotificationPost/notification_post.dart';
 import 'package:neuralcode/View/Profile/edit_profile.dart';
 import 'package:neuralcode/View/Profile/profile.dart';
@@ -79,6 +80,9 @@ class Routes {
             );
           });
         }
+      case RouteName.interests:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const Interests());
         case RouteName.otpVerification:
           if(argument is Map){
             return MaterialPageRoute(

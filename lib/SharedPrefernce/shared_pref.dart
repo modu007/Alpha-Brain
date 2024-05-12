@@ -41,6 +41,16 @@ class SharedData {
     preferences.setString("name", name);
   }
 
+  static Future saveInterests(List<String> interests) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setStringList("interests", interests);
+  }
+
+  static Future saveCustomInterests(List<String> customInterests) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setStringList("custom", customInterests);
+  }
+
   static Future setProfilePic(String profilePic) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("profilePic", profilePic);

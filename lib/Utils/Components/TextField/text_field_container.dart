@@ -52,8 +52,8 @@ class TextFieldContainer extends StatelessWidget {
       children: [
         Container(
           padding: const EdgeInsets.only(
-              top: 10,
-              bottom: 10,
+              top: 6,
+              bottom: 6,
               right: 10,
               left: 15),
           decoration: BoxDecoration(
@@ -91,7 +91,7 @@ class TextFieldContainer extends StatelessWidget {
                     color: themeChange.darkTheme
                         ? Colors.white
                         : const Color(0xff8391A1),
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight:FontWeight.w600
                 ),
             ),

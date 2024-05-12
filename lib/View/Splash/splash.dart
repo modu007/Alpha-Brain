@@ -5,7 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
+import 'package:neuralcode/Utils/Data/local_data.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../Bloc/GetInterets/get_interests_cubit.dart';
 import '../../Utils/Routes/navigation_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +27,18 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController controller;
 
   Future splash() async {
-    BlocProvider.of<TagsCubit>(context).getTags();
+    List customInterests = await SharedData.getToken("custom");
+    List savedInterests = await SharedData.getToken("interests");
+    List<String> custom=[];
+    List<String> interest=[];
+    for(int i=0; i<customInterests.length;i++){
+      custom.add(customInterests[i]);
+    }
+    for(int i=0; i<savedInterests.length;i++){
+      interest.add(savedInterests[i]);
+    }
+    LocalData.getUserInterestsSelected.addAll(interest);
+    LocalData.getCustomTags.addAll(custom);
     var token = await SharedData.getToken("token");
     if(widget.fromBackGround != null){
       if(widget.fromBackGround == true){
@@ -33,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
     }else{
       if (token != null) {
         Timer(
-            const Duration(seconds: 3),
+            const Duration(seconds: 4),
                 () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
                 RouteName.home, (route) => false));
       }

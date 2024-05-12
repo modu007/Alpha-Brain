@@ -1,6 +1,7 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:neuralcode/Models/for_you_model.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
+import 'package:neuralcode/Utils/Data/local_data.dart';
 import '../../Api/all_api.dart';
 import '../../NetworkRequest/network_request.dart';
 
@@ -23,6 +24,7 @@ class HomeRepo {
        "Skip": skip,
        "Limit": limit,
        "Tags": selectedTag,
+       // "User_interest": LocalData.getUserInterestsSelected,
      }, AllApi.forYou);
      if(result is List){
        List<ForYouModel> data =[];

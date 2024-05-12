@@ -120,11 +120,22 @@ class _OtpVerificationState extends State<OtpVerification> {
               ),
               BlocConsumer<OtpCubit, OtpState>(
                 listener: (context, state) {
+                  print(state);
                  if(state is OtpSuccessState){
-                   Navigator.pushNamedAndRemoveUntil(
-                       context,
-                       RouteName.home,
-                           (route) => false);
+                   print("now avcado");
+                   if(state.isNewUser){
+                     print("ab here");
+                     Navigator.pushNamedAndRemoveUntil(
+                         context,
+                         RouteName.interests,
+                             (route) => false);
+                   }
+                   else{
+                     Navigator.pushNamedAndRemoveUntil(
+                         context,
+                         RouteName.home,
+                             (route) => false);
+                   }
                  }
                  if(state is OtpInvalidState){
                    Fluttertoast.showToast(

@@ -150,6 +150,7 @@ class _SignInState extends State<SignIn> {
                     return LoginButtons(
                       size: size,
                       onPressed: () {
+                        FocusManager.instance.primaryFocus?.unfocus();
                         BlocProvider.of<SignInBloc>(context).add(LoginEvent(
                             email: emailController.text,
                             isValidEmail: isValidEmail));
