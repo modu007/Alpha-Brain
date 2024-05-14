@@ -7,8 +7,10 @@ import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Data/local_data.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../Bloc/GetInterets/get_interests_cubit.dart';
+import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Routes/navigation_service.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -71,7 +73,10 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async{
+    final themeChange = Provider.of<DarkThemeProvider>(context);
+    bool isDarkTheme = await DarkThemePreference.getTheme();
+    themeChange.darkTheme = isDarkTheme;
     splash();
     super.didChangeDependencies();
   }

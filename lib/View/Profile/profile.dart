@@ -179,9 +179,9 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                           children: [
                             SimpleText(text: state.name, fontSize: 17,
                               fontColor: Colors.black,fontWeight: FontWeight.w600,),
-                            SimpleText(text: "@${state.userName}", fontSize: 17,
+                            state.userName!=null ? SimpleText(text: "@${state.userName}", fontSize: 17,
                               fontColor: const Color(0xff8698A9),
-                              fontWeight: FontWeight.w600,),
+                              fontWeight: FontWeight.w600,):const SizedBox(),
                           ],
                         ),
                         const Spacer(),

@@ -29,6 +29,8 @@ class _InterestsState extends State<Interests> {
   final List<String> customTags =[];
   bool customTagsTextEmpty=true;
   bool onlyOnce =false;
+  List<String> localSearch=[];
+  bool isEmpty = false;
   Future<void> showAddCustomTagsDialog(BuildContext context, Size size) async {
     return showDialog<void>(
       context: context,
@@ -134,6 +136,78 @@ class _InterestsState extends State<Interests> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
+        bottomNavigationBar:  Container(
+          margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
+          height: size.height*0.18,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+             LoginButtons(
+                 color: Colors.white,
+                 size: size,
+                 centerText: "Add custom tag",
+                 onPressed: () {
+                   showAddCustomTagsDialog(
+                       context,size
+                   );
+                 }),
+             const SizedBox(height: 10,),
+             BlocConsumer<InterestsCubit, InterestsState>(
+               listener: (context, state) {
+                 if(state is AtLeastTwoInterests){
+                   Fluttertoast.showToast(
+                       msg: "At least two interest need to be selected",
+                       toastLength: Toast.LENGTH_LONG,
+                       gravity: ToastGravity.BOTTOM,
+                       textColor: Colors.black,
+                       backgroundColor: Colors.white,
+                       fontSize: 15.0
+                   );
+                 }
+                 if(state is InterestError){
+                   Fluttertoast.showToast(
+                       msg: "something went wrong",
+                       toastLength: Toast.LENGTH_SHORT,
+                       gravity: ToastGravity.BOTTOM,
+                       textColor: Colors.black,
+                       backgroundColor: Colors.white,
+                       fontSize: 15.0
+                   );
+                 }
+                 if(state is InterestsSaved){
+                   Fluttertoast.showToast(
+                       msg: "Interests saved successfully",
+                       toastLength: Toast.LENGTH_SHORT,
+                       gravity: ToastGravity.BOTTOM,
+                       textColor: Colors.black,
+                       backgroundColor: Colors.white,
+                       fontSize: 15.0
+                   );
+                   Navigator.pushNamedAndRemoveUntil(
+                       context,
+                       RouteName.home,
+                           (route) => false);
+                 }
+               },
+               builder: (context, state) {
+                 if (state is InterestsLoading) {
+                   return const Center(
+                     child: CircularProgressIndicator(),
+                   );
+                 }
+                 return LoginButtons(
+                     size: size,
+                     centerText: "Save interests",
+                     onPressed: () {
+                       BlocProvider.of<InterestsCubit>(context).saveInterest(
+                           customTags: customTags,
+                           userInterests: selectedInterests);
+                     });
+               },
+             )
+            ],
+          ),
+        ),
         backgroundColor: Colors.white,
         body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
@@ -200,6 +274,34 @@ class _InterestsState extends State<Interests> {
                                 const SizedBox(width: 7,),
                                 Flexible(
                                   child: TextField(
+                                    onChanged: (value){
+                                      if(value.isEmpty){
+                                        setState(() {
+                                          isEmpty = false;
+                                          localSearch.clear();
+                                        });
+                                      }else{
+                                        localSearch = items
+                                            .where((element) => element
+                                                .toLowerCase()
+                                                .contains(value.toLowerCase()))
+                                            .toList();
+                                        // for(int i=0; i<customTags.length;i++){
+                                        //   if(customTags[i].toLowerCase().contains(value.toLowerCase())){
+                                        //     localSearch.add(customTags[i]);
+                                        //   }
+                                        // }
+                                        if (localSearch.isNotEmpty) {
+                                          setState(() {
+                                            isEmpty = false;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            isEmpty = true;
+                                          });
+                                        }
+                                      }
+                                    },
                                     controller: search,
                                     decoration: const InputDecoration(
                                         hintText: "Search interests",
@@ -211,6 +313,98 @@ class _InterestsState extends State<Interests> {
                             ),
                           ),
                           const SizedBox(height: 10,),
+                          localSearch.isNotEmpty || isEmpty? const SimpleText(
+                            text: "Search results",
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ):const SizedBox(),
+                          localSearch.isNotEmpty || isEmpty
+                              ? const SizedBox()
+                              : const SizedBox(
+                            height: 10,
+                          ),
+                          isEmpty
+                              ? const SizedBox(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 10.0,bottom: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SimpleText(
+                                    text:
+                                    "No results found",
+                                    fontSize: 14,
+                                    fontColor: Colors.black38,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ):Container(
+                            margin: const EdgeInsets.symmetric(vertical: 10),
+                            child: Wrap(
+                              spacing: 8.0, // horizontal spacing between items
+                              runSpacing: 8.0, // vertical spacing between lines
+                              children: localSearch.map((item) {
+                                return InkWell(
+                                  onTap: (){
+                                    if(selectedInterests.contains(item)){
+                                      setState(() {
+                                        selectedInterests.remove(item);
+                                      });
+                                    }else{
+                                      setState(() {
+                                        selectedInterests.add(item);
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: selectedInterests.contains(item)
+                                          ? const Color(0xffF6FDFF)
+                                          : Colors.white,
+                                      border: Border.all(
+                                          color: selectedInterests.contains(item)
+                                              ? const Color(0xff4EB3CA)
+                                              : const Color(0xffBDC5CD),
+                                          width: selectedInterests.contains(item)?2:1
+                                      ),
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        selectedInterests.contains(item)?
+                                        const Icon(
+                                          Icons.close,
+                                          color: Color(0xff2F2924),
+                                          size: 20,
+                                        )
+                                            : const Icon(
+                                          Icons.add,
+                                          color: Color(0xff2F2924),
+                                          size: 22,
+                                        ),
+                                        const SizedBox(width: 3,),
+                                        SimpleText(
+                                          text: LocalData.capitalizeFirstLetter(item),
+                                          fontSize: 14,
+                                          fontColor: Colors.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          localSearch.isNotEmpty || isEmpty
+                              ? const SizedBox()
+                              : const SizedBox(
+                            height: 10,
+                          ),
                           customTags.isNotEmpty? const SimpleText(
                             text: "Custom Interests",
                             fontSize: 15,
@@ -309,14 +503,14 @@ class _InterestsState extends State<Interests> {
                                       const Icon(
                                         Icons.close,
                                         color: Color(0xff2F2924),
-                                        size: 25,
+                                        size: 20,
                                       )
                                           : const Icon(
                                         Icons.add,
                                         color: Color(0xff2F2924),
-                                        size: 25,
+                                        size: 22,
                                       ),
-                                      const SizedBox(width: 5,),
+                                      const SizedBox(width: 3,),
                                       SimpleText(
                                         text: LocalData.capitalizeFirstLetter(item),
                                         fontSize: 14,
@@ -328,70 +522,6 @@ class _InterestsState extends State<Interests> {
                               );
                             }).toList(),
                           ),
-                          SizedBox(height: size.height*0.2,),
-                          LoginButtons(
-                              color: Colors.white,
-                              size: size,
-                              centerText: "Add custom tag",
-                              onPressed: () {
-                                showAddCustomTagsDialog(
-                                    context,size
-                                );
-                              }),
-                          const SizedBox(height: 10,),
-                          BlocConsumer<InterestsCubit, InterestsState>(
-                            listener: (context, state) {
-                              if(state is AtLeastTwoInterests){
-                                Fluttertoast.showToast(
-                                    msg: "At least two interest need to be selected",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    textColor: Colors.black,
-                                    backgroundColor: Colors.white,
-                                    fontSize: 15.0
-                                );
-                              }
-                              if(state is InterestError){
-                                Fluttertoast.showToast(
-                                    msg: "something went wrong",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    textColor: Colors.black,
-                                    backgroundColor: Colors.white,
-                                    fontSize: 15.0
-                                );
-                              }
-                              if(state is InterestsSaved){
-                                Fluttertoast.showToast(
-                                    msg: "Interests saved successfully",
-                                    toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.BOTTOM,
-                                    textColor: Colors.black,
-                                    backgroundColor: Colors.white,
-                                    fontSize: 15.0
-                                );
-                                Navigator.pushNamedAndRemoveUntil(
-                                    context,
-                                    RouteName.home,
-                                        (route) => false);
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is InterestsLoading) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              return LoginButtons(
-                                  size: size,
-                                  centerText: "Save interests",
-                                  onPressed: () {
-                                    BlocProvider.of<InterestsCubit>(context).saveInterest(
-                                        customTags: customTags,
-                                        userInterests: selectedInterests);
-                                  });
-                            },
-                          )
                         ],
                       );
                     }

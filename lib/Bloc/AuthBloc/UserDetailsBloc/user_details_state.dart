@@ -6,7 +6,7 @@ class UserDetailsLoadingState extends UserDetailsState{}
 
 class UserDetailsSuccessState extends UserDetailsState{
   final String name;
-  final String userName;
+  final String? userName;
   final String profilePic;
   final String imageUrl;
   UserDetailsSuccessState({

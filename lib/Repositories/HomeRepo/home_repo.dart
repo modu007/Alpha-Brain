@@ -23,9 +23,11 @@ class HomeRepo {
        "Email": email,
        "Skip": skip,
        "Limit": limit,
-       "Tags": selectedTag,
+       "Tags": selectedTag.toLowerCase(),
+       "User_interest": LocalData.getUserInterestsSelected,
        // "User_interest": LocalData.getUserInterestsSelected,
      }, AllApi.forYou);
+     print(result);
      if(result is List){
        List<ForYouModel> data =[];
        for(int i=0;i<result.length;i++){

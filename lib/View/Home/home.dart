@@ -39,7 +39,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   String name = "";
   String imageUrl="";
   String dp="";
-  String selectedTag ="For you";
+  String selectedTag ="Top Picks";
   bool isVisible=true;
   List<ForYouModel> dataForLanguage=[];
   Future getName()async{
@@ -153,6 +153,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light));
+    print(LocalData.getUserInterestsSelected);
     return SafeArea(
       child: Scaffold(
         endDrawer:  Drawer(
@@ -325,6 +326,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   onTap: (){
                                     if(themeChange.darkTheme==true){
                                       themeChange.darkTheme=false;
+                                      DarkThemePreference.setDarkTheme(false);
                                     }
                                   },
                                   child: Container(
@@ -360,6 +362,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   onTap: (){
                                     if(themeChange.darkTheme==false){
                                       themeChange.darkTheme=true;
+                                      DarkThemePreference.setDarkTheme(false);
                                     }
                                   },
                                   child: Container(

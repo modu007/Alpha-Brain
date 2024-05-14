@@ -17,6 +17,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<TagSelectedEvent>(tagSelectedEvent);
     on<LanguageChange>(languageChange);
   }
+
   FutureOr<void> getPostInitialEvent(
       GetPostInitialEvent event, Emitter<HomeState> emit) async {
     emit(GetPostLoadingState());
@@ -348,9 +349,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(GetPostLoadingState());
     if(event.tabIndex ==0){
       try{
+        print(event.selectedTag);
         var result = await HomeRepo.getAllPostDataOfForYou(
             skip: 0, limit: 5,
-            selectedTag: event.selectedTag
+            selectedTag: event.selectedTag,
         );
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");

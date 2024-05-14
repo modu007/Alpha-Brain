@@ -10,11 +10,9 @@ class UserDetailsCubit extends Cubit<UserDetailsState> {
     emit(UserDetailsLoadingState());
     try{
       String name = await SharedData.getEmail("name");
-      print(name);
-      String userNameData = await SharedData.getEmail("username");
+      String? userNameData = await SharedData.getEmail("username");
       String profilePic = await SharedData.getEmail("profilePic");
       String imageUrl = "${AllApi.getProfilePic}$name/$profilePic";
-      print(imageUrl);
       emit(UserDetailsSuccessState(
         name: name,
         userName: userNameData,

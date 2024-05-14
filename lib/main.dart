@@ -32,10 +32,6 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
   print(message.data);
 }
 
-Future<void> _handleNotificationResponse(NotificationResponse response) async {
-  print("here");
-}
-
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async{
@@ -51,20 +47,16 @@ void main() async{
   if(savedInterests==null){
     SharedData.saveInterests([]);
   }
-  PushNotificationServices.firebaseCloudMessaging();
-  var initializationSettings =
-  PushNotificationServices.localNotificationInitialization();
+  await PushNotificationServices.firebaseCloudMessaging();
+  await PushNotificationServices.localNotificationInitialization();
   PushNotificationServices.saveFcmToken();
-  await notificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: _handleNotificationResponse);
   PushNotificationServices.incomingMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage){
+  PushNotificationServices.onClickNotification.stream.listen((remoteMessage){
     navigatorKey.currentState?.restorablePushNamed(
        RouteName.notificationPost,
      arguments: {
-       "postId" :remoteMessage.data["post_id"]
+       "postId" :remoteMessage["post_id"]
      });
   });
   FirebaseMessaging.instance.getInitialMessage().then((message) {

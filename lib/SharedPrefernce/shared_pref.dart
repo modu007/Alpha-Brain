@@ -87,18 +87,23 @@ class SharedLanguageData {
 class DarkThemePreference {
   static const THEME_STATUS = "THEMESTATUS";
 
-  setDarkTheme(bool value) async {
+  static setDarkTheme(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool(THEME_STATUS, value);
   }
 
-  Future<bool> getTheme() async {
+  static Future<bool> getTheme() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(THEME_STATUS) ?? false;
   }
 }
 
 class SharedFcmToken {
+  static Future setNotification(bool token) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("notification", token);
+  }
+
   static Future getFcmToken(String key) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return preferences.get(key);
