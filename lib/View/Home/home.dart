@@ -30,6 +30,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   late TabController _tabController;
   late ScrollController scrollControllerTab1;
   late ScrollController scrollControllerTab2;
+  late ScrollController scrollControllerTab3;
   TextEditingController languageController= TextEditingController();
 
   int skip = 0;
@@ -39,13 +40,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   String name = "";
   String imageUrl="";
   String dp="";
-  String selectedTag ="Top Picks";
+  String selectedTag ="For you";
+  bool isEmptyData = false;
   bool isVisible=true;
   List<ForYouModel> dataForLanguage=[];
+  DarkThemePreference darkThemePreference = DarkThemePreference();
   Future getName()async{
     String result = await SharedData.getEmail("name");
     name =result;
-    setState(() {});
+    // setState(() {});
   }
 
   Future getImage()async{
@@ -53,39 +56,74 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     String profilePic = await SharedData.getEmail("profilePic");
     dp = profilePic;
     imageUrl = "${AllApi.getProfilePic}$name/$profilePic";
-    setState(() {});
+    // setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<HomeBloc>(context).add(
+        GetPostInitialEvent(
+            selectedTag: selectedTag));
     getName();
     getImage();
     languageController.text="English";
-    BlocProvider.of<HomeBloc>(context).add(
-        GetPostInitialEvent(
-        selectedTag: selectedTag));
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
         skip=0;
         limit=5;
+        isEmptyData=false;
         BlocProvider.of<HomeBloc>(context)
             .add(TabChangeEvent(
-          tabIndex: _tabController.index,
-          selectedTag: selectedTag
+            tabIndex: _tabController.index,
+            selectedTag: selectedTag
         ));
       }
     });
     scrollControllerTab1 = ScrollController();
     scrollControllerTab2 = ScrollController();
+    scrollControllerTab3 = ScrollController();
+    scrollControllerTab3.addListener(() async {
+      if(!isEmptyData){
+        if(scrollControllerTab3.position
+            .userScrollDirection == ScrollDirection.forward && isVisible!=true
+        ){
+          isVisible =true;
+          setState(() {});
+        }
+        else if(scrollControllerTab3.position
+            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
+          isVisible=false;
+          setState(() {});
+        }
+        if (scrollControllerTab3.position.pixels >=
+            scrollControllerTab3.position.maxScrollExtent) {
+          if (!isLoading) {
+            isLoading = true;
+            skip += 5;
+            BlocProvider.of<HomeBloc>(context).add(
+                PaginationEvent(
+                    limit: limit,
+                    skip: skip,
+                    allPrevPostData: allPostsData,
+                    selectedTag: selectedTag,
+                    tab: 3
+                ));
+            isLoading = false;
+          }
+        }
+      }
+    });
     scrollControllerTab1.addListener(() async {
+      if(!isEmptyData){
       if(scrollControllerTab1.position
           .userScrollDirection == ScrollDirection.forward && isVisible!=true
       ){
         isVisible =true;
         setState(() {});
-      }else if(scrollControllerTab1.position
+      }
+      else if(scrollControllerTab1.position
           .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
         isVisible=false;
         setState(() {});
@@ -95,46 +133,59 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         if (!isLoading) {
           isLoading = true;
           skip += 5;
-          BlocProvider.of<HomeBloc>(context).add(
-            PaginationEvent(
-                limit: limit,
-                skip: skip,
-                allPrevPostData: allPostsData,
-                selectedTag: selectedTag,
-                tab: 0
-            ),
-          );
+         if(selectedTag == "For you"){
+           BlocProvider.of<HomeBloc>(context).add(
+               PaginationEvent(
+                   limit: limit,
+                   skip: skip,
+                   allPrevPostData: allPostsData,
+                   selectedTag: selectedTag,
+                   tab: 0
+               ));
+         }else{
+           print("pagination a");
+           BlocProvider.of<HomeBloc>(context).add(
+               PaginationEvent(
+                   limit: limit,
+                   skip: skip,
+                   allPrevPostData: allPostsData,
+                   selectedTag: selectedTag,
+                   tab: 2
+               ));
+               }
           isLoading = false;
         }
       }
-    });
+    }});
     scrollControllerTab2.addListener(() {
+      if(!isEmptyData){
       if(scrollControllerTab2.position
           .userScrollDirection == ScrollDirection.forward && isVisible!=true
       ){
-        isVisible =true;
-        setState(() {});
+      isVisible =true;
+      setState(() {});
       }else if(scrollControllerTab2.position
           .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
-        isVisible=false;
-        setState(() {});
+      isVisible=false;
+      setState(() {});
       }
       if (scrollControllerTab2.position.pixels >=
-          scrollControllerTab2.position.maxScrollExtent) {
-        if (!isLoading) {
-          isLoading = true;
-          skip += 5; // Adjust according to your pagination logic
-          BlocProvider.of<HomeBloc>(context).add(
-            PaginationEvent(
-                limit: limit,
-                skip: skip,
-                allPrevPostData: allPostsData,
-                tab: 1,
-                selectedTag: selectedTag
-            ),
-          );
-          isLoading = false;
-        }
+      scrollControllerTab2.position.maxScrollExtent) {
+      if (!isLoading) {
+      isLoading = true;
+      skip += 5; // Adjust according to your pagination logic
+      BlocProvider.of<HomeBloc>(context).add(
+      PaginationEvent(
+      limit: limit,
+      skip: skip,
+      allPrevPostData: allPostsData,
+      tab: 1,
+      selectedTag: selectedTag
+      ),
+      );
+      isLoading = false;
+      }
+      }
       }
     });
   }
@@ -153,7 +204,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light));
-    print(LocalData.getUserInterestsSelected);
     return SafeArea(
       child: Scaffold(
         endDrawer:  Drawer(
@@ -179,7 +229,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                           fontSize: 15,
                           fontWeight:FontWeight.w600,
                           fontColor: themeChange.darkTheme?
-                              const Color(0xffafafaf): Colors.black,
+                          const Color(0xffafafaf): Colors.black,
                           textHeight: 0,
                         ),
                       ],
@@ -262,7 +312,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               SvgPicture.asset("assets/svg/globe.svg"),
                               const SizedBox(width: 5,),
                               const SimpleText(text: "Language", fontSize: 15,
-                              fontColor: Color(0xff060606),),
+                                fontColor: Color(0xff060606),),
                               const Spacer(),
                               Flexible(
                                 child: DropdownButtonFormField<String>(
@@ -275,6 +325,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       languageController.text = newValue;
                                       BlocProvider.of<HomeBloc>(context)
                                           .add(LanguageChange(
+                                        listOfFutureData: null,
                                           language:
                                           languageController.text ==
                                               "English"
@@ -282,7 +333,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                               : true,
                                           listOfPost: allPostsData,
                                           selectedTag: selectedTag));
-                                      }
+                                    }
                                   },
                                   items: ['English', 'Hindi']
                                       .map<DropdownMenuItem<String>>(
@@ -292,8 +343,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     ),
                                   ).toList(),
                                   style: const TextStyle(
-                                    color: Color(0xff4EB3CA),
-                                    fontSize: 17
+                                      color: Color(0xff4EB3CA),
+                                      fontSize: 17
                                   ),
                                   decoration: InputDecoration(
                                     hintText: "Language",
@@ -325,8 +376,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 child: InkWell(
                                   onTap: (){
                                     if(themeChange.darkTheme==true){
-                                      themeChange.darkTheme=false;
-                                      DarkThemePreference.setDarkTheme(false);
+                                      themeChange.setDarkTheme=false;
+                                      darkThemePreference.setDarkTheme(false);
                                     }
                                   },
                                   child: Container(
@@ -341,9 +392,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                       themeChange.darkTheme?
-                                    SvgPicture.asset("assets/svg/sun_dark.svg"):
-                                       SvgPicture.asset("assets/svg/sun.svg"),
+                                        themeChange.darkTheme?
+                                        SvgPicture.asset("assets/svg/sun_dark.svg"):
+                                        SvgPicture.asset("assets/svg/sun.svg"),
                                         const SizedBox(width: 8,),
                                         SimpleText2(
                                           text: "Light",
@@ -361,8 +412,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 child: InkWell(
                                   onTap: (){
                                     if(themeChange.darkTheme==false){
-                                      themeChange.darkTheme=true;
-                                      DarkThemePreference.setDarkTheme(false);
+                                      themeChange.setDarkTheme=true;
+                                      darkThemePreference.setDarkTheme(true);
                                     }
                                   },
                                   child: Container(
@@ -437,11 +488,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               },
                               child: Container(
                                 margin: const EdgeInsets.symmetric(horizontal: 4),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              selectedTag == "For you" ? 10 : 4,
-                                          vertical: 6),
-                                      decoration: BoxDecoration(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                    selectedTag == "For you" ? 10 : 4,
+                                    vertical: 6),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectedTag=="For you" ? const Color(0xffCCEAF4) :
                                   themeChange.darkTheme?
@@ -458,26 +509,26 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             ),
                             InkWell(
                               onTap:(){
-                              if(selectedTag!="Top Picks"){
-                                setState(() {
-                                  selectedTag="Top Picks";
-                                });
-                                skip=0;
-                                limit=5;
-                                BlocProvider.of<HomeBloc>(context)
-                                    .add(TabChangeEvent(
-                                    tabIndex: 1,
-                                    selectedTag: selectedTag
-                                ));
-                              }
+                                if(selectedTag!="Top Picks"){
+                                  setState(() {
+                                    selectedTag="Top Picks";
+                                  });
+                                  skip=0;
+                                  limit=5;
+                                  BlocProvider.of<HomeBloc>(context)
+                                      .add(TabChangeEvent(
+                                      tabIndex: 1,
+                                      selectedTag: selectedTag
+                                  ));
+                                }
                               },
                               child: Container(
                                 margin: const EdgeInsets.symmetric(horizontal: 4),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal:
-                                              selectedTag == "Top Picks" ? 10 : 4,
-                                          vertical: 6),
-                                      decoration: BoxDecoration(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                    selectedTag == "Top Picks" ? 10 : 4,
+                                    vertical: 6),
+                                decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: selectedTag=="Top Picks" ? const Color(0xffCCEAF4) :
                                   themeChange.darkTheme?
@@ -492,10 +543,48 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 ),
                               ),
                             ),
-                            Container(color: themeChange.darkTheme
-                                        ? const Color(0xff121212)
-                                        : Colors.white,
-                                    child: SingleChildScrollView(
+                            LocalData.getCustomTags.isNotEmpty?
+                            InkWell(
+                              onTap:(){
+                                if(selectedTag!="My tags"){
+                                  setState(() {
+                                    selectedTag="My tags";
+                                  });
+                                  skip=0;
+                                  limit=5;
+                                  BlocProvider.of<HomeBloc>(context)
+                                      .add(TabChangeEvent(
+                                      tabIndex: 2,
+                                      selectedTag: selectedTag
+                                  ));
+                                }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 4),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                    selectedTag == "My tags" ? 10 : 4,
+                                    vertical: 6),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: selectedTag=="My tags" ? const Color(0xffCCEAF4) :
+                                  themeChange.darkTheme?
+                                  const Color(0xff121212):
+                                  Colors.white,
+                                ),
+                                child: const SimpleText(
+                                  text: "My tags",
+                                  fontSize: 14,
+                                  fontColor: Color(0xff56626c),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ):const SizedBox(),
+                            Container(
+                              color: themeChange.darkTheme
+                                ? const Color(0xff121212)
+                                : Colors.white,
+                              child: SingleChildScrollView(
                                 scrollDirection: Axis.horizontal,
                                 child: Wrap(
                                   children: LocalData.getUserInterestsSelected.map((tag) {
@@ -523,47 +612,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                         ),
                                         child: SimpleText(
                                           text:  LocalData.capitalizeFirstLetter(tag),
-                                          fontSize: 14,
-                                          fontColor: const Color(0xff56626c),
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                            ),
-                            Container(color: themeChange.darkTheme
-                                ? const Color(0xff121212)
-                                : Colors.white,
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Wrap(
-                                  children: LocalData.getCustomTags.map((tag) {
-                                    return InkWell(
-                                      onTap: (){
-                                        setState(() {
-                                          selectedTag=tag;
-                                        });
-                                        BlocProvider.of<HomeBloc>(context).add(
-                                            TagSelectedEvent(
-                                                selectedTag: tag,
-                                                tabIndex: _tabController.index
-                                            )
-                                        );
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                                        padding: EdgeInsets.symmetric(horizontal:selectedTag==tag? 10:4, vertical: 6),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          color: selectedTag==tag ? const Color(0xffCCEAF4) :
-                                          themeChange.darkTheme?
-                                          const Color(0xff121212):
-                                          Colors.white,
-                                        ),
-                                        child: SimpleText(
-                                          text: LocalData.capitalizeFirstLetter(tag),
                                           fontSize: 14,
                                           fontColor: const Color(0xff56626c),
                                           fontWeight: FontWeight.w500,
@@ -603,10 +651,13 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   return const Expanded(child: Center(child: CircularProgressIndicator()));
                 }
                 else if (state is GetPostSuccessState) {
-                 final List<ForYouModel> data = [];
+                  final List<ForYouModel> data = [];
                   data.addAll(state.listOfPosts);
-                 allPostsData.clear();
+                  allPostsData.clear();
                   allPostsData.addAll(data);
+                  if(state.listOfFutureData !=null && state.listOfFutureData!.isEmpty){
+                    isEmptyData=true;
+                  }
                   return Expanded(
                     child: DefaultTabController(
                       length: 2,
@@ -621,6 +672,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             selectedTag: selectedTag,
                             isDarkMode: themeChange.darkTheme,
                             language: state.languageChange,
+                            isEmpty: isEmptyData,
+                            listOfFutureData: state.listOfFutureData,
                           ),
                           PostListView(
                             data: data,
@@ -629,6 +682,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             selectedTag: selectedTag,
                             isDarkMode: themeChange.darkTheme,
                             language: state.languageChange,
+                            listOfFutureData: state.listOfFutureData,
+                            isEmpty: isEmptyData,
                           ),
                         ],
                       ),

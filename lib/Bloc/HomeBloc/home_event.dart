@@ -22,12 +22,14 @@ class PostLikeEvent extends HomeEvent{
   final String emojisType;
   final List<ForYouModel> listOfData;
   final String selectedTag;
+  final List<ForYouModel>? listOfFutureData;
   PostLikeEvent({
     required this.postData,
     required this.previousEmojiType,
     required this.emojisType,
     required this.listOfData,
     required this.selectedTag,
+    required this.listOfFutureData,
   });
 }
 
@@ -51,11 +53,13 @@ class BookmarkPostEvent extends HomeEvent{
   final List<ForYouModel> listOfData;
   final bool bookmark;
   final String selectedTag;
+  final List<ForYouModel>? listOfFutureData;
   BookmarkPostEvent({
     required this.postData,
     required this.listOfData,
     required this.bookmark,
     required this.selectedTag,
+    required this.listOfFutureData,
   });
 }
 
@@ -63,10 +67,12 @@ class AdminActionEvent extends HomeEvent{
   final List<ForYouModel> listOfData;
   final ForYouModel postData;
   final String selectedTag;
+  final List<ForYouModel>? listOfFutureData;
   AdminActionEvent({
     required this.postData,
     required this.listOfData,
     required this.selectedTag,
+    required this.listOfFutureData,
   });
 }
 
@@ -83,10 +89,12 @@ class LanguageChange extends HomeEvent{
   final String selectedTag;
   final bool language;
   final List<ForYouModel> listOfPost;
+  final List<ForYouModel>? listOfFutureData;
   LanguageChange({
     required this.language,
     required this.listOfPost,
     required this.selectedTag,
+    required this.listOfFutureData,
   });
 }
 

@@ -17,10 +17,10 @@ class InterestsCubit extends Cubit<InterestsState> {
         var result = await InterestsRepo.saveYourInterests(
             customTags: customTags, userInterests: userInterests);
         if(result == true){
-          SharedData.saveInterests(userInterests);
-          SharedData.saveCustomInterests(customTags);
           LocalData.getUserInterestsSelected.clear();
           LocalData.getCustomTags.clear();
+          SharedData.saveInterests(userInterests);
+          SharedData.saveCustomInterests(customTags);
           LocalData.getUserInterestsSelected.addAll(userInterests);
           LocalData.getCustomTags.addAll(customTags);
          emit(InterestsSaved());

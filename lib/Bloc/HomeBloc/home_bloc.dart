@@ -41,7 +41,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(GetPostSuccessState(
             listOfPosts:result,isAdmin: isAdmin,
             selectedTag: event.selectedTag,
-          languageChange: language!
+          languageChange: language!,
+            listOfFutureData: null
         ));
       }
       else{
@@ -58,9 +59,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(GetPostLoadingState());
     if(event.tabIndex ==0){
       try{
+        print(event.selectedTag =="My tags");
         var result = await HomeRepo.getAllPostDataOfForYou(
             skip: 0, limit: 5,
-          selectedTag: event.selectedTag
+          selectedTag: event.selectedTag,
+          isMyTags: event.selectedTag =="My tags"?true:null
         );
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
@@ -72,7 +75,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(GetPostSuccessState(
               listOfPosts:result,isAdmin: isAdmin,
               selectedTag: event.selectedTag,
-            languageChange: language
+            languageChange: language,
+              listOfFutureData: null
           ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -83,7 +87,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(GetPostFailureState(errorMessage: "Something went wrong"));
       }
     }
-    else{
+    else if (event.tabIndex==1){
       try{
         var result = await HomeRepo.getAllPostDataOfTopPicks(
             skip: 0, limit: 5, selectedTag: event.selectedTag);
@@ -97,7 +101,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           emit(GetPostSuccessState(
               listOfPosts:result,isAdmin: isAdmin,
               selectedTag: event.selectedTag,
-            languageChange: language
+            languageChange: language,
+              listOfFutureData: null
           ));
         }else{
           emit(GetPostFailureState(errorMessage: "Error"));
@@ -107,6 +112,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(GetPostFailureState(errorMessage: "Something went wrong"));
       }
       }
+    else{
+      try{
+        var result = await HomeRepo.getAllMyTagsFeed(
+            skip: 0, limit: 5, selectedTag: event.selectedTag);
+        if(result is List<ForYouModel>){
+          String email =await SharedData.getEmail("email");
+          bool isAdmin =false;
+          if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
+            isAdmin=true;
+          }
+          bool language = await SharedData.getToken("language");
+          emit(GetPostSuccessState(
+              listOfPosts:result,isAdmin: isAdmin,
+              selectedTag: event.selectedTag,
+              languageChange: language,
+            listOfFutureData: null
+          ));
+        }else{
+          emit(GetPostFailureState(errorMessage: "Error"));
+        }
+      }
+      catch(error){
+        emit(GetPostFailureState(errorMessage: "Something went wrong"));
+      }
+    }
     }
 
   FutureOr<void> paginationEvent(
@@ -119,15 +149,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             limit: event.limit,
             selectedTag: event.selectedTag);
       }
-        else{
+        else if (event.tab==1){
            result = await HomeRepo.getAllPostDataOfTopPicks(
             skip: event.skip,
             limit: event.limit,
             selectedTag: event.selectedTag);
-      }
+      }else if(event.tab ==2){
+          result = await HomeRepo.getAllPostDataOfForYouMyTags(
+              skip: event.skip,
+              limit: event.limit,
+              selectedTag: event.selectedTag,
+              tags: [event.selectedTag]);
+        }
+        else{
+          result = await HomeRepo.getAllMyTagsFeed(
+              skip: event.skip,
+              limit: event.limit,
+              selectedTag: event.selectedTag,
+          );
+        }
         if(result is List<ForYouModel>){
+          List<ForYouModel>? listOfFutureData=[];
           List<ForYouModel> allPostData = event.allPrevPostData;
           List<ForYouModel> resultData =[];
+          if(result.isNotEmpty) {
+            listOfFutureData = null;
+          }
           resultData.addAll(result);
           result.clear();
           result.addAll(allPostData);
@@ -139,6 +186,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             isAdmin=true;
           }
           emit(GetPostSuccessState(
+              listOfFutureData: listOfFutureData,
               listOfPosts:result,isAdmin: isAdmin,
               selectedTag: event.selectedTag,
             languageChange: language
@@ -215,6 +263,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       isAdmin=true;
     }
     emit(GetPostSuccessState(
+        listOfFutureData: event.listOfFutureData,
         listOfPosts:data,isAdmin: isAdmin,
         selectedTag: event.selectedTag,
       languageChange: language
@@ -289,6 +338,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     bool language = await SharedData.getToken("language");
     emit(GetPostSuccessState(
+        listOfFutureData: event.listOfFutureData,
         listOfPosts:data,isAdmin: isAdmin,
         selectedTag: event.selectedTag,
       languageChange: language
@@ -330,6 +380,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       isAdmin=true;
     }
    emit(GetPostSuccessState(
+       listOfFutureData: event.listOfFutureData,
        listOfPosts: data, isAdmin: isAdmin,
        selectedTag: event.selectedTag,
      languageChange: language
@@ -347,12 +398,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> tagSelectedEvent(
       TagSelectedEvent event, Emitter<HomeState> emit) async {
     emit(GetPostLoadingState());
-    if(event.tabIndex ==0){
       try{
         print(event.selectedTag);
-        var result = await HomeRepo.getAllPostDataOfForYou(
+        var result = await HomeRepo.getAllPostDataOfForYouMyTags(
             skip: 0, limit: 5,
             selectedTag: event.selectedTag,
+          tags: [event.selectedTag.toLowerCase()],
         );
         if(result is List<ForYouModel>){
           String email =await SharedData.getEmail("email");
@@ -362,6 +413,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           }
           bool language = await SharedData.getToken("language");
           emit(GetPostSuccessState(
+              listOfFutureData: null,
               listOfPosts:result,isAdmin: isAdmin,
               selectedTag: event.selectedTag,
             languageChange: language
@@ -373,31 +425,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       catch(error){
         emit(GetPostFailureState(errorMessage: "Something went wrong"));
       }
-    }
-    else{
-      try{
-        var result = await HomeRepo.getAllPostDataOfTopPicks(
-            skip: 0, limit: 5, selectedTag: event.selectedTag);
-        if(result is List<ForYouModel>){
-          String email =await SharedData.getEmail("email");
-          bool isAdmin =false;
-          if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
-            isAdmin=true;
-          }
-          bool language = await SharedData.getToken("language");
-          emit(GetPostSuccessState(
-              listOfPosts:result,isAdmin: isAdmin,
-              selectedTag: event.selectedTag,
-            languageChange: language
-          ));
-        }else{
-          emit(GetPostFailureState(errorMessage: "Error"));
-        }
-      }
-      catch(error){
-        emit(GetPostFailureState(errorMessage: "Something went wrong"));
-      }
-    }
   }
 
   FutureOr<void> languageChange(
@@ -411,10 +438,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
     List<ForYouModel> data = event.listOfPost;
     emit(GetPostSuccessState(
+      listOfFutureData: event.listOfFutureData,
         listOfPosts: data,
         isAdmin: isAdmin,
         selectedTag: event.selectedTag,
-        languageChange: event.language));
+        languageChange: event.language,
+    ));
     try{
       await HomeRepo.changeLanguage(language: event.language==true?"hi":"en");
     }

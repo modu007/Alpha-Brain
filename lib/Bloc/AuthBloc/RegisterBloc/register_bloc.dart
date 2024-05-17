@@ -17,31 +17,28 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     if (event.fullNameValid) {
       if (event.isEmailValid) {
         if (event.dob) {
-          if (event.isUsernameValid) {
-            emit(RegisterLoadingState());
-            SharedData.language(event.language == "Hindi" ? true : false);
-            try {
-              var result = await AuthRepo.registerUserData(
-                  fullName: event.name,
-                  email: event.email,
-                  gender: event.gender,
-                  age: event.age,
-                  username: event.username,
-                  language: event.language == "Hindi" ? "hi" : "en");
-              if (event.isGoogleSignIn) {
-                await AuthRepo.otpVerification(
-                    email: event.email, otp: "gmail_verified");
-              }
-              if (result == "success") {
-                emit(RegistrationSuccessFullState(email: event.email));
-              } else {
-                emit(ErrorState());
-              }
-            } catch (error) {
+          emit(RegisterLoadingState());
+          SharedData.language(event.language == "Hindi" ? true : false);
+          try {
+            var result = await AuthRepo.registerUserData(
+                fullName: event.name,
+                email: event.email,
+                gender: event.gender,
+                age: event.age,
+                username:"",
+                language: event.language == "Hindi" ? "hi" : "en");
+            if (event.isGoogleSignIn) {
+              await AuthRepo.otpVerification(
+                  email: event.email, otp: "gmail_verified");
+            }
+            if (result == "success") {
+              emit(RegistrationSuccessFullState(email: event.email));
+            }
+            else {
               emit(ErrorState());
             }
-          } else {
-            emit(UsernameInvalidState());
+          } catch (error) {
+            emit(ErrorState());
           }
         } else {
           emit(DobInvalidState());

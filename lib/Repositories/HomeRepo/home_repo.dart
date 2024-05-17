@@ -7,7 +7,7 @@ import '../../NetworkRequest/network_request.dart';
 
 class HomeRepo {
   static Future getAllPostDataOfForYou(
-      {required int skip,required int limit,required String selectedTag}) async {
+      {required int skip,required int limit,required String selectedTag,bool? isMyTags}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
     var token = await SharedData.getToken("token");
@@ -24,10 +24,10 @@ class HomeRepo {
        "Skip": skip,
        "Limit": limit,
        "Tags": selectedTag.toLowerCase(),
-       "User_interest": LocalData.getUserInterestsSelected,
-       // "User_interest": LocalData.getUserInterestsSelected,
+        "User_interest": isMyTags != null
+            ? LocalData.getCustomTags
+            : LocalData.getUserInterestsSelected,
      }, AllApi.forYou);
-     print(result);
      if(result is List){
        List<ForYouModel> data =[];
        for(int i=0;i<result.length;i++){
@@ -36,6 +36,39 @@ class HomeRepo {
        return data;
      }
      return "something went wrong";
+    } catch (error) {
+      print("on pagination repo $error");
+    }
+  }
+
+  static Future getAllPostDataOfForYouMyTags(
+      {required int skip,required int limit,required String selectedTag,required List tags}) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
+    try {
+      if(hasExpired){
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
+      var result = await networkRequest.postMethodRequest({
+        "Email": email,
+        "Skip": skip,
+        "Limit": limit,
+        "Tags": selectedTag.toLowerCase(),
+        "User_interest": tags,
+      }, AllApi.forYou);
+      if(result is List){
+        List<ForYouModel> data =[];
+        for(int i=0;i<result.length;i++){
+          data.add(ForYouModel.fromJson(result[i]));
+        }
+        return data;
+      }
+      return "something went wrong";
     } catch (error) {
       print("on pagination repo $error");
     }
@@ -210,6 +243,39 @@ class HomeRepo {
       return result;
     } catch (error) {
       print("activeUser repo $error");
+    }
+  }
+
+  static Future getAllMyTagsFeed(
+      {required int skip,required int limit,required String selectedTag,bool? isMyTags}) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    String email = await SharedData.getEmail("email");
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
+    try {
+      if(hasExpired){
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
+      print(LocalData.getCustomTags);
+      var result = await networkRequest.postMethodRequest({
+        "Email": email,
+        "User_tags": LocalData.getCustomTags,
+        "Skip": skip,
+        "Limit": limit
+      }, AllApi.getMyTagsFeed);
+      if(result is List){
+        List<ForYouModel> data =[];
+        for(int i=0;i<result.length;i++){
+          data.add(ForYouModel.fromJson(result[i]));
+        }
+        return data;
+      }
+      return "something went wrong";
+    } catch (error) {
+      print("on pagination repo $error");
     }
   }
 }

@@ -50,6 +50,9 @@ class InterestsRepo{
         "email": email
       }, AllApi.getInterests);
       if(result["status"]=="interest_does_not_exists"){
+        LocalData.getCustomTags.clear();
+        LocalData.getUserInterestsSelected.clear();
+        LocalData.getInterests.clear();
         List<String> interests =[];
         for(int i=0; i <result["user_interest"].length;i++){
           interests.add(result["user_interest"][i]);
@@ -65,6 +68,7 @@ class InterestsRepo{
         LocalData.getUserInterestsSelected.clear();
         List<String> interests =[];
         List<String> customTags =[];
+        print(result);
         for(int i=0; i <result["user_interest"].length;i++){
           interests.add(result["user_interest"][i]);
         }
@@ -75,8 +79,17 @@ class InterestsRepo{
         SharedData.removeUserid("interests");
         LocalData.getCustomTags.addAll(customTags);
         LocalData.getUserInterestsSelected.addAll(interests);
-        SharedData.saveInterests(LocalData.getUserInterestsSelected);
+        print("local data");
+        print(LocalData.getCustomTags);
+        print(LocalData.getInterests);
+        print(LocalData.getUserInterestsSelected);
+        print("here");
+        print(await SharedData.getToken("interests"));
         SharedData.saveCustomInterests(LocalData.getCustomTags);
+        SharedData.saveInterests(interests);
+        print("yes");
+        print(await SharedData.getToken("interests"));
+        print("hello");
         return false;
       }
     } catch (error) {

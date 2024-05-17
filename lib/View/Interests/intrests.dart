@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:neuralcode/Bloc/InterestCubit/interests_cubit.dart';
 import 'package:neuralcode/Bloc/InterestCubit/interests_state.dart';
+import 'package:neuralcode/Utils/Components/Text/simple_text2.dart';
 import 'package:provider/provider.dart';
 import '../../Bloc/GetInterets/get_interests_cubit.dart';
 import '../../Bloc/GetInterets/get_interests_state.dart';
@@ -31,7 +32,7 @@ class _InterestsState extends State<Interests> {
   bool onlyOnce =false;
   List<String> localSearch=[];
   bool isEmpty = false;
-  Future<void> showAddCustomTagsDialog(BuildContext context, Size size) async {
+  Future<void> showAddCustomTagsDialog(BuildContext context, Size size,DarkThemeProvider themeChange) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -43,7 +44,7 @@ class _InterestsState extends State<Interests> {
               padding:
               const EdgeInsets.only(bottom: 15, left: 20, right: 20, top: 15),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color:themeChange.darkTheme? const Color(0xff1E1E1E):Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -54,10 +55,11 @@ class _InterestsState extends State<Interests> {
                      Row(
                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                        children: [
-                         const SimpleText(
+                          SimpleText2(
                            text: "Add a new interest",
                            fontSize: 17,
                            fontWeight: FontWeight.w500,
+                           fontColor: themeChange.darkTheme?Colors.white:Colors.black,
                          ),
                          InkWell(
                              onTap: () {
@@ -143,12 +145,13 @@ class _InterestsState extends State<Interests> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
              LoginButtons(
-                 color: Colors.white,
+                 color: null,
                  size: size,
                  centerText: "Add custom tag",
                  onPressed: () {
                    showAddCustomTagsDialog(
-                       context,size
+                       context,size,
+                     themeChange
                    );
                  }),
              const SizedBox(height: 10,),
@@ -208,7 +211,6 @@ class _InterestsState extends State<Interests> {
             ],
           ),
         ),
-        backgroundColor: Colors.white,
         body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 25,vertical: 10),
           child: SingleChildScrollView(
@@ -217,8 +219,9 @@ class _InterestsState extends State<Interests> {
               children: [
                InkWell(
                  onTap: (){
-                   Navigator.of(context).pop();
-                 },
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        RouteName.home, (route) => false);
+                  },
                  child: Container(
                    padding: const EdgeInsets.all(15),
                    decoration: BoxDecoration(
@@ -391,7 +394,6 @@ class _InterestsState extends State<Interests> {
                                         SimpleText(
                                           text: LocalData.capitalizeFirstLetter(item),
                                           fontSize: 14,
-                                          fontColor: Colors.black,
                                         ),
                                       ],
                                     ),
@@ -439,10 +441,10 @@ class _InterestsState extends State<Interests> {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      SimpleText(
+                                      SimpleText2(
                                         text: LocalData.capitalizeFirstLetter(item),
                                         fontSize: 14,
-                                        fontColor: Colors.black,
+                                        fontColor: themeChange.darkTheme?Colors.black:Colors.black,
                                       ),
                                       const SizedBox(
                                         width: 5,
@@ -511,10 +513,10 @@ class _InterestsState extends State<Interests> {
                                         size: 22,
                                       ),
                                       const SizedBox(width: 3,),
-                                      SimpleText(
+                                      SimpleText2(
                                         text: LocalData.capitalizeFirstLetter(item),
                                         fontSize: 14,
-                                        fontColor: Colors.black,
+                                        fontColor: themeChange.darkTheme?Colors.black:Colors.black,
                                       ),
                                     ],
                                   ),

@@ -9,6 +9,7 @@ import '../../../Models/for_you_model.dart';
 import '../Text/simple_text.dart';
 
 class PostListView extends StatefulWidget {
+
   const PostListView({
     super.key,
     required this.data,
@@ -17,6 +18,8 @@ class PostListView extends StatefulWidget {
     required this.selectedTag,
     required this.isDarkMode,
     required this.language,
+    required this.isEmpty,
+    required this.listOfFutureData,
   });
 
   final List<ForYouModel> data;
@@ -25,6 +28,8 @@ class PostListView extends StatefulWidget {
   final String selectedTag;
   final bool isDarkMode;
   final bool language;
+  final bool isEmpty;
+  final List<ForYouModel>? listOfFutureData;
 
   @override
   State<PostListView> createState() => _PostListViewState();
@@ -38,7 +43,7 @@ class _PostListViewState extends State<PostListView> {
           controller: widget.scrollController,
           itemCount: widget.data.length,
           itemBuilder: (context, index) {
-            if (index == widget.data.length - 1) {
+            if (index == widget.data.length-1 && widget.isEmpty==false) {
               return Container(
                 margin: const EdgeInsets.symmetric(vertical: 5),
                 child: const Center(
@@ -152,7 +157,9 @@ class _PostListViewState extends State<PostListView> {
                                     previousEmojiType: emojiType,
                                     emojisType: "",
                                     listOfData: widget.data,
-                                    selectedTag: widget.selectedTag),
+                                    selectedTag: widget.selectedTag,
+                                  listOfFutureData: widget.listOfFutureData
+                                ),
                               );
                             },
                             child: Row(
@@ -191,7 +198,9 @@ class _PostListViewState extends State<PostListView> {
                                       previousEmojiType: emojiType,
                                       emojisType: "love",
                                       listOfData: widget.data,
-                                      selectedTag: widget.selectedTag));
+                                      selectedTag: widget.selectedTag,
+                                      listOfFutureData: widget.listOfFutureData
+                                  ));
                             },
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
@@ -229,7 +238,9 @@ class _PostListViewState extends State<PostListView> {
                                       postData: widget.data[index],
                                       listOfData: widget.data,
                                       bookmark: bookmarkOrNot,
-                                      selectedTag: widget.selectedTag));
+                                      selectedTag: widget.selectedTag,
+                                      listOfFutureData: widget.listOfFutureData
+                                  ));
                             },
                             child: bookmarkOrNot
                                 ? widget.isDarkMode? SvgPicture.asset(
@@ -247,7 +258,9 @@ class _PostListViewState extends State<PostListView> {
                                     AdminActionEvent(
                                         postData: widget.data[index],
                                         listOfData: widget.data,
-                                        selectedTag: widget.selectedTag));
+                                        selectedTag: widget.selectedTag,
+                                        listOfFutureData: widget.listOfFutureData
+                                    ));
                               },
                               child: const Icon(
                                 Icons.delete_outline,

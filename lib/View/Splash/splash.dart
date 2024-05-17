@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Data/local_data.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../Bloc/GetInterets/get_interests_cubit.dart';
 import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Routes/navigation_service.dart';
 
@@ -27,7 +23,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
-
+  DarkThemeProvider themeChangeProvider = DarkThemeProvider();
   Future splash() async {
     List customInterests = await SharedData.getToken("custom");
     List savedInterests = await SharedData.getToken("interests");
@@ -46,7 +42,8 @@ class _SplashScreenState extends State<SplashScreen>
       if(widget.fromBackGround == true){
         NavigationService.navigateToNotificationPost(widget.postId!);
       }
-    }else{
+    }
+    else{
       if (token != null) {
         Timer(
             const Duration(seconds: 4),
@@ -59,7 +56,14 @@ class _SplashScreenState extends State<SplashScreen>
       }
     }
   }
-
+  bool onlyOnce=false;
+  void getCurrentAppTheme(BuildContext context) async {
+    bool theme =
+    await themeChangeProvider.darkThemePreference.getTheme();
+    print("theme $theme");
+    final themeChange = Provider.of<DarkThemeProvider>(context,listen: false);
+    themeChange.setDarkTheme=theme;
+  }
   @override
   void initState() {
     controller = AnimationController(
@@ -74,9 +78,6 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void didChangeDependencies() async{
-    final themeChange = Provider.of<DarkThemeProvider>(context);
-    bool isDarkTheme = await DarkThemePreference.getTheme();
-    themeChange.darkTheme = isDarkTheme;
     splash();
     super.didChangeDependencies();
   }
@@ -89,6 +90,11 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    if(onlyOnce==false){
+      print("yes");
+      getCurrentAppTheme(context);
+      onlyOnce=true;
+    }
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,

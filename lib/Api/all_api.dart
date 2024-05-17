@@ -73,4 +73,7 @@ class AllApi {
 
   // list of interests
   static const listOfInterests = "$baseUrl/list_interest/";
+
+  //get my tags feed
+  static const getMyTagsFeed = "$baseUrl/tags_feed/";
 }

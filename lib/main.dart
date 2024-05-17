@@ -34,13 +34,15 @@ Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+bool darkTheme =false;
+
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
   List? customInterests = await SharedData.getToken("custom");
-  List? savedInterests = await SharedData.getToken("interests");
+  var savedInterests = await SharedData.getToken("interests");
   if(customInterests==null){
     SharedData.saveCustomInterests([]);
   }
@@ -76,8 +78,14 @@ void main() async{
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {

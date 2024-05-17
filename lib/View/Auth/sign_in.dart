@@ -107,7 +107,7 @@ class _SignInState extends State<SignIn> {
                   child: Center(
                     child: SimpleText(
                       text:
-                          "A verification code will be sent to the email you provide.",
+                      "A verification code will be sent to the email you provide.",
                       fontSize: 12,
                       fontColor: Color(0xff6A707C),
                     ),
@@ -118,9 +118,9 @@ class _SignInState extends State<SignIn> {
                 ),
                 BlocConsumer<SignInBloc, SignInState>(
                   listenWhen: (previous, current) =>
-                      current is SignInActionState,
+                  current is SignInActionState,
                   buildWhen: (previous, current) =>
-                      current is! SignInActionState,
+                  current is! SignInActionState,
                   listener: (context, state) {
                     if (state is InvalidEmailState) {
                       Navigator.of(context)
@@ -150,7 +150,6 @@ class _SignInState extends State<SignIn> {
                     return LoginButtons(
                       size: size,
                       onPressed: () {
-                        FocusManager.instance.primaryFocus?.unfocus();
                         BlocProvider.of<SignInBloc>(context).add(LoginEvent(
                             email: emailController.text,
                             isValidEmail: isValidEmail));
@@ -169,9 +168,9 @@ class _SignInState extends State<SignIn> {
                     children: [
                       Expanded(
                           child: Divider(
-                        color: Color(0xffE8ECF4),
-                        thickness: 1,
-                      )),
+                            color: Color(0xffE8ECF4),
+                            thickness: 1,
+                          )),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
                         child: SimpleText(
@@ -184,9 +183,9 @@ class _SignInState extends State<SignIn> {
                       ),
                       Expanded(
                           child: Divider(
-                        thickness: 1,
-                        color: Color(0xffE8ECF4),
-                      )),
+                            thickness: 1,
+                            color: Color(0xffE8ECF4),
+                          )),
                     ],
                   ),
                 ),
@@ -226,33 +225,33 @@ class _SignInState extends State<SignIn> {
                       },
                       child: (state is OtpLoadingState)
                           ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
+                        child: CircularProgressIndicator(),
+                      )
                           : Container(
-                              width: size.width,
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: const Color(0xffE8ECF4),
-                                    width: 2,
-                                  )),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset("assets/svg/google.svg"),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  const SimpleText(
-                                    text: "Continue with Google",
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    fontColor: Color(0xff6A707C),
-                                  ),
-                                ],
-                              ),
+                        width: size.width,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: const Color(0xffE8ECF4),
+                              width: 2,
+                            )),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SvgPicture.asset("assets/svg/google.svg"),
+                            const SizedBox(
+                              width: 10,
                             ),
+                            const SimpleText(
+                              text: "Continue with Google",
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                              fontColor: Color(0xff6A707C),
+                            ),
+                          ],
+                        ),
+                      ),
                     );
                   },
                 ),
