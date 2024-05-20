@@ -29,8 +29,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   late TabController _tabController;
   late ScrollController scrollControllerTab1;
-  late ScrollController scrollControllerTab2;
-  late ScrollController scrollControllerTab3;
   TextEditingController languageController= TextEditingController();
 
   int skip = 0;
@@ -50,7 +48,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     name =result;
     // setState(() {});
   }
-
   Future getImage()async{
     String name = await SharedData.getEmail("name");
     String profilePic = await SharedData.getEmail("profilePic");
@@ -82,41 +79,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       }
     });
     scrollControllerTab1 = ScrollController();
-    scrollControllerTab2 = ScrollController();
-    scrollControllerTab3 = ScrollController();
-    scrollControllerTab3.addListener(() async {
-      if(!isEmptyData){
-        if(scrollControllerTab3.position
-            .userScrollDirection == ScrollDirection.forward && isVisible!=true
-        ){
-          isVisible =true;
-          setState(() {});
-        }
-        else if(scrollControllerTab3.position
-            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
-          isVisible=false;
-          setState(() {});
-        }
-        if (scrollControllerTab3.position.pixels >=
-            scrollControllerTab3.position.maxScrollExtent) {
-          if (!isLoading) {
-            isLoading = true;
-            skip += 5;
-            BlocProvider.of<HomeBloc>(context).add(
-                PaginationEvent(
-                    limit: limit,
-                    skip: skip,
-                    allPrevPostData: allPostsData,
-                    selectedTag: selectedTag,
-                    tab: 3
-                ));
-            isLoading = false;
-          }
-        }
-      }
-    });
     scrollControllerTab1.addListener(() async {
-      if(!isEmptyData){
+      if(!isEmptyData && selectedTag=="For You"){
+        print("here");
       if(scrollControllerTab1.position
           .userScrollDirection == ScrollDirection.forward && isVisible!=true
       ){
@@ -143,7 +108,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                    tab: 0
                ));
          }else{
-           print("pagination a");
            BlocProvider.of<HomeBloc>(context).add(
                PaginationEvent(
                    limit: limit,
@@ -156,36 +120,93 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           isLoading = false;
         }
       }
-    }});
-    scrollControllerTab2.addListener(() {
-      if(!isEmptyData){
-      if(scrollControllerTab2.position
-          .userScrollDirection == ScrollDirection.forward && isVisible!=true
-      ){
-      isVisible =true;
-      setState(() {});
-      }else if(scrollControllerTab2.position
-          .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
-      isVisible=false;
-      setState(() {});
+    }
+      else if(!isEmptyData && selectedTag == "Top Picks"){
+        if(scrollControllerTab1.position
+            .userScrollDirection == ScrollDirection.forward && isVisible!=true
+        ){
+          isVisible =true;
+          setState(() {});
+        }else if(scrollControllerTab1.position
+            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
+          isVisible=false;
+          setState(() {});
+        }
+        if (scrollControllerTab1.position.pixels >=
+            scrollControllerTab1.position.maxScrollExtent) {
+          if (!isLoading) {
+            isLoading = true;
+            skip += 5; // Adjust according to your pagination logic
+            BlocProvider.of<HomeBloc>(context).add(
+              PaginationEvent(
+                  limit: limit,
+                  skip: skip,
+                  allPrevPostData: allPostsData,
+                  tab: 1,
+                  selectedTag: selectedTag
+              ),
+            );
+            isLoading = false;
+          }
+        }
       }
-      if (scrollControllerTab2.position.pixels >=
-      scrollControllerTab2.position.maxScrollExtent) {
-      if (!isLoading) {
-      isLoading = true;
-      skip += 5; // Adjust according to your pagination logic
-      BlocProvider.of<HomeBloc>(context).add(
-      PaginationEvent(
-      limit: limit,
-      skip: skip,
-      allPrevPostData: allPostsData,
-      tab: 1,
-      selectedTag: selectedTag
-      ),
-      );
-      isLoading = false;
+      else if(!isEmptyData && selectedTag=="My tags" ){
+        if(scrollControllerTab1.position
+            .userScrollDirection == ScrollDirection.forward && isVisible!=true
+        ){
+          setState(() {
+            isVisible =true;
+          });
+        }
+        if(scrollControllerTab1.position
+            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
+          setState(() {isVisible=false;});
+        }
+        if (scrollControllerTab1.position.pixels >=
+            scrollControllerTab1.position.maxScrollExtent) {
+          if (!isLoading) {
+            isLoading = true;
+            skip += 5;
+            BlocProvider.of<HomeBloc>(context).add(
+                PaginationEvent(
+                    limit: limit,
+                    skip: skip,
+                    allPrevPostData: allPostsData,
+                    selectedTag: selectedTag,
+                    tab: 3
+                ));
+            isLoading = false;
+          }
+        }
       }
-      }
+      else{
+        if(scrollControllerTab1.position
+            .userScrollDirection == ScrollDirection.forward && isVisible!=true
+        ){
+          setState(() {
+            isVisible =true;
+          });
+        }
+        if(scrollControllerTab1.position
+            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
+          setState(() {isVisible=false;});
+        }
+        if (scrollControllerTab1.position.pixels >=
+            scrollControllerTab1.position.maxScrollExtent) {
+          if (!isLoading) {
+            isLoading = true;
+            skip += 5;
+            BlocProvider.of<HomeBloc>(context).add(
+                PaginationEvent(
+                    limit: limit,
+                    skip: skip,
+                    allPrevPostData: allPostsData,
+                    selectedTag: selectedTag,
+                    tab: 2
+                ));
+            isLoading = false;
+          }
+        }
       }
     });
   }
@@ -193,7 +214,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   void dispose() {
     _tabController.dispose();
     scrollControllerTab1.dispose();
-    scrollControllerTab2.dispose();
     super.dispose();
   }
 
@@ -622,6 +642,49 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                 ),
                               ),
                             ),
+                            LocalData.getUserInterestsSelected.isEmpty?
+                            Container(
+                              color: themeChange.darkTheme
+                                  ? const Color(0xff121212)
+                                  : Colors.white,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Wrap(
+                                  children: LocalData.getInterests.map((tag) {
+                                    return InkWell(
+                                      onTap: (){
+                                        setState(() {
+                                          selectedTag=tag;
+                                        });
+                                        BlocProvider.of<HomeBloc>(context).add(
+                                            TagSelectedEvent(
+                                                selectedTag: tag,
+                                                tabIndex: _tabController.index
+                                            )
+                                        );
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                                        padding: EdgeInsets.symmetric(horizontal:selectedTag==tag? 10:4, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          color: selectedTag==tag ? const Color(0xffCCEAF4) :
+                                          themeChange.darkTheme?
+                                          const Color(0xff121212):
+                                          Colors.white,
+                                        ),
+                                        child: SimpleText(
+                                          text:  LocalData.capitalizeFirstLetter(tag),
+                                          fontSize: 14,
+                                          fontColor: const Color(0xff56626c),
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ):const SizedBox()
                           ],
                         ),
                       ),
@@ -659,34 +722,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     isEmptyData=true;
                   }
                   return Expanded(
-                    child: DefaultTabController(
-                      length: 2,
-                      child: TabBarView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        controller: _tabController,
-                        children: [
-                          PostListView(
-                            data: data,
-                            scrollController: scrollControllerTab1,
-                            isAdmin: state.isAdmin,
-                            selectedTag: selectedTag,
-                            isDarkMode: themeChange.darkTheme,
-                            language: state.languageChange,
-                            isEmpty: isEmptyData,
-                            listOfFutureData: state.listOfFutureData,
-                          ),
-                          PostListView(
-                            data: data,
-                            scrollController: scrollControllerTab2,
-                            isAdmin: state.isAdmin,
-                            selectedTag: selectedTag,
-                            isDarkMode: themeChange.darkTheme,
-                            language: state.languageChange,
-                            listOfFutureData: state.listOfFutureData,
-                            isEmpty: isEmptyData,
-                          ),
-                        ],
-                      ),
+                    child: PostListView(
+                      data: data,
+                      scrollController: scrollControllerTab1,
+                      isAdmin: state.isAdmin,
+                      selectedTag: selectedTag,
+                      isDarkMode: themeChange.darkTheme,
+                      language: state.languageChange,
+                      listOfFutureData: state.listOfFutureData,
+                      isEmpty: isEmptyData,
                     ),
                   );
                 }

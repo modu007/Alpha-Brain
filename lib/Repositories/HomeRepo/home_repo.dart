@@ -24,10 +24,12 @@ class HomeRepo {
        "Skip": skip,
        "Limit": limit,
        "Tags": selectedTag.toLowerCase(),
-        "User_interest": isMyTags != null
-            ? LocalData.getCustomTags
-            : LocalData.getUserInterestsSelected,
-     }, AllApi.forYou);
+        "User_interest": LocalData.getUserInterestsSelected.isEmpty
+            ? LocalData.getInterests
+            : isMyTags != null
+                ? LocalData.getCustomTags
+                : LocalData.getUserInterestsSelected,
+      }, AllApi.forYou);
      if(result is List){
        List<ForYouModel> data =[];
        for(int i=0;i<result.length;i++){
@@ -61,6 +63,7 @@ class HomeRepo {
         "Tags": selectedTag.toLowerCase(),
         "User_interest": tags,
       }, AllApi.forYou);
+      print(result);
       if(result is List){
         List<ForYouModel> data =[];
         for(int i=0;i<result.length;i++){

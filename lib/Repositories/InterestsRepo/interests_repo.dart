@@ -49,6 +49,7 @@ class InterestsRepo{
       var result = await networkRequest.postMethodRequest({
         "email": email
       }, AllApi.getInterests);
+      print(result);
       if(result["status"]=="interest_does_not_exists"){
         LocalData.getCustomTags.clear();
         LocalData.getUserInterestsSelected.clear();

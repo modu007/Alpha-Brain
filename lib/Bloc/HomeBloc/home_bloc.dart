@@ -59,7 +59,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(GetPostLoadingState());
     if(event.tabIndex ==0){
       try{
-        print(event.selectedTag =="My tags");
         var result = await HomeRepo.getAllPostDataOfForYou(
             skip: 0, limit: 5,
           selectedTag: event.selectedTag,
@@ -113,6 +112,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       }
       }
     else{
+      //my tags
       try{
         var result = await HomeRepo.getAllMyTagsFeed(
             skip: 0, limit: 5, selectedTag: event.selectedTag);
@@ -144,17 +144,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     var result;
       try{
         if(event.tab==0){
+          //for you
            result = await HomeRepo.getAllPostDataOfForYou(
             skip: event.skip,
             limit: event.limit,
             selectedTag: event.selectedTag);
       }
         else if (event.tab==1){
+          //top picks
            result = await HomeRepo.getAllPostDataOfTopPicks(
             skip: event.skip,
             limit: event.limit,
             selectedTag: event.selectedTag);
       }else if(event.tab ==2){
+          //anime economy
           result = await HomeRepo.getAllPostDataOfForYouMyTags(
               skip: event.skip,
               limit: event.limit,
@@ -162,6 +165,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
               tags: [event.selectedTag]);
         }
         else{
+          // getAllMyTagsFeed my tags
+          print("yes");
+          print(event.selectedTag);
           result = await HomeRepo.getAllMyTagsFeed(
               skip: event.skip,
               limit: event.limit,
@@ -399,7 +405,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       TagSelectedEvent event, Emitter<HomeState> emit) async {
     emit(GetPostLoadingState());
       try{
-        print(event.selectedTag);
         var result = await HomeRepo.getAllPostDataOfForYouMyTags(
             skip: 0, limit: 5,
             selectedTag: event.selectedTag,

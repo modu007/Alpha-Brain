@@ -318,7 +318,7 @@ class _RegisterState extends State<Register> {
                   height: 10,
                 ),
                 TextFieldContainer(
-                  inputFormatter: [EmailInputFormatter()],
+                  // inputFormatter: [EmailInputFormatter()],
                   keyboardType: TextInputType.emailAddress,
                   emailController: emailController,
                   hintText: "Email",
