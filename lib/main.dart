@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:neuralcode/Bloc/AuthBloc/OtpVerficationBloc/otp_cubit.dart';
 import 'package:neuralcode/Bloc/AuthBloc/RegisterBloc/register_bloc.dart';
 import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_bloc.dart';
@@ -59,6 +60,7 @@ void main() async{
        RouteName.notificationPost,
      arguments: {
        "postId" :remoteMessage["post_id"]
+       // "postId" :"65e030815cc2b100a817d036"
      });
   });
   FirebaseMessaging.instance.getInitialMessage().then((message) {
@@ -67,6 +69,7 @@ void main() async{
           RouteName.splash,arguments: {
         "fromBackground":true,
         "postId":message.data["post_id"]
+        // "postId":"65e030815cc2b100a817d036"
       });
     }
   });
@@ -120,16 +123,18 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider<DarkThemeProvider>(
             create: (BuildContext context) => DarkThemeProvider())
       ],
-      child: Consumer<DarkThemeProvider>(
-          builder: (BuildContext context, value, child) {
-          return MaterialApp(
-            navigatorKey: navigatorKey,
-            initialRoute: RouteName.splash,
-            onGenerateRoute: Routes.generateRoute,
-            debugShowCheckedModeBanner: false,
-            theme: Styles.themeData(value.darkTheme, context),
-          );
-        }
+      child: ScreenUtilInit(
+        child: Consumer<DarkThemeProvider>(
+            builder: (BuildContext context, value, child) {
+            return MaterialApp(
+              navigatorKey: navigatorKey,
+              initialRoute: RouteName.splash,
+              onGenerateRoute: Routes.generateRoute,
+              debugShowCheckedModeBanner: false,
+              theme: Styles.themeData(value.darkTheme, context),
+            );
+          }
+        ),
       ),
     );
   }

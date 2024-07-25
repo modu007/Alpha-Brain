@@ -56,7 +56,6 @@ class _RegisterState extends State<Register> {
       }
     }
     genderController.text = "Male";
-    languageController.text = "English";
     BlocProvider.of<UsernameCubit>(context).userInitialEvent();
     focusNode.addListener(() {
       if (!focusNode.hasFocus) {
@@ -253,9 +252,6 @@ class _RegisterState extends State<Register> {
                 //     );
                 //   },
                 // ),
-                const SizedBox(
-                  height: 10,
-                ),
                 TextFieldContainer(
                   emailController: dobController,
                   hintText: "Date of birth",
@@ -280,7 +276,10 @@ class _RegisterState extends State<Register> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(
-                      right: 25, left: 15, top: 10, bottom: 10),
+                      top: 6,
+                      bottom: 6,
+                      right: 10,
+                      left: 15),
                   width: size.width,
                   decoration: BoxDecoration(
                       color: const Color(0xffE8ECF4),
@@ -331,30 +330,39 @@ class _RegisterState extends State<Register> {
                   },
                 ),
                 Container(
+                  alignment: Alignment.center,
                   padding: const EdgeInsets.only(
-                      right: 25, left: 15, top: 10, bottom: 10),
+                      top: 6,
+                      bottom: 6,
+                      right: 10,
+                      left: 15),
                   width: size.width,
                   decoration: BoxDecoration(
                       color: const Color(0xffE8ECF4),
                       borderRadius: BorderRadius.circular(10)),
                   child: DropdownButtonFormField<String>(
+                    padding: languageController.text.isEmpty ? const EdgeInsets.only(bottom: 5):null,
                     icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
                     value: languageController.text.isEmpty
                         ? null
                         : languageController.text,
                     onChanged: (String? newValue) {
                       if (newValue != null) {
-                        languageController.text = newValue;
+                        setState(() {
+                          languageController.text = newValue;
+                        });
                       }
                     },
                     items: ['Hindi', 'English']
                         .map<DropdownMenuItem<String>>(
                           (String value) => DropdownMenuItem<String>(
+                            alignment: Alignment.center,
                             value: value,
                             child: Text(value),
                           ),
                         )
                         .toList(),
+                    alignment: Alignment.center,
                     decoration: InputDecoration(
                       hintText: "Select Language",
                       border: InputBorder.none,
@@ -390,7 +398,7 @@ class _RegisterState extends State<Register> {
                     if (state is RegistrationSuccessFullState) {
                       if (widget.isGoogleSignIn) {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, RouteName.home, (route) => false);
+                            context, RouteName.interests, (route) => false);
                       } else {
                         BlocProvider.of<RegisterBloc>(context)
                             .add(SendOtp(email: state.email));
@@ -433,6 +441,16 @@ class _RegisterState extends State<Register> {
                     if (state is EmailInvalidState) {
                       Fluttertoast.showToast(
                           msg: "Invalid Email",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          textColor: Colors.black,
+                          backgroundColor: Colors.white,
+                          fontSize: 15.0
+                      );
+                    }
+                    if(state is SelectLanguage){
+                      Fluttertoast.showToast(
+                          msg: "Please select your language",
                           toastLength: Toast.LENGTH_LONG,
                           gravity: ToastGravity.BOTTOM,
                           textColor: Colors.black,

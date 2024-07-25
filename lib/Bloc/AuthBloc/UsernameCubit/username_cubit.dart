@@ -10,7 +10,6 @@ class UsernameCubit extends Cubit<UsernameState> {
     try{
       var result = await AuthRepo.userAvailability(userName: username);
       if(result == "success" ){
-        print("here");
         emit((UsernameSuccessState(isUsernameValid: true)));
       }else if(result =="exists"){
         emit(UsernameExistsState(isUsernameValid: false));

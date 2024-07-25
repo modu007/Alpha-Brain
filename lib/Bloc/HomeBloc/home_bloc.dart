@@ -114,6 +114,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     else{
       //my tags
       try{
+        print("here yeah");
         var result = await HomeRepo.getAllMyTagsFeed(
             skip: 0, limit: 5, selectedTag: event.selectedTag);
         if(result is List<ForYouModel>){
@@ -166,8 +167,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
         else{
           // getAllMyTagsFeed my tags
-          print("yes");
-          print(event.selectedTag);
           result = await HomeRepo.getAllMyTagsFeed(
               skip: event.skip,
               limit: event.limit,

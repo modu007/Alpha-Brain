@@ -408,7 +408,7 @@ class _InterestsState extends State<Interests> {
                             height: 10,
                           ),
                           customTags.isNotEmpty? const SimpleText(
-                            text: "Custom Interests",
+                            text: "Customized Tags [CT Feed]",
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ):const SizedBox(),

@@ -70,8 +70,8 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
       duration: const Duration(seconds: 5),
     )..addListener(() {
-        setState(() {});
-      });
+      setState(() {});
+    });
     controller.repeat();
     super.initState();
   }
@@ -91,12 +91,11 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     if(onlyOnce==false){
-      print("yes");
       getCurrentAppTheme(context);
       onlyOnce=true;
     }
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
+        statusBarColor: Colors.black87,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light));
     return Scaffold(

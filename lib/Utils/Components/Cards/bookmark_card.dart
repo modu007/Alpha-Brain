@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Bloc/ProfileBloc/profile_bloc.dart';
@@ -107,9 +108,9 @@ class BookmarkPostCard extends StatelessWidget{
                               const SizedBox(
                                 width: 3,
                               ),
-                              const SimpleText(
+                               SimpleText(
                                 text: "Alpha Brain",
-                                fontSize: 10,
+                                fontSize: 9.sp,
                                 fontWeight: FontWeight.w600,
                                 textHeight: 1,
                                 fontColor: Colors.white,
@@ -168,7 +169,7 @@ class BookmarkPostCard extends StatelessWidget{
                     text: translateHindi && dataResult.summaryHi != null
                         ? dataResult.summaryHi!.title
                         : dataResult.summary.title,
-                    fontSize: 17.5,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w400,
                     fontColor: const Color(0xff002D42),
                     textHeight: 1,
@@ -192,19 +193,19 @@ class BookmarkPostCard extends StatelessWidget{
                             text: TextSpan(
                               children: [
                             TextSpan(
-                            text: "${keyPoints?.subHeading} ",
+                              text:keyPoints?.subHeading== ""? "":"${keyPoints?.subHeading} ",
                               style: GoogleFonts.roboto(
-                                fontSize: 14,
+                                fontSize: 13.5.sp,
                                 color: isDarkMode ?
                                 Colors.white :const Color(0xff2B2B2B),
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w700,
                                 height: 1.0,
                               ),
                             ),
                             TextSpan(
-                              text: keyPoints?.description,
+                              text: keyPoints?.description.trim(),
                               style: GoogleFonts.roboto(
-                                fontSize: 14,
+                                fontSize: 13.5.sp,
                                 color: isDarkMode ?
                                 Colors.white :const Color(0xff2B2B2B),
                                 height: 1.2,

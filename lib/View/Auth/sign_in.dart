@@ -229,7 +229,7 @@ class _SignInState extends State<SignIn> {
                       )
                           : Container(
                         width: size.width,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(

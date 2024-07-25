@@ -29,9 +29,7 @@ class _OtpVerificationState extends State<OtpVerification> {
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,
         statusBarIconBrightness: Brightness.dark,
@@ -122,9 +120,7 @@ class _OtpVerificationState extends State<OtpVerification> {
                 listener: (context, state) {
                   print(state);
                  if(state is OtpSuccessState){
-                   print("now avcado");
                    if(state.isNewUser){
-                     print("ab here");
                      Navigator.pushNamedAndRemoveUntil(
                          context,
                          RouteName.interests,

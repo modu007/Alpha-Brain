@@ -17,6 +17,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     if (event.fullNameValid) {
       if (event.isEmailValid) {
         if (event.dob) {
+        if(event.language.isNotEmpty){
           emit(RegisterLoadingState());
           SharedData.language(event.language == "Hindi" ? true : false);
           try {
@@ -40,7 +41,11 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           } catch (error) {
             emit(ErrorState());
           }
-        } else {
+        }else{
+          emit(SelectLanguage());
+        }
+        }
+        else {
           emit(DobInvalidState());
         }
       } else {

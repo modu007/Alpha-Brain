@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -83,25 +84,42 @@ class _PostListViewState extends State<PostListView> {
                           child: Column(
                             children: [
                               widget.data[index].imageUrl == null
-                                  ? Container(
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
+                                  ? InkWell(
+                              onTap: ()async{
+                                        if (!await launchUrl(Uri.parse(
+                                            widget.data[index].newsUrl))) {
+                                          throw Exception(
+                                              'Could not launch url');
+                                        }
+                                      },
+                                      child: Container(
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: Center(
+                                            child: Image.asset(
+                                                "assets/images/logo.png")),
                                       ),
-                                      child: Center(
-                                          child: Image.asset(
-                                              "assets/images/logo.png")),
-                                    )
-                                  : Container(
-                                      height: 200,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(8),
-                                          image: DecorationImage(
-                                            fit: BoxFit.fill,
-                                            image: NetworkImage(
-                                                widget.data[index].imageUrl!),
-                                          )),
-                                    ),
+                                  )
+                                  : InkWell(
+                                onTap: ()async{
+                                  if (!await launchUrl(
+                                  Uri.parse(widget.data[index].newsUrl))) {
+                                  throw Exception('Could not launch url');
+                                  }
+                                },
+                                    child: Container(
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(8),
+                                            image: DecorationImage(
+                                              fit: BoxFit.fill,
+                                              image: NetworkImage(
+                                                  widget.data[index].imageUrl!),
+                                            )),
+                                      ),
+                                  ),
                             ],
                           ),
                         ),
@@ -131,9 +149,9 @@ class _PostListViewState extends State<PostListView> {
                                 const SizedBox(
                                   width: 3,
                                 ),
-                                const SimpleText(
+                                 SimpleText(
                                   text: "Alpha Brain",
-                                  fontSize: 10,
+                                  fontSize: 9.sp,
                                   fontWeight: FontWeight.w600,
                                   textHeight: 1,
                                   fontColor: Colors.white,
@@ -171,6 +189,8 @@ class _PostListViewState extends State<PostListView> {
                               children: [
                                 SvgPicture.asset(
                                   "assets/svg/like_filled.svg",
+                                  width: 22,
+                                  height: 22,
                                 ),
                                 widget.data[index].love != null
                                     ? Padding(
@@ -211,6 +231,8 @@ class _PostListViewState extends State<PostListView> {
                               children: [
                                 SvgPicture.asset(
                                   "assets/svg/like.svg",
+                                  width: 22,
+                                  height: 22,
                                 ),
                                 widget.data[index].love != null
                                     ? const SizedBox(
@@ -228,7 +250,7 @@ class _PostListViewState extends State<PostListView> {
                             ),
                           ),
                           const SizedBox(
-                            width: 10,
+                            width: 18,
                           ),
                           InkWell(
                             onTap: () {
@@ -246,9 +268,11 @@ class _PostListViewState extends State<PostListView> {
                                 ? widget.isDarkMode? SvgPicture.asset(
                                         "assets/svg/bookmark_dark.svg")
                                     :SvgPicture.asset(
-                                "assets/svg/bookmarked.svg")
+                                "assets/svg/bookmarked.svg", width: 22,
+                              height: 22,)
                                 : SvgPicture.asset(
-                                "assets/svg/bookmark.svg"),
+                                "assets/svg/bookmark.svg", width: 22,
+                                height: 22,),
                           ),
                           const Spacer(),
                           widget.isAdmin
@@ -331,7 +355,7 @@ class _PostListViewState extends State<PostListView> {
                           widget.data[index].summaryHi != null ?
                       widget.data[index].summaryHi!.title
                       :widget.data[index].summary.title,
-                      fontSize: 17.5,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       fontColor: const Color(0xff002D42),
                       textHeight: 1,
@@ -356,20 +380,19 @@ class _PostListViewState extends State<PostListView> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: "${keyPoints?.subHeading} ",
+                                    text:keyPoints?.subHeading== ""? "":"${keyPoints?.subHeading} ",
                                     style: GoogleFonts.roboto(
-                                      fontSize: 14,
+                                      fontSize: 13.5.sp,
                                       color: widget.isDarkMode ?
                                       Colors.white :const Color(0xff2B2B2B),
-                                      fontWeight: FontWeight.w600,
+                                      fontWeight: FontWeight.w700,
                                       height: 1.0,
                                     ),
                                   ),
                                   TextSpan(
-                                    text: keyPoints?.description,
+                                    text: keyPoints?.description.trim(),
                                     style: GoogleFonts.roboto(
-                                      fontSize: 14,
-                                      color: widget.isDarkMode ?
+                                      fontSize: 13.5.sp,                                      color: widget.isDarkMode ?
                                       Colors.white :const Color(0xff2B2B2B),
                                       height: 1.2,
                                     ),

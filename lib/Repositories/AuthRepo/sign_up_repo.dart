@@ -89,6 +89,7 @@ class AuthRepo {
       print("${AllApi.userAvailability}$userName");
       var result = await networkRequest
           .getMethodRequest("${AllApi.userAvailability}$userName");
+      print(result);
       if (result["Status"] == "username_available") {
         return "success";
       } else if (result["Status"] == "username_exists") {

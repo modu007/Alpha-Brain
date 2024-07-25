@@ -19,6 +19,8 @@ class HomeRepo {
          SharedData.setToken(res["Token"]);
        }
      }
+     print(isMyTags);
+     print(LocalData.getUserInterestsSelected);
      var result = await networkRequest.postMethodRequest({
        "Email": email,
        "Skip": skip,
@@ -63,7 +65,6 @@ class HomeRepo {
         "Tags": selectedTag.toLowerCase(),
         "User_interest": tags,
       }, AllApi.forYou);
-      print(result);
       if(result is List){
         List<ForYouModel> data =[];
         for(int i=0;i<result.length;i++){
@@ -262,7 +263,6 @@ class HomeRepo {
           SharedData.setToken(res["Token"]);
         }
       }
-      print(LocalData.getCustomTags);
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "User_tags": LocalData.getCustomTags,

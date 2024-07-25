@@ -80,6 +80,7 @@ class TextFieldContainer extends StatelessWidget {
                 fontSize: 15,
                 fontWeight: FontWeight.w600),
             decoration:InputDecoration(
+              contentPadding:suffixIcon !=null? const EdgeInsets.only(top: 13):null,
                 suffixIcon: suffixIcon !=null ? SizedBox(
                   height: 10,
                   width: 10,

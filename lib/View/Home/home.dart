@@ -8,6 +8,7 @@ import 'package:neuralcode/Bloc/HomeBloc/home_event.dart';
 import 'package:neuralcode/Bloc/HomeBloc/home_state.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
+import 'package:neuralcode/Utils/Components/Text/simple_text3.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:provider/provider.dart';
 import '../../Api/all_api.dart';
@@ -46,7 +47,15 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   Future getName()async{
     String result = await SharedData.getEmail("name");
     name =result;
-    // setState(() {});
+    bool? language = await SharedData.getToken("language");
+    if(language == null) {
+      languageController.text= "English";
+    }
+    else{
+      setState(() {
+        languageController.text= language==true? "Hindi":"English";
+      });
+    }
   }
   Future getImage()async{
     String name = await SharedData.getEmail("name");
@@ -64,7 +73,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             selectedTag: selectedTag));
     getName();
     getImage();
-    languageController.text="English";
     _tabController = TabController(length: 2, vsync: this);
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) {
@@ -80,19 +88,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     });
     scrollControllerTab1 = ScrollController();
     scrollControllerTab1.addListener(() async {
-      if(!isEmptyData && selectedTag=="For You"){
-        print("here");
       if(scrollControllerTab1.position
           .userScrollDirection == ScrollDirection.forward && isVisible!=true
       ){
-        isVisible =true;
-        setState(() {});
+        setState(() {
+          isVisible =true;
+        });
       }
-      else if(scrollControllerTab1.position
+      if(scrollControllerTab1.position
           .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
-        isVisible=false;
-        setState(() {});
+        setState(() {isVisible=false;});
       }
+      if(!isEmptyData && selectedTag=="For you"){
       if (scrollControllerTab1.position.pixels >=
           scrollControllerTab1.position.maxScrollExtent) {
         if (!isLoading) {
@@ -107,31 +114,12 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                    selectedTag: selectedTag,
                    tab: 0
                ));
-         }else{
-           BlocProvider.of<HomeBloc>(context).add(
-               PaginationEvent(
-                   limit: limit,
-                   skip: skip,
-                   allPrevPostData: allPostsData,
-                   selectedTag: selectedTag,
-                   tab: 2
-               ));
-               }
+         }
           isLoading = false;
         }
       }
     }
       else if(!isEmptyData && selectedTag == "Top Picks"){
-        if(scrollControllerTab1.position
-            .userScrollDirection == ScrollDirection.forward && isVisible!=true
-        ){
-          isVisible =true;
-          setState(() {});
-        }else if(scrollControllerTab1.position
-            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
-          isVisible=false;
-          setState(() {});
-        }
         if (scrollControllerTab1.position.pixels >=
             scrollControllerTab1.position.maxScrollExtent) {
           if (!isLoading) {
@@ -150,18 +138,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
           }
         }
       }
-      else if(!isEmptyData && selectedTag=="My tags" ){
-        if(scrollControllerTab1.position
-            .userScrollDirection == ScrollDirection.forward && isVisible!=true
-        ){
-          setState(() {
-            isVisible =true;
-          });
-        }
-        if(scrollControllerTab1.position
-            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
-          setState(() {isVisible=false;});
-        }
+      else if(!isEmptyData && selectedTag=="CT Feed" ){
         if (scrollControllerTab1.position.pixels >=
             scrollControllerTab1.position.maxScrollExtent) {
           if (!isLoading) {
@@ -180,17 +157,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
         }
       }
       else{
-        if(scrollControllerTab1.position
-            .userScrollDirection == ScrollDirection.forward && isVisible!=true
-        ){
-          setState(() {
-            isVisible =true;
-          });
-        }
-        if(scrollControllerTab1.position
-            .userScrollDirection == ScrollDirection.reverse && isVisible!=false){
-          setState(() {isVisible=false;});
-        }
         if (scrollControllerTab1.position.pixels >=
             scrollControllerTab1.position.maxScrollExtent) {
           if (!isLoading) {
@@ -342,7 +308,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       : languageController.text,
                                   onChanged: (String? newValue) {
                                     if (newValue != null) {
-                                      languageController.text = newValue;
+                                      setState(() {
+                                        languageController.text = newValue;
+                                      });
                                       BlocProvider.of<HomeBloc>(context)
                                           .add(LanguageChange(
                                         listOfFutureData: null,
@@ -504,6 +472,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       tabIndex: 0,
                                       selectedTag: selectedTag
                                   ));
+                                  isEmptyData = false;
                                 }
                               },
                               child: Container(
@@ -540,6 +509,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       tabIndex: 1,
                                       selectedTag: selectedTag
                                   ));
+                                  isEmptyData = false;
                                 }
                               },
                               child: Container(
@@ -555,7 +525,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                   const Color(0xff121212):
                                   Colors.white,
                                 ),
-                                child: const SimpleText(
+                                child: themeChange.darkTheme?
+                                SimpleText3(
+                                  text: "Top Picks",
+                                  fontSize: 14,
+                                  fontColor:selectedTag=="Top Picks"?
+                                  Colors.black87 :  Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ):const SimpleText(
                                   text: "Top Picks",
                                   fontSize: 14,
                                   fontColor: Color(0xff56626c),
@@ -566,9 +543,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             LocalData.getCustomTags.isNotEmpty?
                             InkWell(
                               onTap:(){
-                                if(selectedTag!="My tags"){
+                                if(selectedTag!="CT Feed"){
                                   setState(() {
-                                    selectedTag="My tags";
+                                    selectedTag="CT Feed";
                                   });
                                   skip=0;
                                   limit=5;
@@ -577,23 +554,31 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                       tabIndex: 2,
                                       selectedTag: selectedTag
                                   ));
+                                  isEmptyData = false;
                                 }
                               },
                               child: Container(
                                 margin: const EdgeInsets.symmetric(horizontal: 4),
                                 padding: EdgeInsets.symmetric(
                                     horizontal:
-                                    selectedTag == "My tags" ? 10 : 4,
+                                    selectedTag == "CT Feed" ? 10 : 4,
                                     vertical: 6),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: selectedTag=="My tags" ? const Color(0xffCCEAF4) :
+                                  color: selectedTag=="CT Feed" ? const Color(0xffCCEAF4) :
                                   themeChange.darkTheme?
                                   const Color(0xff121212):
                                   Colors.white,
                                 ),
-                                child: const SimpleText(
-                                  text: "My tags",
+                                child: themeChange.darkTheme?
+                                SimpleText3(
+                                  text: "CT Feed",
+                                  fontSize: 14,
+                                  fontColor:selectedTag=="CT Feed"?
+                                  Colors.black87 :  Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ): const SimpleText(
+                                  text: "CT Feed",
                                   fontSize: 14,
                                   fontColor: Color(0xff56626c),
                                   fontWeight: FontWeight.w500,
@@ -619,6 +604,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                 tabIndex: _tabController.index
                                             )
                                         );
+                                        isEmptyData = false;
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -630,7 +616,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           const Color(0xff121212):
                                           Colors.white,
                                         ),
-                                        child: SimpleText(
+                                        child:themeChange.darkTheme?
+                                        SimpleText3(
+                                          text: LocalData.capitalizeFirstLetter(tag),
+                                          fontSize: 14,
+                                          fontColor:selectedTag==tag?
+                                          Colors.black87 :  Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ): SimpleText(
                                           text:  LocalData.capitalizeFirstLetter(tag),
                                           fontSize: 14,
                                           fontColor: const Color(0xff56626c),
@@ -662,6 +655,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                                 tabIndex: _tabController.index
                                             )
                                         );
+                                        isEmptyData = false;
                                       },
                                       child: Container(
                                         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -673,7 +667,14 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                                           const Color(0xff121212):
                                           Colors.white,
                                         ),
-                                        child: SimpleText(
+                                        child:themeChange.darkTheme?
+                                        SimpleText3(
+                                          text: LocalData.capitalizeFirstLetter(tag),
+                                          fontSize: 14,
+                                          fontColor:selectedTag==tag?
+                                          Colors.black87 :  Colors.white,
+                                          fontWeight: FontWeight.w500,
+                                        ): SimpleText(
                                           text:  LocalData.capitalizeFirstLetter(tag),
                                           fontSize: 14,
                                           fontColor: const Color(0xff56626c),

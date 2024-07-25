@@ -29,3 +29,5 @@ class FullNameInvalidState extends RegisterScreenActionState{}
 class DobInvalidState extends RegisterScreenActionState{}
 
 class ErrorState extends RegisterState{}
+
+class SelectLanguage extends RegisterScreenActionState{}
