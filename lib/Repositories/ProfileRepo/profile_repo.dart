@@ -170,7 +170,7 @@ class ProfileRepo {
   }
 
   static Future editProfile(
-      {required String name,required String age}) async {
+      {required String name,required String age,required String gender}) async {
     NetworkRequest networkRequest = NetworkRequest();
     String email = await SharedData.getEmail("email");
     var token = await SharedData.getToken("token");
@@ -185,10 +185,13 @@ class ProfileRepo {
       var result = await networkRequest.postMethodRequest({
         "Email": email,
         "Name": name,
-        "Age": age
+        "Age": age,
+        "Gender":gender
       }, AllApi.updateProfile);
       if(result["Status"]=="success"){
         SharedData.setName(name);
+        SharedData.setGender(gender);
+        SharedData.setAge(age);
         return "success";
       }
       return "something went wrong";

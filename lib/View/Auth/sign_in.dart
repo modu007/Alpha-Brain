@@ -28,7 +28,7 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   TextEditingController emailController = TextEditingController();
-  String emailIdGoogleSignIn = '';
+    String emailIdGoogleSignIn = '';
   late Regex regex;
   bool isValidEmail = false;
   @override

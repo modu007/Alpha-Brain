@@ -62,6 +62,10 @@ class AuthRepo {
       var result = await networkRequest.postMethodRequest(
           {"Otp": otp, "Email": email, "FCMToken": fcmToken}, AllApi.verifyOtp);
       if (result["Token"] != null) {
+        print(result["Age"]);
+        print(result["Gender"]);
+        SharedData.setAge(result["Age"]);
+        SharedData.setGender(result["Gender"]);
         SharedData.setToken(result["Token"]);
         SharedData.setRefreshToken(result["Refresh_Token"]);
         SharedData.setEmail(result["Email"]);

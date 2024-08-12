@@ -118,7 +118,6 @@ class _OtpVerificationState extends State<OtpVerification> {
               ),
               BlocConsumer<OtpCubit, OtpState>(
                 listener: (context, state) {
-                  print(state);
                  if(state is OtpSuccessState){
                    if(state.isNewUser){
                      Navigator.pushNamedAndRemoveUntil(

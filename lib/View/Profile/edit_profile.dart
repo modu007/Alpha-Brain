@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
 import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
 import 'package:neuralcode/Utils/Components/Buttons/login_buttons.dart';
@@ -15,9 +17,13 @@ import '../../Utils/Regex/regex.dart';
 
 class EditProfile extends StatefulWidget {
   final String name;
+  final String dob;
+  final String gender;
   const EditProfile({
     super.key,
-    required this.name});
+    required this.name,
+    required this.dob,
+    required this.gender});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -26,6 +32,8 @@ class EditProfile extends StatefulWidget {
 class _EditProfileState extends State<EditProfile> {
   TextEditingController nameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
+  TextEditingController genderController = TextEditingController();
+
   bool isEmailValid = false;
   bool isUserNameValid = false;
   late Regex regex;
@@ -37,6 +45,8 @@ class _EditProfileState extends State<EditProfile> {
   @override
   void initState() {
     nameController.text =widget.name;
+    dobController.text = widget.dob;
+    genderController.text=widget.gender;
     BlocProvider.of<UsernameCubit>(context).userInitialEvent();
     super.initState();
     regex= Regex();
@@ -96,6 +106,46 @@ class _EditProfileState extends State<EditProfile> {
                     child:Image.asset("assets/images/calender.png"),
                   ),
                 ),
+                Container(
+                  padding: const EdgeInsets.only(
+                      top: 6,
+                      bottom: 6,
+                      right: 25,
+                      left: 15),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      color: const Color(0xffE8ECF4),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
+                    value: genderController.text.isEmpty
+                        ? null
+                        : genderController.text,
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        genderController.text = newValue;
+                      }
+                    },
+                    items: ['Male', 'Female']
+                        .map<DropdownMenuItem<String>>(
+                          (String value) => DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      ),
+                    )
+                        .toList(),
+                    decoration: InputDecoration(
+                      hintText: "Gender",
+                      border: InputBorder.none,
+                      hintStyle: GoogleFonts.besley(
+                        color: const Color(0xff8391A1),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 5),
                   child: Center(
@@ -118,8 +168,9 @@ class _EditProfileState extends State<EditProfile> {
                     onPressed: (){
                      if(nameController.text.isNotEmpty && dobController.text.isNotEmpty){
                        BlocProvider.of<EditProfileCubit>(context)
-                           .editProfile(nameController.text,dobController.text);
-                     }
+                                .editProfile(nameController.text,
+                                    dobController.text, genderController.text);
+                          }
                     });
                   },
                 )

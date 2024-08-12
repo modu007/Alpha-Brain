@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:neuralcode/View/Auth/otp_verification.dart';
 import 'package:neuralcode/View/Auth/register.dart';
+import 'package:neuralcode/View/Auth/sign.dart';
 import 'package:neuralcode/View/Auth/sign_in.dart';
 import 'package:neuralcode/View/Home/home.dart';
 import 'package:neuralcode/View/Interests/intrests.dart';
@@ -48,7 +49,7 @@ class Routes {
         }
         case RouteName.signIn:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const SignIn());
+            builder: (BuildContext context) => const Sign());
         case RouteName.profile:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Profile());
@@ -70,7 +71,10 @@ class Routes {
         if(argument is Map){
           return MaterialPageRoute(
               builder: (BuildContext context) => EditProfile(
-                name: argument["name"],));
+                name: argument["name"],
+                dob: argument["dob"],
+                gender: argument["gender"],
+              ));
         }else{
           return MaterialPageRoute(builder: (_) {
             return const Scaffold(

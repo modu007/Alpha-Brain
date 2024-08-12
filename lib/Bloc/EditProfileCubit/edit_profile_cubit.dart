@@ -5,10 +5,10 @@ import 'edit_profile_state.dart';
 class EditProfileCubit extends Cubit<EditProfileState> {
   EditProfileCubit() : super(EditProfileInitial());
 
-  Future editProfile(String name,String age )async{
+  Future editProfile(String name,String age,String gender )async{
     try{
       emit(EditProfileLoadingState());
-      var result = await ProfileRepo.editProfile(name: name,age: age);
+      var result = await ProfileRepo.editProfile(name: name,age: age,gender: gender);
 
       if(result == "success" ){
         emit(EditProfileSuccessState());

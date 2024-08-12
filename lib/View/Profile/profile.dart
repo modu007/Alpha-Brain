@@ -15,6 +15,7 @@ import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:provider/provider.dart';
 import '../../Bloc/ProfileBloc/profile_event.dart';
 import '../../Provider/dark_theme_controller.dart';
+import '../../SharedPrefernce/shared_pref.dart';
 import '../../Utils/Components/Cards/bookmark_card.dart';
 import '../../Utils/Routes/route_name.dart';
 import 'dart:io';
@@ -42,6 +43,8 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   String imageUrl="";
   String dp="";
   String userName="";
+  String dob ="";
+  String gender="";
   
   @override
   void initState() {
@@ -105,6 +108,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   }
 
   @override
+  void didChangeDependencies() async{
+    dob = await SharedData.getToken("age");
+    gender= await SharedData.getToken("gender");
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     tabController.dispose();
     scrollControllerTab1.dispose();
@@ -143,10 +153,14 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                           },),
                         const Spacer(),
                         InkWell(
-                          onTap: (){
+                          onTap: ()async{
+                            dob = await SharedData.getToken("age");
+                            gender= await SharedData.getToken("gender");
                             Navigator.of(context).pushNamed(
                                 RouteName.editProfile,arguments: {
-                                  "name":state.name
+                                  "name":state.name,
+                              "dob":dob,
+                              "gender":gender
                             });
                           },
                           child: Container(
@@ -179,8 +193,13 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
                           children: [
                             SimpleText(text: state.name, fontSize: 17,
                               fontColor: Colors.black,fontWeight: FontWeight.w600,),
-                            state.userName!=null ? SimpleText(text: "@${state.userName}", fontSize: 17,
-                              fontColor: const Color(0xff8698A9),
+                            state.userName != null
+                                ? state.userName!.isEmpty
+                                    ? const SizedBox()
+                                    : SimpleText(
+                                        text: "@${state.userName}",
+                                        fontSize: 17,
+                                        fontColor: const Color(0xff8698A9),
                               fontWeight: FontWeight.w600,):const SizedBox(),
                           ],
                         ),

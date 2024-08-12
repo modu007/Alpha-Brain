@@ -113,16 +113,6 @@ class _SplashScreenState extends State<SplashScreen>
               child: Image.asset("assets/images/logo.png"),
             ),
             const SimpleText(text: "Z-Alpha Brains", fontSize: 25),
-            const SizedBox(
-              height: 20,
-            ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 50),
-              child: LinearProgressIndicator(
-                value: controller.value,
-                semanticsLabel: 'Linear progress indicator',
-              ),
-            ),
           ],
         ),
       ),
