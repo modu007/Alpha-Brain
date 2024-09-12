@@ -138,6 +138,27 @@ class _SignState extends State<Sign> {
               },
             ),
             const SizedBox(height: 10,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SimpleText(
+                    text: "Already have an account? ",
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    fontColor: Colors.black),
+                InkWell(
+                  onTap: () {
+                    Navigator.popAndPushNamed(context, RouteName.signInAlreadyHaveAnAccount);
+                  },
+                  child: const SimpleText(
+                      text: "Login Now",
+                      fontSize: 14,
+                      fontColor: Color(0xff4EB3CA),
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+            const SizedBox(height: 10,),
             SimpleText(text: "Made in India❤️",
                 fontSize: 15.sp,
               fontColor: Colors.black,

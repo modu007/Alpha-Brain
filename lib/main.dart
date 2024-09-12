@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +21,21 @@ import 'package:neuralcode/Provider/dark_theme_controller.dart';
 import 'package:neuralcode/firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'Bloc/HomeBloc/home_bloc.dart';
+import 'Core/AppLink/handle_app_link.dart';
 import 'Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
 import 'SharedPrefernce/shared_pref.dart';
 import 'Utils/Routes/route_name.dart';
 import 'Utils/Routes/routes.dart';
 import 'Utils/Style/style.dart';
 
-FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin notificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
-Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
-  print("handling a message id ${message.messageId}");
-  print(message.data);
-}
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{}
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+StreamController<String> pathStreamController = StreamController<String>.broadcast();
+String isPathStreamControllerListened="";
 
 bool darkTheme =false;
 
@@ -42,6 +44,7 @@ void main() async{
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform
   );
+  await DynamicLinkHandler.instance.initialize();
   List? customInterests = await SharedData.getToken("custom");
   var savedInterests = await SharedData.getToken("interests");
   if(customInterests==null){

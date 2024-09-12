@@ -2,9 +2,9 @@ import 'package:neuralcode/Models/for_you_model.dart';
 
 abstract class HomeEvent {}
 
-class GetPostInitialEvent extends HomeEvent{
+class GetHomePostInitialEvent extends HomeEvent{
   final String selectedTag;
-  GetPostInitialEvent({required this.selectedTag});
+  GetHomePostInitialEvent({required this.selectedTag});
 }
 
 class TabChangeEvent extends HomeEvent{
@@ -16,14 +16,14 @@ class TabChangeEvent extends HomeEvent{
   });
 }
 
-class PostLikeEvent extends HomeEvent{
+class HomePostLikeEvent extends HomeEvent{
   final ForYouModel postData;
   final String previousEmojiType;
   final String emojisType;
   final List<ForYouModel> listOfData;
   final String selectedTag;
   final List<ForYouModel>? listOfFutureData;
-  PostLikeEvent({
+  HomePostLikeEvent({
     required this.postData,
     required this.previousEmojiType,
     required this.emojisType,
@@ -48,13 +48,13 @@ class PaginationEvent extends HomeEvent{
   });
 }
 
-class BookmarkPostEvent extends HomeEvent{
+class HomeBookmarkPostEvent extends HomeEvent{
   final ForYouModel postData;
   final List<ForYouModel> listOfData;
   final bool bookmark;
   final String selectedTag;
   final List<ForYouModel>? listOfFutureData;
-  BookmarkPostEvent({
+  HomeBookmarkPostEvent({
     required this.postData,
     required this.listOfData,
     required this.bookmark,

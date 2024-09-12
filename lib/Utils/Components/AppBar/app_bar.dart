@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
+import '../../../SharedPrefernce/shared_pref.dart';
 import '../../Color/colors.dart';
 
 class HomeAppBar extends StatelessWidget {
   final TabController tabController;
   final Widget widget;
-  final bool isVisibleWhenScroll;
+  // final bool isVisibleWhenScroll;
   final bool darkTheme;
   const HomeAppBar({
     super.key,
     required this.tabController,
     required this.widget,
-    required this.isVisibleWhenScroll,
+    // required this.isVisibleWhenScroll,
     required this.darkTheme,
   });
 
@@ -23,25 +24,22 @@ class HomeAppBar extends StatelessWidget {
       padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Column(
         children: [
-          Visibility(
-            visible: isVisibleWhenScroll,
-            child: Row(
-              children: [
-                const SimpleText(
-                  text: "Z-Alpha Brains",
-                  fontSize: 24,
-                  fontColor: ColorClass.headingColor,
-                  fontWeight: FontWeight.w500,
-                ),
-                const Spacer(),
-                Builder(
-                    builder: (context) => InkWell(
-                        onTap: () {
-                          Scaffold.of(context).openEndDrawer();
-                        },
-                        child: SvgPicture.asset("assets/svg/menu_dark.svg")))
-              ],
-            ),
+          Row(
+            children: [
+              const SimpleText(
+                text: "Ekonara",
+                fontSize: 24,
+                fontColor: ColorClass.headingColor,
+                fontWeight: FontWeight.w500,
+              ),
+              const Spacer(),
+              Builder(
+                  builder: (context) => InkWell(
+                      onTap: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                      child: SvgPicture.asset("assets/svg/menu_dark.svg")))
+            ],
           ),
           const SizedBox(height: 10,),
           Container(

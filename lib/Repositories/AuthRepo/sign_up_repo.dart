@@ -1,5 +1,6 @@
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
 import '../../Api/all_api.dart';
+import '../../Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
 import '../../NetworkRequest/network_request.dart';
 
 class AuthRepo {
@@ -59,11 +60,14 @@ class AuthRepo {
     NetworkRequest networkRequest = NetworkRequest();
     try {
       String? fcmToken = await SharedFcmToken.getFcmToken("fcmToken");
+      if(fcmToken == null ){
+        PushNotificationServices.saveFcmToken();
+        fcmToken = await SharedFcmToken.getFcmToken("fcmToken");
+      }
       var result = await networkRequest.postMethodRequest(
           {"Otp": otp, "Email": email, "FCMToken": fcmToken}, AllApi.verifyOtp);
+
       if (result["Token"] != null) {
-        print(result["Age"]);
-        print(result["Gender"]);
         SharedData.setAge(result["Age"]);
         SharedData.setGender(result["Gender"]);
         SharedData.setToken(result["Token"]);

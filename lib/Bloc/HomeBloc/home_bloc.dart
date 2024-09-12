@@ -8,18 +8,18 @@ import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(GetPostInitialState()) {
-    on<GetPostInitialEvent>(getPostInitialEvent);
+    on<GetHomePostInitialEvent>(getPostInitialEvent);
     on<TabChangeEvent>(tabChangeEvent);
     on<PaginationEvent>(paginationEvent);
-    on<PostLikeEvent>(postLikeEvent);
-    on<BookmarkPostEvent>(bookmarkPostEvent);
+    on<HomePostLikeEvent>(postLikeEvent);
+    on<HomeBookmarkPostEvent>(bookmarkPostEvent);
     on<AdminActionEvent>(adminActionEvent);
     on<TagSelectedEvent>(tagSelectedEvent);
     on<LanguageChange>(languageChange);
   }
 
   FutureOr<void> getPostInitialEvent(
-      GetPostInitialEvent event, Emitter<HomeState> emit) async {
+      GetHomePostInitialEvent event, Emitter<HomeState> emit) async {
     emit(GetPostLoadingState());
     try{
       var result = await HomeRepo.getAllPostDataOfForYou(
@@ -82,7 +82,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         }
       }
       catch(error){
-        print(error.toString());
         emit(GetPostFailureState(errorMessage: "Something went wrong"));
       }
     }
@@ -114,7 +113,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     else{
       //my tags
       try{
-        print("here yeah");
         var result = await HomeRepo.getAllMyTagsFeed(
             skip: 0, limit: 5, selectedTag: event.selectedTag);
         if(result is List<ForYouModel>){
@@ -206,7 +204,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   FutureOr<void> postLikeEvent(
-      PostLikeEvent event, Emitter<HomeState> emit) async {
+      HomePostLikeEvent event, Emitter<HomeState> emit) async {
     int? loveCount = event.postData.love;
     var data = event.listOfData;
     int index=0;
@@ -291,7 +289,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   FutureOr<void> bookmarkPostEvent(
-      BookmarkPostEvent event, Emitter<HomeState> emit) async {
+      HomeBookmarkPostEvent event, Emitter<HomeState> emit) async {
     var data = event.listOfData;
     int index=0;
     for(int i=0;i<data.length;i++){

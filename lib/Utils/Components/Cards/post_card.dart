@@ -1,3 +1,9 @@
+import 'dart:io';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:neuralcode/Core/AppLink/handle_app_link.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,6 +43,28 @@ class PostListView extends StatefulWidget {
 }
 
 class _PostListViewState extends State<PostListView> {
+  Future<void> shareImageTextAndURL(String imageUrl, String text, String id)
+  async {
+    try {
+      final response = await http.get(Uri.parse(imageUrl));
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/shared_image.png');
+        await file.writeAsBytes(bytes);
+        String link =await DynamicLinkHandler.instance.createProductLink(id: id);
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: '$text\nCheck this out: $link',
+        );
+      } else {
+        print('Failed to download the image.');
+      }
+    } catch (e) {
+      print('Error sharing: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
@@ -150,7 +178,7 @@ class _PostListViewState extends State<PostListView> {
                                   width: 3,
                                 ),
                                  SimpleText(
-                                  text: "Alpha Brain",
+                                  text: "Ekonara",
                                   fontSize: 9.sp,
                                   fontWeight: FontWeight.w600,
                                   textHeight: 1,
@@ -170,7 +198,7 @@ class _PostListViewState extends State<PostListView> {
                               ? InkWell(
                             onTap: () {
                               BlocProvider.of<HomeBloc>(context).add(
-                                PostLikeEvent(
+                                HomePostLikeEvent(
                                     postData: widget.data[index],
                                     previousEmojiType: emojiType,
                                     emojisType: "",
@@ -213,7 +241,7 @@ class _PostListViewState extends State<PostListView> {
                               : InkWell(
                             onTap: () {
                               BlocProvider.of<HomeBloc>(context).add(
-                                  PostLikeEvent(
+                                  HomePostLikeEvent(
                                       postData: widget.data[index],
                                       previousEmojiType: emojiType,
                                       emojisType: "love",
@@ -256,7 +284,7 @@ class _PostListViewState extends State<PostListView> {
                             onTap: () {
                               bookmarkOrNot = !bookmarkOrNot;
                               BlocProvider.of<HomeBloc>(context).add(
-                                  BookmarkPostEvent(
+                                  HomeBookmarkPostEvent(
                                       postData: widget.data[index],
                                       listOfData: widget.data,
                                       bookmark: bookmarkOrNot,
@@ -275,6 +303,18 @@ class _PostListViewState extends State<PostListView> {
                                 height: 22,),
                           ),
                           const Spacer(),
+                          GestureDetector(
+                            onTap: (){
+                              shareImageTextAndURL(
+                                  widget.data[index].imageUrl!,
+                                  widget.data[index].summary.title,
+                                  widget.data[index].id);
+                            },
+                            child: const Icon(
+                                FontAwesomeIcons.share,
+                              color: Colors.black26,
+                            ),
+                          ),
                           widget.isAdmin
                               ? InkWell(
                               onTap: () {
@@ -291,59 +331,6 @@ class _PostListViewState extends State<PostListView> {
                                 color: Colors.red,
                               ))
                               : const SizedBox(),
-                          // widget.data[index].summaryHi != null ?
-                          // InkWell(
-                          //   onTap: (){
-                          //     translateHindi=!translateHindi;
-                          //    BlocProvider.of<HomeBloc>(context).add(
-                          //      LanguageChange(
-                          //          language: translateHindi,
-                          //          listOfPost: widget.data,
-                          //          selectedTag: widget.selectedTag
-                          //      )
-                          //    );
-                          //   },
-                          //   child: Container(
-                          //     padding: const EdgeInsets.all(6),
-                          //     decoration: BoxDecoration(
-                          //       shape: BoxShape.circle,
-                          //       border: Border.all(
-                          //         color: const Color(0xffD8D8D8)
-                          //       )
-                          //     ),
-                          //     child: widget.isDarkMode ?
-                          //     SvgPicture.asset("assets/svg/translate_dark.svg"):
-                          //     SvgPicture.asset("assets/svg/translate.svg"),
-                          //   ),
-                          // ):const SizedBox()
-                          // SleekCircularSlider(
-                          //   innerWidget: (double value) {
-                          //     return const Center(
-                          //       child: Icon(
-                          //         Icons.play_arrow_rounded,
-                          //         color: Colors.black,
-                          //         size: 24,
-                          //       ),
-                          //     );
-                          //   },
-                          //   appearance: CircularSliderAppearance(
-                          //     spinnerMode: false,
-                          //     size: 40,
-                          //     startAngle: 150,
-                          //     angleRange: 240,
-                          //     counterClockwise: false,
-                          //     customColors: CustomSliderColors(
-                          //       progressBarColors: [ColorClass.backgroundColor],
-                          //       hideShadow: false,
-                          //     ),
-                          //     customWidths: CustomSliderWidths(
-                          //       progressBarWidth: 1,
-                          //     ),
-                          //   ),
-                          //   min: 0,
-                          //   max: 100,
-                          //   initialValue: 70,
-                          // )
                         ],
                       ),
                     ),
@@ -355,8 +342,8 @@ class _PostListViewState extends State<PostListView> {
                           widget.data[index].summaryHi != null ?
                       widget.data[index].summaryHi!.title
                       :widget.data[index].summary.title,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
+                      fontSize: 16.5.sp,
+                      fontWeight: FontWeight.w500,
                       fontColor: const Color(0xff002D42),
                       textHeight: 1,
                     ),

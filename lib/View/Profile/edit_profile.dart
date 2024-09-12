@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Bloc/EditProfileCubit/edit_profile_cubit.dart';
 import 'package:neuralcode/Utils/Components/Buttons/back_buttons_text.dart';
@@ -41,7 +42,6 @@ class _EditProfileState extends State<EditProfile> {
     'Male',
     'Female',
   ];
-
   @override
   void initState() {
     nameController.text =widget.name;
@@ -118,6 +118,7 @@ class _EditProfileState extends State<EditProfile> {
                       borderRadius: BorderRadius.circular(10)),
                   child: DropdownButtonFormField<String>(
                     isExpanded: true,
+                    dropdownColor: Colors.white,
                     icon: SvgPicture.asset("assets/svg/down_arrow.svg"),
                     value: genderController.text.isEmpty
                         ? null
@@ -131,7 +132,7 @@ class _EditProfileState extends State<EditProfile> {
                         .map<DropdownMenuItem<String>>(
                           (String value) => DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value,),
                       ),
                     )
                         .toList(),
@@ -157,7 +158,19 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ),
                 const SizedBox(height: 10,),
-                BlocBuilder<EditProfileCubit, EditProfileState>(
+                BlocConsumer<EditProfileCubit, EditProfileState>(
+                  listener: (context,state){
+                    if(state is EditProfileSuccessState){
+                      Fluttertoast.showToast(
+                          msg: "Your profile has been updated successfully",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          textColor: Colors.black,
+                          backgroundColor: Colors.white,
+                          fontSize: 15.0
+                      );
+                    }
+                  },
                 builder: (context, state) {
                   if(state is EditProfileLoadingState){
                     return const Center(child: CircularProgressIndicator(),);

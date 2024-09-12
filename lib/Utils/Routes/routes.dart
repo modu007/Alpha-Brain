@@ -15,6 +15,8 @@ import 'package:neuralcode/View/SupportScreen/support_screen.dart';
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final argument = settings.arguments;
+    print("Handling route: ${settings.name}");
+    print("Arguments passed: ${settings.arguments}");
     switch (settings.name) {
       case RouteName.home:
         return MaterialPageRoute(
@@ -50,19 +52,24 @@ class Routes {
         case RouteName.signIn:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Sign());
+      case RouteName.signInAlreadyHaveAnAccount:
+        return MaterialPageRoute(
+            builder: (BuildContext context) => const SignIn());
         case RouteName.profile:
         return MaterialPageRoute(
             builder: (BuildContext context) => const Profile());
         case RouteName.notificationPost:
        if(argument is Map){
+         print("kaka");
          return MaterialPageRoute(
              builder: (BuildContext context) =>  NotificationPost(postId: argument["postId"],)
          );
        }else{
+         print("adakjdk");
          return MaterialPageRoute(builder: (_) {
            return const Scaffold(
              body: Center(
-               child: Text('No route defined'),
+               child: Text('No route defined ko'),
              ),
            );
          });
@@ -106,7 +113,7 @@ class Routes {
         return MaterialPageRoute(builder: (_) {
           return const Scaffold(
             body: Center(
-              child: Text('No route defined'),
+              child: Text('No route definedDD'),
             ),
           );
         });

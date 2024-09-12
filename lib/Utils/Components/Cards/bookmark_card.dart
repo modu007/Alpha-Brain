@@ -169,8 +169,8 @@ class BookmarkPostCard extends StatelessWidget{
                     text: translateHindi && dataResult.summaryHi != null
                         ? dataResult.summaryHi!.title
                         : dataResult.summary.title,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
+                    fontSize: 16.5.sp,
+                    fontWeight: FontWeight.w500,
                     fontColor: const Color(0xff002D42),
                     textHeight: 1,
                   ),

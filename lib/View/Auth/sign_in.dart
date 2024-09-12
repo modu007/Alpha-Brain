@@ -47,31 +47,6 @@ class _SignInState extends State<SignIn> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SimpleText(
-                  text: "Don’t have an account? ",
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  fontColor: Colors.black),
-              InkWell(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, RouteName.register);
-                },
-                child: SimpleText(
-                    text: "Register Now",
-                    fontSize: 14,
-                    fontColor: themeChange.darkTheme
-                        ? const Color(0xff4EB3CA)
-                        : const Color(0xff4EB3CA),
-                    fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
         body: Container(
           margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
           child: SingleChildScrollView(

@@ -112,7 +112,7 @@ class _SplashScreenState extends State<SplashScreen>
                   color: const Color(0xffd4edf4)),
               child: Image.asset("assets/images/logo.png"),
             ),
-            const SimpleText(text: "Z-Alpha Brains", fontSize: 25),
+            // const SimpleText(text: "Ekonara", fontSize: 25),
           ],
         ),
       ),

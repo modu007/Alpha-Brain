@@ -66,20 +66,21 @@ class PushNotificationServices {
   static void showNotification(RemoteMessage message) async {
     AndroidNotificationDetails androidDetails =
     const AndroidNotificationDetails(
-        "notifications-Z-Alpha Brains", "Z-Alpha Brains",
+        "notifications-Ekonara", "Ekonara",
         priority: Priority.max, importance: Importance.max);
     NotificationDetails notiDetails =
     NotificationDetails(android: androidDetails);
-    await notificationsPlugin.show(
-        0, message.notification?.title, message.notification?.body, notiDetails,
+    int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000; // Unique ID
+    await notificationsPlugin.show(notificationId, message.notification?.title,
+        message.notification?.body, notiDetails,
         payload: jsonEncode(message.data));
   }
 
 
   static void incomingMessage() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("on message ${message.data}data\n ${message.notification?.title}"
-          " title\n ${message.notification?.body} body \n");
+        // print("on message ${message.data}data\n ${message.notification?.title}"
+        //   " title\n ${message.notification?.body} body \n");
       showNotification(message);
     });
   }

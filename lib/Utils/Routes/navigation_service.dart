@@ -3,6 +3,7 @@ import '../../main.dart';
 
 class NavigationService {
   static void navigateToNotificationPost(String postId) {
+    print("ll");
     navigatorKey.currentState
         ?.restorablePushNamedAndRemoveUntil(
         RouteName.notificationPost, (route) => false,
