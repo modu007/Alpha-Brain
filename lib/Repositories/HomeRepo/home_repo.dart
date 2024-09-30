@@ -281,4 +281,30 @@ class HomeRepo {
       print("on pagination repo $error");
     }
   }
+
+  static Future getShortNewsUrlGenerator(
+      {required String postId,required String appUrl}) async {
+    NetworkRequest networkRequest = NetworkRequest();
+    var token = await SharedData.getToken("token");
+    bool hasExpired = JwtDecoder.isExpired(token);
+    try {
+      if(hasExpired){
+        var res = await networkRequest.refreshToken({}, AllApi.generateToken);
+        if(res["Token"]!= null){
+          SharedData.setToken(res["Token"]);
+        }
+      }
+      var result = await networkRequest.postMethodRequest({
+        "Post_id":postId,
+        "App_redirect_url": appUrl
+      }, AllApi.shortUrlGenerate);
+      if(result is Map && result.containsKey("short_url")){
+        return result["short_url"];
+      }else{
+        return "something went wrong";
+      }
+    } catch (error) {
+      print("on pagination repo $error");
+    }
+  }
 }

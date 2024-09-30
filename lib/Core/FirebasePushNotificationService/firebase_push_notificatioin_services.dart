@@ -5,7 +5,6 @@ import 'package:rxdart/rxdart.dart';
 import '../../SharedPrefernce/shared_pref.dart';
 import '../../main.dart';
 
-
 class PushNotificationServices {
   static final onClickNotification = BehaviorSubject<Map>();
 
@@ -34,6 +33,7 @@ class PushNotificationServices {
 
   static void saveFcmToken() async {
     await FirebaseMessaging.instance.getToken().then((value) async {
+      print(value);
       await SharedFcmToken.setFcmToken(value!);
     });
   }
@@ -70,7 +70,7 @@ class PushNotificationServices {
         priority: Priority.max, importance: Importance.max);
     NotificationDetails notiDetails =
     NotificationDetails(android: androidDetails);
-    int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000; // Unique ID
+    int notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     await notificationsPlugin.show(notificationId, message.notification?.title,
         message.notification?.body, notiDetails,
         payload: jsonEncode(message.data));
@@ -79,8 +79,6 @@ class PushNotificationServices {
 
   static void incomingMessage() async {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        // print("on message ${message.data}data\n ${message.notification?.title}"
-        //   " title\n ${message.notification?.body} body \n");
       showNotification(message);
     });
   }

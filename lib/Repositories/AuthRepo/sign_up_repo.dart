@@ -64,6 +64,7 @@ class AuthRepo {
         PushNotificationServices.saveFcmToken();
         fcmToken = await SharedFcmToken.getFcmToken("fcmToken");
       }
+      print(fcmToken);
       var result = await networkRequest.postMethodRequest(
           {"Otp": otp, "Email": email, "FCMToken": fcmToken}, AllApi.verifyOtp);
 

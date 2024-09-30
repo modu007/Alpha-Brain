@@ -65,7 +65,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     dp = profilePic;
     imageUrl = "${AllApi.getProfilePic}$name/$profilePic";
   }
-
   @override
   void initState() {
     super.initState();
@@ -183,7 +182,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       }
     });
   }
-
   @override
   void dispose() {
     _tabController.dispose();
@@ -193,7 +191,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    getName();
     final themeChange = Provider.of<DarkThemeProvider>(context);
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
         statusBarColor: Colors.white,

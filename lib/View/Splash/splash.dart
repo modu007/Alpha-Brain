@@ -60,7 +60,6 @@ class _SplashScreenState extends State<SplashScreen>
   void getCurrentAppTheme(BuildContext context) async {
     bool theme =
     await themeChangeProvider.darkThemePreference.getTheme();
-    print("theme $theme");
     final themeChange = Provider.of<DarkThemeProvider>(context,listen: false);
     themeChange.setDarkTheme=theme;
   }

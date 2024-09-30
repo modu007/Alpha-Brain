@@ -91,6 +91,7 @@ class _SignState extends State<Sign> {
                       if (state is! OtpLoadingState) {
                         User? user = await GoogleSignInAuth.signIn();
                         if (mounted) {
+                          print("user $user");
                           if (user != null) {
                             emailIdGoogleSignIn = user.email!;
                             BlocProvider.of<OtpCubit>(context)

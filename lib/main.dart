@@ -20,6 +20,7 @@ import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
 import 'package:neuralcode/Provider/dark_theme_controller.dart';
 import 'package:neuralcode/firebase_options.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'Bloc/HomeBloc/home_bloc.dart';
 import 'Core/AppLink/handle_app_link.dart';
 import 'Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
@@ -92,7 +93,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return  MultiBlocProvider(

@@ -11,7 +11,16 @@ import 'package:neuralcode/View/Profile/edit_profile.dart';
 import 'package:neuralcode/View/Profile/profile.dart';
 import 'package:neuralcode/View/Splash/splash.dart';
 import 'package:neuralcode/View/SupportScreen/support_screen.dart';
-
+import 'package:upgrader/upgrader.dart';
+import 'package:url_launcher/url_launcher.dart';
+appUpdate()async{
+  const url = 'https://play.google.com/store/apps/details?id=com.ai.neuralcode&hl=en';
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    print('Could not launch $url');
+  }
+}
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final argument = settings.arguments;
@@ -20,7 +29,19 @@ class Routes {
     switch (settings.name) {
       case RouteName.home:
         return MaterialPageRoute(
-            builder: (BuildContext context) => const Home());
+            builder: (BuildContext context) => UpgradeAlert(
+                showLater: false,
+                showIgnore: false,
+                // upgrader: Upgrader(
+                //     debugDisplayAlways: true,
+                //     minAppVersion: "1.1.12+20"
+                // ),
+                onUpdate: (){
+                  print("here");
+                  appUpdate();
+                  return true;
+                },
+                child: const Home()));
         case RouteName.support:
         return MaterialPageRoute(
             builder: (BuildContext context) => const SupportScreen());
@@ -60,12 +81,10 @@ class Routes {
             builder: (BuildContext context) => const Profile());
         case RouteName.notificationPost:
        if(argument is Map){
-         print("kaka");
          return MaterialPageRoute(
              builder: (BuildContext context) =>  NotificationPost(postId: argument["postId"],)
          );
        }else{
-         print("adakjdk");
          return MaterialPageRoute(builder: (_) {
            return const Scaffold(
              body: Center(

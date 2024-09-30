@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neuralcode/Core/AppLink/handle_app_link.dart';
+import 'package:neuralcode/Repositories/HomeRepo/home_repo.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
@@ -43,8 +44,14 @@ class PostListView extends StatefulWidget {
 }
 
 class _PostListViewState extends State<PostListView> {
-  Future<void> shareImageTextAndURL(String imageUrl, String text, String id)
-  async {
+
+
+  Future<void> shareImageTextAndURL(
+      {required ForYouModel postModel,
+        required String imageUrl,
+        required List<KeyPoint> description,
+        required String text,
+        required String id}) async {
     try {
       final response = await http.get(Uri.parse(imageUrl));
       if (response.statusCode == 200) {
@@ -52,11 +59,27 @@ class _PostListViewState extends State<PostListView> {
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/shared_image.png');
         await file.writeAsBytes(bytes);
-        String link =await DynamicLinkHandler.instance.createProductLink(id: id);
-        await Share.shareXFiles(
-          [XFile(file.path)],
-          text: '$text\nCheck this out: $link',
-        );
+
+        // Generate the link
+        String myGeneratedLink = await DynamicLinkHandler.instance.createProductLink(id: id);
+        String redirectLink = await HomeRepo.getShortNewsUrlGenerator(
+            postId: postModel.id, appUrl: myGeneratedLink);
+        if (description.isNotEmpty) {
+          // Prepare the components
+          final subHeading = description[0].subHeading;
+          final desc = description[0].description;
+          final fixedText = '$text\n$subHeading\nCheck this out: $redirectLink';
+          final fixedLength = fixedText.length;
+          final availableDescLength = 232 - fixedLength;
+          final truncatedDesc = desc.length > availableDescLength
+              ? '${desc.substring(0, availableDescLength - 3)}...' // -3 for the ellipsis
+              : desc;
+          final shareText = '$text\n\n$redirectLink/${widget.language ==false?"en":"hi"}';
+          await Share.shareXFiles(
+            [XFile(file.path)],
+            text: shareText,
+          );
+        }
       } else {
         print('Failed to download the image.');
       }
@@ -64,6 +87,7 @@ class _PostListViewState extends State<PostListView> {
       print('Error sharing: $e');
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -306,9 +330,12 @@ class _PostListViewState extends State<PostListView> {
                           GestureDetector(
                             onTap: (){
                               shareImageTextAndURL(
-                                  widget.data[index].imageUrl!,
-                                  widget.data[index].summary.title,
-                                  widget.data[index].id);
+                                postModel:  widget.data[index],
+                                  text: widget.data[index].summary.title,
+                                  imageUrl: widget.data[index].imageUrl!,
+                                  description:widget.data[index].summary.keyPoints,
+                                  id: widget.data[index].id,
+                              );
                             },
                             child: const Icon(
                                 FontAwesomeIcons.share,
@@ -379,7 +406,8 @@ class _PostListViewState extends State<PostListView> {
                                   TextSpan(
                                     text: keyPoints?.description.trim(),
                                     style: GoogleFonts.roboto(
-                                      fontSize: 13.5.sp,                                      color: widget.isDarkMode ?
+                                      fontSize: 13.5.sp,
+                                      color: widget.isDarkMode ?
                                       Colors.white :const Color(0xff2B2B2B),
                                       height: 1.2,
                                     ),
