@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:neuralcode/Core/AppLink/handle_app_link.dart';
 import 'package:neuralcode/Repositories/HomeRepo/home_repo.dart';
 import 'package:path_provider/path_provider.dart';
@@ -52,6 +51,7 @@ class _PostListViewState extends State<PostListView> {
         required List<KeyPoint> description,
         required String text,
         required String id}) async {
+    // "short_url": "https://zalphabrains.in/SMJFiM",
     try {
       final response = await http.get(Uri.parse(imageUrl));
       if (response.statusCode == 200) {
@@ -59,11 +59,13 @@ class _PostListViewState extends State<PostListView> {
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/shared_image.png');
         await file.writeAsBytes(bytes);
-
         // Generate the link
         String myGeneratedLink = await DynamicLinkHandler.instance.createProductLink(id: id);
-        String redirectLink = await HomeRepo.getShortNewsUrlGenerator(
-            postId: postModel.id, appUrl: myGeneratedLink);
+        String redirectLink=postModel.shortUrl.toString();
+        if(postModel.shortUrl== null){
+          redirectLink = await HomeRepo.getShortNewsUrlGenerator(
+              postId: postModel.id, appUrl: myGeneratedLink);
+        }
         if (description.isNotEmpty) {
           // Prepare the components
           final subHeading = description[0].subHeading;
@@ -337,11 +339,7 @@ class _PostListViewState extends State<PostListView> {
                                   id: widget.data[index].id,
                               );
                             },
-                            child: const Icon(
-                                FontAwesomeIcons.share,
-                              color: Colors.black26,
-                            ),
-                          ),
+                            child: SvgPicture.asset("assets/svg/share.svg"),),
                           widget.isAdmin
                               ? InkWell(
                               onTap: () {

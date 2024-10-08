@@ -2,13 +2,14 @@ import 'package:neuralcode/Utils/Routes/route_name.dart';
 import '../../main.dart';
 
 class NavigationService {
-  static void navigateToNotificationPost(String postId) {
-    print("ll");
+  static void navigateToNotificationPost(
+      {required String postId, required bool fromBackGround}) {
     navigatorKey.currentState
         ?.restorablePushNamedAndRemoveUntil(
         RouteName.notificationPost, (route) => false,
       arguments:{
-          "postId":postId
+          "postId":postId,
+        "fromBackground":fromBackGround
       }
     );
   }

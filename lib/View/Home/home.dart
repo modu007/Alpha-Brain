@@ -75,15 +75,18 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
       if (postId.isNotEmpty) {
         isListened=true;
         isPathStreamControllerListened ="";
-        navigatorKey.currentState?.pushNamed(RouteName.notificationPost, arguments: {
-          "postId": postId
+        navigatorKey.currentState?.pushNamed(
+            RouteName.notificationPost, arguments: {
+          "postId": postId,
+          "fromBackground":false
         });
       }
     });
     if(isListened ==false && isPathStreamControllerListened.isNotEmpty){
       WidgetsBinding.instance.addPostFrameCallback((_) {
         navigatorKey.currentState?.pushNamed(RouteName.notificationPost, arguments: {
-          "postId": isPathStreamControllerListened
+          "postId": isPathStreamControllerListened,
+          "fromBackground":true
         });
         isPathStreamControllerListened ="";
       });

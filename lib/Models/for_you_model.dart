@@ -14,10 +14,11 @@ class ForYouModel {
   final String newsUrl;
   final String source;
   final Summary summary;
-  final Summary? summaryHi; // Updated to be nullable
+  final Summary? summaryHi;
   final List<String> tags;
   final bool yt;
   final int? love;
+  final String? shortUrl;
 
   ForYouModel({
     required this.id,
@@ -32,6 +33,7 @@ class ForYouModel {
     required this.tags,
     required this.yt,
     required this.love,
+    required this.shortUrl,
   });
 
   factory ForYouModel.fromJson(Map<String, dynamic> json) => ForYouModel(
@@ -49,6 +51,7 @@ class ForYouModel {
     tags: List<String>.from(json["tags"].map((x) => x)),
     yt: json["yt"],
     love: json["love"],
+    shortUrl: json["short_url"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -64,6 +67,7 @@ class ForYouModel {
     "tags": List<dynamic>.from(tags.map((x) => x)),
     "yt": yt,
     "love": love,
+    "short_url":shortUrl
   };
 }
 

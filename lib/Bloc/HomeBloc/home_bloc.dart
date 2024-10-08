@@ -223,6 +223,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         loveCount = loveCount+1;
       }
       data.insert(index, ForYouModel(
+        shortUrl: event.postData.shortUrl,
         summaryHi: event.postData.summaryHi,
         id: event.postData.id,
         dateTime: event.postData.dateTime,
@@ -246,6 +247,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         loveCount = loveCount!-1;
       }
       data.insert(index, ForYouModel(
+        shortUrl: event.postData.shortUrl,
         summaryHi: event.postData.summaryHi,
         id: event.postData.id,
         dateTime: event.postData.dateTime,
@@ -302,6 +304,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     data.removeAt(index);
     if(event.bookmark){
       data.insert(index, ForYouModel(
+          shortUrl: event.postData.shortUrl,
           summaryHi: event.postData.summaryHi,
           id: event.postData.id,
           dateTime: event.postData.dateTime,
@@ -332,7 +335,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           tags: event.postData.tags,
           yt: event.postData.yt,
           love: event.postData.love,
-          myBookmark: []
+          myBookmark: [],
+        shortUrl: event.postData.shortUrl
       ));
     }
     String email =await SharedData.getEmail("email");

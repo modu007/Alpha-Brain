@@ -40,15 +40,17 @@ class _SplashScreenState extends State<SplashScreen>
     var token = await SharedData.getToken("token");
     if(widget.fromBackGround != null){
       if(widget.fromBackGround == true){
-        NavigationService.navigateToNotificationPost(widget.postId!);
+        NavigationService.navigateToNotificationPost(
+            postId: widget.postId!, fromBackGround: true);
       }
     }
     else{
       if (token != null) {
         Timer(
-            const Duration(seconds: 4),
+            const Duration(seconds: 3),
                 () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
-                RouteName.home, (route) => false));
+                RouteName.home, (route) => false)
+        );
       }
       else {
         Timer(const Duration(seconds: 3),

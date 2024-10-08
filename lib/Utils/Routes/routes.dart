@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:neuralcode/View/Auth/otp_verification.dart';
 import 'package:neuralcode/View/Auth/register.dart';
@@ -16,7 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 appUpdate()async{
   const url = 'https://play.google.com/store/apps/details?id=com.ai.neuralcode&hl=en';
   if (await canLaunch(url)) {
-    await launch(url);
+    await canLaunchUrl(Uri.parse(url));
   } else {
     print('Could not launch $url');
   }
@@ -24,23 +25,22 @@ appUpdate()async{
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final argument = settings.arguments;
-    print("Handling route: ${settings.name}");
-    print("Arguments passed: ${settings.arguments}");
+    print(settings.name);
     switch (settings.name) {
       case RouteName.home:
         return MaterialPageRoute(
             builder: (BuildContext context) => UpgradeAlert(
+                shouldPopScope: () {
+                  SystemNavigator.pop();
+                  return false; 
+                },
                 showLater: false,
                 showIgnore: false,
-                // upgrader: Upgrader(
-                //     debugDisplayAlways: true,
-                //     minAppVersion: "1.1.12+20"
-                // ),
                 onUpdate: (){
-                  print("here");
                   appUpdate();
                   return true;
                 },
+
                 child: const Home()));
         case RouteName.support:
         return MaterialPageRoute(
@@ -82,7 +82,9 @@ class Routes {
         case RouteName.notificationPost:
        if(argument is Map){
          return MaterialPageRoute(
-             builder: (BuildContext context) =>  NotificationPost(postId: argument["postId"],)
+             builder: (BuildContext context) =>  NotificationPost(
+               postId: argument["postId"],
+               fromBackGround: argument["fromBackground"],)
          );
        }else{
          return MaterialPageRoute(builder: (_) {
