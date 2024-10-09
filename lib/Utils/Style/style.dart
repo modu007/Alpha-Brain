@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Styles {
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: isDarkTheme ? Colors.black : Colors.white, // Set the status bar color
+        statusBarBrightness: isDarkTheme ? Brightness.light : Brightness.dark, // For iOS devices
+        statusBarIconBrightness: isDarkTheme ? Brightness.light : Brightness.dark, // For Android devices
+      ),
+    );
     return ThemeData(
       primaryColor: isDarkTheme ? Colors.black54 : Colors.white,
       indicatorColor: isDarkTheme ? Colors.black54 : const Color(0xffCBDCF8),

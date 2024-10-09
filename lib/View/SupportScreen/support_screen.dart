@@ -3,8 +3,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 
-import '../../Utils/Components/Buttons/back_arrow_button.dart';
-
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key});
 

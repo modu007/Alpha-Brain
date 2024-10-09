@@ -20,7 +20,6 @@ import 'package:neuralcode/Bloc/TagsBloc/tags_cubit.dart';
 import 'package:neuralcode/Provider/dark_theme_controller.dart';
 import 'package:neuralcode/firebase_options.dart';
 import 'package:provider/provider.dart';
-import 'package:upgrader/upgrader.dart';
 import 'Bloc/HomeBloc/home_bloc.dart';
 import 'Core/AppLink/handle_app_link.dart';
 import 'Core/FirebasePushNotificationService/firebase_push_notificatioin_services.dart';
@@ -63,7 +62,8 @@ void main() async{
     navigatorKey.currentState?.restorablePushNamed(
        RouteName.notificationPost,
      arguments: {
-       "postId" :remoteMessage["post_id"]
+       "postId" :remoteMessage["post_id"],
+       "fromBackground":false,
        // "postId" :"65e030815cc2b100a817d036"
      });
   });

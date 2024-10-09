@@ -19,6 +19,8 @@ class NotificationPostModel {
   final List<String> tags;
   final bool yt;
   final int? love;
+  final String? shortUrl;
+
 
   NotificationPostModel({
     required this.id,
@@ -33,6 +35,7 @@ class NotificationPostModel {
     required this.tags,
     required this.yt,
     required this.love,
+    required this.shortUrl,
   });
 
   factory NotificationPostModel.fromJson(Map<String, dynamic> json) => NotificationPostModel(
@@ -50,6 +53,7 @@ class NotificationPostModel {
     tags: List<String>.from(json["tags"].map((x) => x)),
     yt: json["yt"],
     love: json["love"],
+    shortUrl: json["short_url"]
   );
 
   Map<String, dynamic> toJson() => {
@@ -65,6 +69,7 @@ class NotificationPostModel {
     "tags": List<dynamic>.from(tags.map((x) => x)),
     "yt": yt,
     "love": love,
+    "short_url":shortUrl
   };
 }
 

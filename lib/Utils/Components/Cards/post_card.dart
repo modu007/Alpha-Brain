@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:neuralcode/Core/AppLink/handle_app_link.dart';
 import 'package:neuralcode/Repositories/HomeRepo/home_repo.dart';
@@ -46,47 +47,51 @@ class _PostListViewState extends State<PostListView> {
 
 
   Future<void> shareImageTextAndURL(
-      {required ForYouModel postModel,
-        required String imageUrl,
-        required List<KeyPoint> description,
-        required String text,
-        required String id}) async {
+      {required ForYouModel postModel}) async {
     // "short_url": "https://zalphabrains.in/SMJFiM",
     try {
-      final response = await http.get(Uri.parse(imageUrl));
+      final response = await http.get(Uri.parse(postModel.imageUrl.toString()));
       if (response.statusCode == 200) {
         final bytes = response.bodyBytes;
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/shared_image.png');
         await file.writeAsBytes(bytes);
         // Generate the link
-        String myGeneratedLink = await DynamicLinkHandler.instance.createProductLink(id: id);
+        String myGeneratedLink = await DynamicLinkHandler.instance.createProductLink(id: postModel.id);
         String redirectLink=postModel.shortUrl.toString();
         if(postModel.shortUrl== null){
           redirectLink = await HomeRepo.getShortNewsUrlGenerator(
               postId: postModel.id, appUrl: myGeneratedLink);
         }
-        if (description.isNotEmpty) {
+        var englishKeyPoints=postModel.summary.keyPoints[0];
+        var hindiKeyPoints=postModel.summaryHi?.keyPoints[0];
+        if (englishKeyPoints.description.isNotEmpty) {
           // Prepare the components
-          final subHeading = description[0].subHeading;
-          final desc = description[0].description;
-          final fixedText = '$text\n$subHeading\nCheck this out: $redirectLink';
+          final subHeading = widget.language == false
+              ? englishKeyPoints.subHeading
+              : hindiKeyPoints?.subHeading;
+          final desc =widget.language == false
+              ? englishKeyPoints.description
+              : hindiKeyPoints?.description;
+          final fixedText =
+              '${widget.language == false ? postModel.summary.title : postModel.summaryHi?.title}\n$subHeading\nCheck this out: $redirectLink';
           final fixedLength = fixedText.length;
           final availableDescLength = 232 - fixedLength;
-          final truncatedDesc = desc.length > availableDescLength
+          final truncatedDesc = desc!.length > availableDescLength
               ? '${desc.substring(0, availableDescLength - 3)}...' // -3 for the ellipsis
               : desc;
-          final shareText = '$text\n\n$redirectLink/${widget.language ==false?"en":"hi"}';
+          final shareText =
+              '${widget.language == false ? postModel.summary.title : postModel.summaryHi?.title}\n\n$redirectLink/${widget.language == false ? "en" : "hi"}';
           await Share.shareXFiles(
             [XFile(file.path)],
             text: shareText,
           );
         }
       } else {
-        print('Failed to download the image.');
+        log("something went wrong");
       }
     } catch (e) {
-      print('Error sharing: $e');
+      log('Error sharing: $e');
     }
   }
 
@@ -331,13 +336,7 @@ class _PostListViewState extends State<PostListView> {
                           const Spacer(),
                           GestureDetector(
                             onTap: (){
-                              shareImageTextAndURL(
-                                postModel:  widget.data[index],
-                                  text: widget.data[index].summary.title,
-                                  imageUrl: widget.data[index].imageUrl!,
-                                  description:widget.data[index].summary.keyPoints,
-                                  id: widget.data[index].id,
-                              );
+                              shareImageTextAndURL(postModel:  widget.data[index]);
                             },
                             child: SvgPicture.asset("assets/svg/share.svg"),),
                           widget.isAdmin

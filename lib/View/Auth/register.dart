@@ -81,10 +81,6 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light));
     return SafeArea(
       child: Scaffold(
         body: Container(

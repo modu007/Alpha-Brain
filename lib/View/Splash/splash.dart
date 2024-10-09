@@ -95,10 +95,6 @@ class _SplashScreenState extends State<SplashScreen>
       getCurrentAppTheme(context);
       onlyOnce=true;
     }
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.black87,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light));
     return Scaffold(
       backgroundColor: const Color(0xffd4edf4),
       body: Center(

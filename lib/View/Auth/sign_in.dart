@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,8 +11,6 @@ import 'package:neuralcode/Bloc/AuthBloc/SignInBloc/sign_in_state.dart';
 import 'package:neuralcode/Repositories/AuthRepo/google_sign_in.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
-import 'package:provider/provider.dart';
-import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Components/Buttons/back_arrow_button.dart';
 import '../../Utils/Components/Buttons/login_buttons.dart';
 import '../../Utils/Components/TextField/text_field_container.dart';
@@ -39,11 +36,6 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    final themeChange = Provider.of<DarkThemeProvider>(context);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light));
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(

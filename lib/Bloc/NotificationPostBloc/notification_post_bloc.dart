@@ -56,7 +56,7 @@ class NotificationPostBloc extends Bloc<NotificationPostEvent, NotificationPostS
          summary:  event.postData.summary,
          tags:  event.postData.tags,
          yt:  event.postData.yt,
-        summaryHi: event.postData.summaryHi,love: event.postData.love,
+        summaryHi: event.postData.summaryHi,love: event.postData.love, shortUrl: event.postData.shortUrl,
       );
    }else{
      result = NotificationPostModel(
@@ -71,6 +71,7 @@ class NotificationPostBloc extends Bloc<NotificationPostEvent, NotificationPostS
          tags:  event.postData.tags,
          yt:  event.postData.yt,
        summaryHi: event.postData.summaryHi,love: event.postData.love,
+       shortUrl: event.postData.shortUrl
      );
    }
     bool language =await SharedData.getToken("language");
@@ -110,7 +111,9 @@ FutureOr<void> bookmarkPostEvent(
           summary:  event.postData.summary,
           tags:  event.postData.tags,
           yt:  event.postData.yt,
-        summaryHi: event.postData.summaryHi,love: event.postData.love,
+        summaryHi: event.postData.summaryHi,
+        love: event.postData.love,
+        shortUrl: event.postData.shortUrl,
       );
     }else{
       result = NotificationPostModel(
@@ -123,7 +126,8 @@ FutureOr<void> bookmarkPostEvent(
           source:  event.postData.source,
           summary:  event.postData.summary,
           tags:  event.postData.tags,
-          yt:  event.postData.yt, summaryHi: event.postData.summaryHi,love: event.postData.love,);
+          yt:  event.postData.yt, summaryHi: event.postData.summaryHi,love: event.postData.love,
+        shortUrl: event.postData.shortUrl,);
     }
     bool language =await SharedData.getToken("language");
     emit(NotificationPostSuccess(listOfPosts: result,language: language));

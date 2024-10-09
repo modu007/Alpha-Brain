@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,11 +8,19 @@ import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_bloc.dart
 import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_event.dart';
 import 'package:neuralcode/Bloc/NotificationPostBloc/notification_post_state.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../Core/AppLink/handle_app_link.dart';
+import '../../Models/notification_post_model.dart';
 import '../../Provider/dark_theme_controller.dart';
+import '../../Repositories/HomeRepo/home_repo.dart';
+import '../../SharedPrefernce/shared_pref.dart';
 import '../../Utils/Components/Buttons/back_buttons_text.dart';
 import '../../Utils/Components/Text/simple_text.dart';
+import 'package:http/http.dart' as http;
+
 
 class NotificationPost extends StatefulWidget {
   final String postId;
@@ -27,27 +35,79 @@ class NotificationPost extends StatefulWidget {
 
 class _NotificationPostState extends State<NotificationPost> {
   String selectedTag ="For you";
+  bool? language;
+
+  Future<void> shareImageTextAndURL(
+      {required NotificationPostModel postModel}) async {
+    try {
+      final response = await http.get(Uri.parse(postModel.imageUrl.toString()));
+      if (response.statusCode == 200) {
+        final bytes = response.bodyBytes;
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/shared_image.png');
+        await file.writeAsBytes(bytes);
+        // Generate the link
+        String myGeneratedLink =
+            await DynamicLinkHandler.instance.createProductLink(id: postModel.id);
+        String redirectLink=postModel.shortUrl.toString();
+        if(postModel.shortUrl== null){
+          redirectLink = await HomeRepo.getShortNewsUrlGenerator(
+              postId: postModel.id, appUrl: myGeneratedLink);
+        }
+        var englishKeyPoints=postModel.summary.keyPoints[0];
+        var hindiKeyPoints=postModel.summaryHi?.keyPoints[0];
+        if (englishKeyPoints.description.isNotEmpty) {
+          // Prepare the components
+          final subHeading = language == false
+              ? englishKeyPoints.subHeading
+              : hindiKeyPoints?.subHeading;
+          final desc =language == false
+              ? englishKeyPoints.description
+              : hindiKeyPoints?.description;
+          final fixedText =
+              '${language == false ? postModel.summary.title : postModel.summaryHi?.title}\n$subHeading\nCheck this out: $redirectLink';
+          final fixedLength = fixedText.length;
+          final availableDescLength = 232 - fixedLength;
+          final truncatedDesc = desc!.length > availableDescLength
+              ? '${desc.substring(0, availableDescLength - 3)}...' // -3 for the ellipsis
+              : desc;
+          final shareText =
+              '${language == false ? postModel.summary.title : postModel.summaryHi?.title}\n\n$redirectLink/${language == false ? "en" : "hi"}';
+          await Share.shareXFiles(
+            [XFile(file.path)],
+            text: shareText,
+          );
+        }
+      } else {
+        print('Failed to download the image.');
+      }
+    } catch (e) {
+      print('Error sharing: $e');
+    }
+  }
+
+  getLanguage()async{
+    language = await SharedData.getToken("language");
+    language ??= false;
+    return language;
+  }
 
   @override
   void initState() {
     BlocProvider.of<NotificationPostBloc>(context)
         .add(GetPostInitialEvent(postId: widget.postId));
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light));
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: PopScope(
         canPop: false,
         child: Scaffold(
-          backgroundColor: Colors.white,
           body: Container(
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: SingleChildScrollView(
@@ -286,6 +346,12 @@ class _NotificationPostState extends State<NotificationPost> {
                                         width: 22,),
                                     ),
                                     const Spacer(),
+                                    GestureDetector(
+                                      onTap: (){
+                                        shareImageTextAndURL(
+                                          postModel: state.listOfPosts,);
+                                      },
+                                      child: SvgPicture.asset("assets/svg/share.svg"),),
                                     // Container(
                                     //   padding: const EdgeInsets.all(6),
                                     //   decoration: BoxDecoration(

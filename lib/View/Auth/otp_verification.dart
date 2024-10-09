@@ -30,10 +30,6 @@ class _OtpVerificationState extends State<OtpVerification> {
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     Size size = MediaQuery.of(context).size;
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light));
     return SafeArea(
       child: Scaffold(
         body: Container(

@@ -125,10 +125,6 @@ class _ProfileState extends State<Profile> with SingleTickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-        statusBarColor: Colors.white,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light));
     return SafeArea(
       child: Scaffold(
         body: BlocBuilder<UserDetailsCubit, UserDetailsState>(

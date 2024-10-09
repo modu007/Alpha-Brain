@@ -25,7 +25,6 @@ appUpdate()async{
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final argument = settings.arguments;
-    print(settings.name);
     switch (settings.name) {
       case RouteName.home:
         return MaterialPageRoute(
