@@ -19,8 +19,6 @@ class HomeRepo {
          SharedData.setToken(res["Token"]);
        }
      }
-     print(isMyTags);
-     print(LocalData.getUserInterestsSelected);
      var result = await networkRequest.postMethodRequest({
        "Email": email,
        "Skip": skip,

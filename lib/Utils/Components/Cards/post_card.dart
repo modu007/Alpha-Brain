@@ -48,7 +48,6 @@ class _PostListViewState extends State<PostListView> {
 
   Future<void> shareImageTextAndURL(
       {required ForYouModel postModel}) async {
-    // "short_url": "https://zalphabrains.in/SMJFiM",
     try {
       final response = await http.get(Uri.parse(postModel.imageUrl.toString()));
       if (response.statusCode == 200) {
@@ -66,7 +65,6 @@ class _PostListViewState extends State<PostListView> {
         var englishKeyPoints=postModel.summary.keyPoints[0];
         var hindiKeyPoints=postModel.summaryHi?.keyPoints[0];
         if (englishKeyPoints.description.isNotEmpty) {
-          // Prepare the components
           final subHeading = widget.language == false
               ? englishKeyPoints.subHeading
               : hindiKeyPoints?.subHeading;
@@ -339,22 +337,6 @@ class _PostListViewState extends State<PostListView> {
                               shareImageTextAndURL(postModel:  widget.data[index]);
                             },
                             child: SvgPicture.asset("assets/svg/share.svg"),),
-                          widget.isAdmin
-                              ? InkWell(
-                              onTap: () {
-                                BlocProvider.of<HomeBloc>(context).add(
-                                    AdminActionEvent(
-                                        postData: widget.data[index],
-                                        listOfData: widget.data,
-                                        selectedTag: widget.selectedTag,
-                                        listOfFutureData: widget.listOfFutureData
-                                    ));
-                              },
-                              child: const Icon(
-                                Icons.delete_outline,
-                                color: Colors.red,
-                              ))
-                              : const SizedBox(),
                         ],
                       ),
                     ),
@@ -420,32 +402,53 @@ class _PostListViewState extends State<PostListView> {
                     const Divider(
                       color: Color(0xffE8ECF4),
                     ),
-                    InkWell(
-                      onTap: () async {
-                        if (!await launchUrl(
-                            Uri.parse(widget.data[index].newsUrl))) {
-                          throw Exception('Could not launch url');
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          const SimpleText(
-                              text: "source:",
-                              fontSize: 10,
-                            fontColor: Colors.grey,
-                            fontWeight: FontWeight.bold,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () async {
+                            if (!await launchUrl(
+                                Uri.parse(widget.data[index].newsUrl))) {
+                              throw Exception('Could not launch url');
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              const SimpleText(
+                                  text: "source:",
+                                  fontSize: 10,
+                                fontColor: Colors.grey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              const SizedBox(width: 2,),
+                              InkWell(
+                                child: SimpleText(
+                                  text: widget.data[index].source,
+                                  fontSize: 10,
+                                  fontColor: Colors.grey,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 2,),
-                          InkWell(
-                            child: SimpleText(
-                              text: widget.data[index].source,
-                              fontSize: 10,
-                              fontColor: Colors.grey,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                        widget.isAdmin
+                            ? InkWell(
+                            onTap: () {
+                              BlocProvider.of<HomeBloc>(context).add(
+                                  AdminActionEvent(
+                                      postData: widget.data[index],
+                                      listOfData: widget.data,
+                                      selectedTag: widget.selectedTag,
+                                      listOfFutureData: widget.listOfFutureData
+                                  ));
+                            },
+                            child: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.red,
+                            ))
+                            : const SizedBox(),
+                      ],
                     ),
                     const SizedBox(height: 5,),
                   ],

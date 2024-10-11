@@ -30,10 +30,12 @@ class NotificationPostBloc extends Bloc<NotificationPostEvent, NotificationPostS
           language: language
         ));
       }else{
+        print("aidia");
         emit(NotificationPostError(errorMessage: "Error"));
       }
     }
     catch(error){
+      print(error.toString());
       emit(NotificationPostError(errorMessage: "Something went wrong"));
     }
   }

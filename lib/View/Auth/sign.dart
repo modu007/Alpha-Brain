@@ -23,7 +23,6 @@ class _SignState extends State<Sign> {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: Column(
           children: [
             SizedBox(

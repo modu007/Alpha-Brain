@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -500,50 +499,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                               )
                                   : const SimpleText(
                                 text: "For you",
-                                fontSize: 14,
-                                fontColor: Color(0xff56626c),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap:(){
-                              if(selectedTag!="Top Picks"){
-                                setState(() {
-                                  selectedTag="Top Picks";
-                                });
-                                skip=0;
-                                limit=5;
-                                BlocProvider.of<HomeBloc>(context)
-                                    .add(TabChangeEvent(
-                                    tabIndex: 1,
-                                    selectedTag: selectedTag
-                                ));
-                                isEmptyData = false;
-                              }
-                            },
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal:
-                                  selectedTag == "Top Picks" ? 10 : 4,
-                                  vertical: 6),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: selectedTag=="Top Picks" ? const Color(0xffCCEAF4) :
-                                themeChange.darkTheme?
-                                const Color(0xff121212):
-                                Colors.white,
-                              ),
-                              child: themeChange.darkTheme?
-                              SimpleText3(
-                                text: "Top Picks",
-                                fontSize: 14,
-                                fontColor:selectedTag=="Top Picks"?
-                                Colors.black87 :  Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ):const SimpleText(
-                                text: "Top Picks",
                                 fontSize: 14,
                                 fontColor: Color(0xff56626c),
                                 fontWeight: FontWeight.w500,

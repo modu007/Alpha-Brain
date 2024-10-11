@@ -96,7 +96,7 @@ class _NotificationPostState extends State<NotificationPost> {
   void initState() {
     BlocProvider.of<NotificationPostBloc>(context)
         .add(GetPostInitialEvent(postId: widget.postId));
-
+    print(widget.postId);
     super.initState();
   }
 
@@ -125,7 +125,8 @@ class _NotificationPostState extends State<NotificationPost> {
                         const Center(child: CircularProgressIndicator()),
                       ],
                     );
-                  } else if (state is NotificationPostSuccess) {
+                  }
+                  else if (state is NotificationPostSuccess) {
                     bool emojiTypeBool = false;
                     var emojiType = "";
                     bool bookmarkOrNot = false;
@@ -458,14 +459,16 @@ class _NotificationPostState extends State<NotificationPost> {
                         )
                       ],
                     );
-                  } else if (state is NotificationPostError) {
+                  }
+                  else if (state is NotificationPostError) {
                     return Center(
                       child: SimpleText(
                         text: state.errorMessage,
                         fontSize: 16,
                       ),
                     );
-                  } else {
+                  }
+                  else {
                     return const Center(
                       child: SimpleText(
                         text: "Loading...",

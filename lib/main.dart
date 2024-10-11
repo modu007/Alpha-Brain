@@ -31,7 +31,8 @@ import 'Utils/Style/style.dart';
 FlutterLocalNotificationsPlugin notificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{}
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message)async{
+}
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 StreamController<String> pathStreamController = StreamController<String>.broadcast();
@@ -42,7 +43,7 @@ bool darkTheme =false;
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
+      options: DefaultFirebaseOptions.currentPlatform
   );
   await DynamicLinkHandler.instance.initialize();
   List? customInterests = await SharedData.getToken("custom");
@@ -60,12 +61,22 @@ void main() async{
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   PushNotificationServices.onClickNotification.stream.listen((remoteMessage){
     navigatorKey.currentState?.restorablePushNamed(
-       RouteName.notificationPost,
-     arguments: {
-       "postId" :remoteMessage["post_id"],
-       "fromBackground":false,
-       // "postId" :"65e030815cc2b100a817d036"
-     });
+        RouteName.notificationPost,
+        arguments: {
+          "postId" :remoteMessage["post_id"],
+          "fromBackground":false,
+          // "postId" :"65e030815cc2b100a817d036"
+        });
+  });
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    if (message.data.isNotEmpty) {
+      navigatorKey.currentState?.restorablePushNamed(
+          RouteName.notificationPost,arguments: {
+        "fromBackground":false,
+        "postId":message.data["post_id"]
+        // "postId":"65e030815cc2b100a817d036"
+      });
+    }
   });
   FirebaseMessaging.instance.getInitialMessage().then((message) {
     if (message != null) {
@@ -77,6 +88,7 @@ void main() async{
       });
     }
   });
+
   final String languageCode =
       await SharedLanguageData.getLanguageData('lang') ?? '';
   languageCode == ""

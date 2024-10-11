@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:neuralcode/SharedPrefernce/shared_pref.dart';
-import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
 import 'package:neuralcode/Utils/Data/local_data.dart';
 import 'package:neuralcode/Utils/Routes/route_name.dart';
 import 'package:provider/provider.dart';
+import '../../Api/all_api.dart';
+import '../../NetworkRequest/network_request.dart';
 import '../../Provider/dark_theme_controller.dart';
 import '../../Utils/Routes/navigation_service.dart';
 
@@ -45,9 +46,17 @@ class _SplashScreenState extends State<SplashScreen>
       }
     }
     else{
+      NetworkRequest networkRequest = NetworkRequest();
+      bool hasExpired = JwtDecoder.isExpired(token);
       if (token != null) {
+        if(hasExpired){
+          var res = await networkRequest.refreshToken({}, AllApi.generateToken);
+          if(res["Token"]!= null){
+            SharedData.setToken(res["Token"]);
+          }
+        }
         Timer(
-            const Duration(seconds: 3),
+            const Duration(seconds: 5),
                 () => Navigator.of(context).restorablePushNamedAndRemoveUntil(
                 RouteName.home, (route) => false)
         );
@@ -65,28 +74,11 @@ class _SplashScreenState extends State<SplashScreen>
     final themeChange = Provider.of<DarkThemeProvider>(context,listen: false);
     themeChange.setDarkTheme=theme;
   }
-  @override
-  void initState() {
-    controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 5),
-    )..addListener(() {
-      setState(() {});
-    });
-    controller.repeat();
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() async{
     splash();
     super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
   }
 
   @override

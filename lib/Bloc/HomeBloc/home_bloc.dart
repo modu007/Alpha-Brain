@@ -30,7 +30,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       await HomeRepo.activeUser();
       if(result is List<ForYouModel>){
         String email =await SharedData.getEmail("email");
-        print(email);
         bool isAdmin =false;
         if(email == "satishlangayan@gmail.com"||email=="rangashubham1108@gmail.com"){
           isAdmin=true;
