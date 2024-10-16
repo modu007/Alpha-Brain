@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../Bloc/HomeBloc/home_bloc.dart';
 import '../../../Bloc/HomeBloc/home_event.dart';
 import '../../../Models/for_you_model.dart';
+import '../../../SharedPrefernce/shared_pref.dart';
 import '../Text/simple_text.dart';
 
 class PostListView extends StatefulWidget {
@@ -58,28 +59,29 @@ class _PostListViewState extends State<PostListView> {
         // Generate the link
         String myGeneratedLink = await DynamicLinkHandler.instance.createProductLink(id: postModel.id);
         String redirectLink=postModel.shortUrl.toString();
+        bool? language = await SharedData.getToken("language");
         if(postModel.shortUrl== null){
           redirectLink = await HomeRepo.getShortNewsUrlGenerator(
-              postId: postModel.id, appUrl: myGeneratedLink);
+              postId: postModel.id, appUrl: "");
         }
         var englishKeyPoints=postModel.summary.keyPoints[0];
         var hindiKeyPoints=postModel.summaryHi?.keyPoints[0];
         if (englishKeyPoints.description.isNotEmpty) {
-          final subHeading = widget.language == false
+          final subHeading = language == false
               ? englishKeyPoints.subHeading
               : hindiKeyPoints?.subHeading;
-          final desc =widget.language == false
+          final desc =language == false
               ? englishKeyPoints.description
               : hindiKeyPoints?.description;
           final fixedText =
-              '${widget.language == false ? postModel.summary.title : postModel.summaryHi?.title}\n$subHeading\nCheck this out: $redirectLink';
+              '${language == false ? postModel.summary.title : postModel.summaryHi?.title}\n$subHeading\nCheck this out: $redirectLink';
           final fixedLength = fixedText.length;
           final availableDescLength = 232 - fixedLength;
           final truncatedDesc = desc!.length > availableDescLength
               ? '${desc.substring(0, availableDescLength - 3)}...' // -3 for the ellipsis
               : desc;
           final shareText =
-              '${widget.language == false ? postModel.summary.title : postModel.summaryHi?.title}\n\n$redirectLink/${widget.language == false ? "en" : "hi"}';
+              '${language == false ? postModel.summary.title : postModel.summaryHi?.title}\n\n$redirectLink/${language == false ? "en" : "hi"}';
           await Share.shareXFiles(
             [XFile(file.path)],
             text: shareText,

@@ -160,7 +160,7 @@ class FirebaseAuthService {
         PhoneMultiFactorGenerator.getAssertion(credential),
       );
       return true; // Successfully verified and enrolled second factor
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       // Handle authentication errors
       return false;
     } catch (e) {

@@ -44,6 +44,7 @@ class Styles {
       drawerTheme: DrawerThemeData(
         backgroundColor: isDarkTheme ? const Color(0xff363636):Colors.white,
       ),
+      scaffoldBackgroundColor: isDarkTheme ? const Color(0xff363636):Colors.white,
       cardColor: isDarkTheme ? const Color(0xFF151515) : Colors.white,
       canvasColor: isDarkTheme ? Colors.black54 : Colors.grey[50],
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
@@ -53,7 +54,7 @@ class Styles {
       textSelectionTheme: TextSelectionThemeData(
           selectionColor: isDarkTheme ? Colors.white : Colors.black54),
       colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.deepPurple).copyWith(
-          background: isDarkTheme ? const Color(0xff1E1E1E) : const Color(0xffF7F8FA)),
+          surface: isDarkTheme ? const Color(0xff1E1E1E) : const Color(0xffF7F8FA)),
     );
   }
 }

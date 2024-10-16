@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:neuralcode/Utils/Components/Text/simple_text.dart';
-import '../../../SharedPrefernce/shared_pref.dart';
 import '../../Color/colors.dart';
 
 class HomeAppBar extends StatelessWidget {

@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../../../Provider/dark_theme_controller.dart';
 
-import 'package:flutter/services.dart';
 
 class EmailInputFormatter extends TextInputFormatter {
   @override

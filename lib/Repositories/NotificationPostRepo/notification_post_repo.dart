@@ -1,7 +1,6 @@
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:neuralcode/Models/notification_post_model.dart';
 import '../../Api/all_api.dart';
-import '../../Models/for_you_model.dart';
 import '../../NetworkRequest/network_request.dart';
 import '../../SharedPrefernce/shared_pref.dart';
 
