@@ -46,6 +46,7 @@ class _NotificationPostState extends State<NotificationPost> {
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/shared_image.png');
         await file.writeAsBytes(bytes);
+        bool? sharedLanguage = await SharedData.getToken("language");
         // Generate the link
         String myGeneratedLink =
             await DynamicLinkHandler.instance.createProductLink(id: postModel.id);
@@ -58,21 +59,21 @@ class _NotificationPostState extends State<NotificationPost> {
         var hindiKeyPoints=postModel.summaryHi?.keyPoints[0];
         if (englishKeyPoints.description.isNotEmpty) {
           // Prepare the components
-          final subHeading = language == false
+          final subHeading = sharedLanguage == false
               ? englishKeyPoints.subHeading
               : hindiKeyPoints?.subHeading;
-          final desc =language == false
+          final desc =sharedLanguage == false
               ? englishKeyPoints.description
               : hindiKeyPoints?.description;
           final fixedText =
-              '${language == false ? postModel.summary.title : postModel.summaryHi?.title}\n$subHeading\nCheck this out: $redirectLink';
+              '${sharedLanguage == false ? postModel.summary.title : postModel.summaryHi?.title}\n$subHeading\nCheck this out: $redirectLink';
           final fixedLength = fixedText.length;
           final availableDescLength = 232 - fixedLength;
           final truncatedDesc = desc!.length > availableDescLength
               ? '${desc.substring(0, availableDescLength - 3)}...' // -3 for the ellipsis
               : desc;
           final shareText =
-              '${language == false ? postModel.summary.title : postModel.summaryHi?.title}\n\n$redirectLink/${language == false ? "en" : "hi"}';
+              '${sharedLanguage == false ? postModel.summary.title : postModel.summaryHi?.title}\n\n$redirectLink/${sharedLanguage == false ? "en" : "hi"}';
           await Share.shareXFiles(
             [XFile(file.path)],
             text: shareText,
@@ -96,7 +97,6 @@ class _NotificationPostState extends State<NotificationPost> {
   void initState() {
     BlocProvider.of<NotificationPostBloc>(context)
         .add(GetPostInitialEvent(postId: widget.postId));
-    print(widget.postId);
     super.initState();
   }
 

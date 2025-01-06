@@ -47,8 +47,8 @@ class _SplashScreenState extends State<SplashScreen>
     }
     else{
       NetworkRequest networkRequest = NetworkRequest();
-      bool hasExpired = JwtDecoder.isExpired(token);
       if (token != null) {
+        bool hasExpired = JwtDecoder.isExpired(token);
         if(hasExpired){
           var res = await networkRequest.refreshToken({}, AllApi.generateToken);
           if(res["Token"]!= null){

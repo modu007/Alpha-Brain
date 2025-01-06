@@ -60,10 +60,14 @@ class _PostListViewState extends State<PostListView> {
         String myGeneratedLink = await DynamicLinkHandler.instance.createProductLink(id: postModel.id);
         String redirectLink=postModel.shortUrl.toString();
         bool? language = await SharedData.getToken("language");
+        print(language);
         if(postModel.shortUrl== null){
+          print(postModel.id);
           redirectLink = await HomeRepo.getShortNewsUrlGenerator(
               postId: postModel.id, appUrl: "");
+          print(redirectLink);
         }
+        print("here");
         var englishKeyPoints=postModel.summary.keyPoints[0];
         var hindiKeyPoints=postModel.summaryHi?.keyPoints[0];
         if (englishKeyPoints.description.isNotEmpty) {
@@ -338,7 +342,8 @@ class _PostListViewState extends State<PostListView> {
                             onTap: (){
                               shareImageTextAndURL(postModel:  widget.data[index]);
                             },
-                            child: SvgPicture.asset("assets/svg/share.svg"),),
+                            child: SvgPicture.asset("assets/svg/share.svg",height: 28,width: 22,),
+                          ),
                         ],
                       ),
                     ),
